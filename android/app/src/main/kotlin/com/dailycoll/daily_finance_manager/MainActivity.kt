@@ -1,4 +1,4 @@
-package com.qrgift.qr_gift_system
+package com.sparkle.sparkle_lite
 
 import io.flutter.embedding.android.FlutterActivity
 

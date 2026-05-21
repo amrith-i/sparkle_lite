@@ -7,8 +7,5 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     AutoRoute(page: UserIdRoute.page, path: '/user-id-screen', initial: true),
-    AutoRoute(page: GuestRoute.page),
-
-    AutoRoute(page: HostRoute.page),
   ];
 }

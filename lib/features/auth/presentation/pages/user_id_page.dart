@@ -67,10 +67,10 @@ class _UserIdPageState extends State<UserIdPage> {
         if (state is UserExists) {
           _saveUserPreferences(state.user.userId);
 
-          if (state.user.role == "guest") {
-            context.router.replace(GuestRoute(userId: state.user.userId));
+          if (state.user.role == "") {
+            // context.router.replace(Symtoms(userId: state.user.userId));
           } else {
-            context.router.replace(const HostRoute());
+            // context.router.replace(const Symtoms());
           }
         }
 

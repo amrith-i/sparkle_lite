@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "247606471711",
-    "project_id": "qr-gift-system-a4830",
-    "storage_bucket": "qr-gift-system-a4830.firebasestorage.app"
+    "project_id": "sparkle-lite-a4830",
+    "storage_bucket": "sparkle-lite-a4830.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:247606471711:android:22eabe65a789f8c832792a",
         "android_client_info": {
-          "package_name": "com.qrgift.qr_gift_system"
+          "package_name": "com.sparkle.sparkle_lite"
         }
       },
       "oauth_client": [],

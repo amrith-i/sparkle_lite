@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
 
     return GlobalKeyboardDismiss(
       child: MaterialApp.router(
-        title: 'Qr Gift',
+        title: 'Sparkle Lite',
         debugShowCheckedModeBanner: false,
         routerConfig: appRouter.config(
           navigatorObservers: () => [routeObserver],

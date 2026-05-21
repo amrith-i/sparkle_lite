@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.qrgift.qr_gift_system"
+    namespace = "com.sparkle.sparkle_lite"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.qrgift.qr_gift_system"
+        applicationId = "com.sparkle.sparkle_lite"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

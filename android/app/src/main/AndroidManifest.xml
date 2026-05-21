@@ -23,7 +23,7 @@
     
     
     <application
-        android:label="QR Gift"
+        android:label="Sparkle Lite"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
