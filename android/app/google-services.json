@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "247606471711",
+    "project_id": "qr-gift-system-a4830",
+    "storage_bucket": "qr-gift-system-a4830.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247606471711:android:22eabe65a789f8c832792a",
+        "android_client_info": {
+          "package_name": "com.qrgift.qr_gift_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMY9P_aMVXgCGX65uDJQ-rjGX4RACMacg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
