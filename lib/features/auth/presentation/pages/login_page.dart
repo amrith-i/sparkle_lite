@@ -42,7 +42,8 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          context.router.replace(const SessionGateRoute());
+          // context.router.replace(const SessionGateRoute());
+          context.router.replaceAll([const OnboardingRoute()]);
         } else if (state is AuthError) {
           AppNotifier.show(context, state.message, type: MessageType.error);
         }

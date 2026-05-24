@@ -11,6 +11,22 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [HomePage]
+class HomeRoute extends PageRouteInfo<void> {
+  const HomeRoute({List<PageRouteInfo>? children})
+    : super(HomeRoute.name, initialChildren: children);
+
+  static const String name = 'HomeRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const HomePage();
+    },
+  );
+}
+
+/// generated route for
 /// [LoginPage]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})
@@ -38,6 +54,38 @@ class NoInternetRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const NoInternetPage();
+    },
+  );
+}
+
+/// generated route for
+/// [OnboardingPage]
+class OnboardingRoute extends PageRouteInfo<void> {
+  const OnboardingRoute({List<PageRouteInfo>? children})
+    : super(OnboardingRoute.name, initialChildren: children);
+
+  static const String name = 'OnboardingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const OnboardingPage());
+    },
+  );
+}
+
+/// generated route for
+/// [ProfileSetupPage]
+class ProfileSetupRoute extends PageRouteInfo<void> {
+  const ProfileSetupRoute({List<PageRouteInfo>? children})
+    : super(ProfileSetupRoute.name, initialChildren: children);
+
+  static const String name = 'ProfileSetupRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const ProfileSetupPage());
     },
   );
 }
