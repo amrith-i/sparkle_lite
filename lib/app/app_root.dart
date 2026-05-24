@@ -1,4 +1,4 @@
-import 'package:daily_finance_manager/core_import.dart';
+import 'package:sparkle_lite/core_import.dart';
 
 class AppRoot extends StatelessWidget {
   const AppRoot({super.key});
@@ -10,7 +10,11 @@ class AppRoot extends StatelessWidget {
         ScreenScaler.instance.init(
           Size(constraints.maxWidth, constraints.maxHeight),
         );
-        return const MyApp();
+
+        return BlocProvider.value(
+          value: getIt<SessionBloc>(),
+          child: const MyApp(),
+        );
       },
     );
   }

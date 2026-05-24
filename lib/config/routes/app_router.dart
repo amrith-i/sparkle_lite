@@ -1,4 +1,4 @@
-import 'package:daily_finance_manager/core_import.dart';
+import '../../core_import.dart';
 
 part 'app_router.gr.dart';
 
@@ -6,6 +6,9 @@ part 'app_router.gr.dart';
 class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
-    AutoRoute(page: UserIdRoute.page, path: '/user-id-screen', initial: true),
+    AutoRoute(page: SessionGateRoute.page, path: '/', initial: true),
+    AutoRoute(page: SplashRoute.page, path: '/splash'),
+    AutoRoute(page: LoginRoute.page, path: '/login'),
+    AutoRoute(page: SignUpRoute.page, path: '/sign-up'),
   ];
 }

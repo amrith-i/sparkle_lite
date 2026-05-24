@@ -1,4 +1,5 @@
-import 'package:daily_finance_manager/core_import.dart';
+
+import '../../core_import.dart';
 
 class ApiFailure extends Equatable {
   final String message;

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "247606471711",
-    "project_id": "sparkle-lite-a4830",
-    "storage_bucket": "sparkle-lite-a4830.firebasestorage.app"
+    "project_number": "327706044489",
+    "project_id": "sparkle-lite",
+    "storage_bucket": "sparkle-lite.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:247606471711:android:22eabe65a789f8c832792a",
+        "mobilesdk_app_id": "1:327706044489:android:5d437f1177680eff10f798",
         "android_client_info": {
           "package_name": "com.sparkle.sparkle_lite"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDMY9P_aMVXgCGX65uDJQ-rjGX4RACMacg"
+          "current_key": "AIzaSyCN0gPrcO9P-GdZEvfuPn11vG87OiQ0vo0"
         }
       ],
       "services": {

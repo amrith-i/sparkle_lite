@@ -1,43 +1,51 @@
-import 'package:daily_finance_manager/config/config.dart';
-import 'package:daily_finance_manager/core/extensions/extensions.dart';
-import 'package:flutter/material.dart';
-import 'auth_colors.dart';
+import '../../../core_import.dart';
 
 class AuthDecorations {
   AuthDecorations._();
 
-  static const BoxDecoration primaryGradient = BoxDecoration(
-    gradient: AuthColors.primaryBlueGradient,
+  static BoxDecoration splashBackground() => const BoxDecoration(
+    gradient: LinearGradient(
+      colors: AuthColors.splashGradient,
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    ),
   );
 
-  static const BoxDecoration whiteTopRounded = BoxDecoration(
-    color: AuthColors.white,
-    borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+  static BoxDecoration logoContainer(BuildContext context) => BoxDecoration(
+    gradient: const LinearGradient(
+      colors: AuthColors.logoGradient,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    borderRadius: BorderRadius.circular(context.r(mobile: 24)),
+    boxShadow: [
+      BoxShadow(
+        color: AuthColors.buttonGradientStart.withOpacity(0.35),
+        blurRadius: 20,
+        offset: const Offset(0, 8),
+      ),
+    ],
   );
 
-  static const BoxDecoration iconBackground = BoxDecoration(
-    color: Color(0xFFDCEAFF),
-    borderRadius: BorderRadius.all(Radius.circular(8)),
+  static BoxDecoration gradientButton() => const BoxDecoration(
+    gradient: LinearGradient(
+      colors: [AuthColors.buttonGradientStart, AuthColors.buttonGradientEnd],
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+    ),
+    borderRadius: BorderRadius.all(Radius.circular(14)),
   );
 
-  static const RoundedRectangleBorder checkboxShape = RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4)),
+  static BoxDecoration privacyNoteCard() => BoxDecoration(
+    color: AuthColors.privacyBg,
+    borderRadius: BorderRadius.circular(12),
   );
 
-  static const BorderSide checkboxBorder = BorderSide(
-    color: AuthColors.border,
-    width: 1.5,
+  static BoxDecoration sensitiveNoteCard() => BoxDecoration(
+    color: AuthColors.sensitiveNoteBg,
+    borderRadius: BorderRadius.circular(12),
   );
 
-  static BoxDecoration inputPrefixIcon(BuildContext context) => BoxDecoration(
-    color: AuthColors.inputPrefixIcon,
-    borderRadius: BorderRadius.circular(context.r(mobile: 8)),
-  );
-
-  static ButtonStyle get elevatedButtonStyle => ElevatedButton.styleFrom(
-    backgroundColor: AuthColors.primaryBlue,
-    elevation: 0,
-    shadowColor: Colors.transparent,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-  );
+  static BoxDecoration pageBackground() =>
+      const BoxDecoration(color: AuthColors.background);
 }

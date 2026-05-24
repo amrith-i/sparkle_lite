@@ -1,4 +1,4 @@
-import 'package:daily_finance_manager/core_import.dart';
+import '../../../core_import.dart';
 
 class AppFormField extends StatefulWidget {
   final TextEditingController controller;
@@ -80,7 +80,7 @@ class _AppFormFieldState extends State<AppFormField> {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveBorderColor = widget.borderColor ?? AppColors.border;
+    final effectiveBorderColor = widget.borderColor ?? AppColors.primaryPink;
     final effectiveFocusedColor =
         widget.focusedBorderColor ?? AppColors.primaryBlue;
 

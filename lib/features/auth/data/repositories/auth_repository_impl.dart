@@ -1,13 +1,47 @@
-import '../../../../core_import.dart';
+import '../../../../../core_import.dart';
 
-@LazySingleton(as: UserRepository)
-class UserRepositoryImpl implements UserRepository {
-  final UserRemoteDatasource remoteDatasource;
+@LazySingleton(as: AuthRepository)
+class AuthRepositoryImpl extends BaseRepository implements AuthRepository {
+  final AuthRemoteDataSource remoteDataSource;
 
-  UserRepositoryImpl(this.remoteDatasource);
+  AuthRepositoryImpl(super.dio, {required this.remoteDataSource});
 
   @override
-  Future<UserEntity?> checkUserExists(String userId) async {
-    return await remoteDatasource.checkUserExists(userId);
+  Future<ApiResult<AuthUserEntity>> login({
+    required String email,
+    required String password,
+  }) {
+    return safeApiCall(() async {
+      final dto = await remoteDataSource.login(
+        email: email,
+        password: password,
+      );
+      return dto.toEntity();
+    });
   }
+
+  @override
+  Future<ApiResult<AuthUserEntity>> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) {
+    return safeApiCall(() async {
+      final dto = await remoteDataSource.signUp(
+        name: name,
+        email: email,
+        password: password,
+      );
+      return dto.toEntity();
+    });
+  }
+
+  @override
+  Future<ApiResult<void>> logout() {
+    return safeApiCall(() => remoteDataSource.logout());
+  }
+
+  @override
+  Stream<AuthUserEntity?> get authStateChanges =>
+      remoteDataSource.authStateChanges.map((dto) => dto?.toEntity());
 }

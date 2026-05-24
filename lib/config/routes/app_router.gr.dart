@@ -11,6 +11,22 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [LoginPage]
+class LoginRoute extends PageRouteInfo<void> {
+  const LoginRoute({List<PageRouteInfo>? children})
+    : super(LoginRoute.name, initialChildren: children);
+
+  static const String name = 'LoginRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const LoginPage());
+    },
+  );
+}
+
+/// generated route for
 /// [NoInternetPage]
 class NoInternetRoute extends PageRouteInfo<void> {
   const NoInternetRoute({List<PageRouteInfo>? children})
@@ -27,17 +43,49 @@ class NoInternetRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [UserIdPage]
-class UserIdRoute extends PageRouteInfo<void> {
-  const UserIdRoute({List<PageRouteInfo>? children})
-    : super(UserIdRoute.name, initialChildren: children);
+/// [SessionGatePage]
+class SessionGateRoute extends PageRouteInfo<void> {
+  const SessionGateRoute({List<PageRouteInfo>? children})
+    : super(SessionGateRoute.name, initialChildren: children);
 
-  static const String name = 'UserIdRoute';
+  static const String name = 'SessionGateRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const UserIdPage();
+      return const SessionGatePage();
+    },
+  );
+}
+
+/// generated route for
+/// [SignUpPage]
+class SignUpRoute extends PageRouteInfo<void> {
+  const SignUpRoute({List<PageRouteInfo>? children})
+    : super(SignUpRoute.name, initialChildren: children);
+
+  static const String name = 'SignUpRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const SignUpPage());
+    },
+  );
+}
+
+/// generated route for
+/// [SplashPage]
+class SplashRoute extends PageRouteInfo<void> {
+  const SplashRoute({List<PageRouteInfo>? children})
+    : super(SplashRoute.name, initialChildren: children);
+
+  static const String name = 'SplashRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const SplashPage();
     },
   );
 }

@@ -1,5 +1,12 @@
-import '../../../../core_import.dart';
+import '../../../../../core_import.dart';
 
-abstract class UserRemoteDatasource {
-  Future<UserDto?> checkUserExists(String userId);
+abstract class AuthRemoteDataSource {
+  Future<AuthUserDto> login({required String email, required String password});
+  Future<AuthUserDto> signUp({
+    required String name,
+    required String email,
+    required String password,
+  });
+  Future<void> logout();
+  Stream<AuthUserDto?> get authStateChanges;
 }

@@ -1,69 +1,81 @@
-import 'package:daily_finance_manager/core_import.dart';
-import 'package:flutter/material.dart';
-import 'auth_colors.dart';
+import '../../../core_import.dart';
 
 class AuthTextStyles {
   AuthTextStyles._();
 
-  static TextStyle appTitle(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 36),
+  static TextStyle appName(BuildContext context) => TextStyle(
+    fontSize: context.sp(mobile: 28),
     fontWeight: FontWeight.w800,
-    color: AuthColors.white,
-    letterSpacing: 0.5,
-    height: 1.1,
+    color: AuthColors.titleText,
+    fontFamily: 'Inter',
+    height: 1.2,
+    letterSpacing: -0.5,
+  );
+
+  static TextStyle tagline(BuildContext context) => TextStyle(
+    fontSize: context.sp(mobile: 14),
+    fontWeight: FontWeight.w400,
+    color: AuthColors.subtitleText,
+    fontFamily: 'Inter',
+  );
+
+  static TextStyle heading(BuildContext context) => TextStyle(
+    fontSize: context.sp(mobile: 26),
+    fontWeight: FontWeight.w800,
+    color: AuthColors.titleText,
+    fontFamily: 'Inter',
+    height: 1.2,
+    letterSpacing: -0.5,
   );
 
   static TextStyle subtitle(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 16),
-    color: AuthColors.white.withOpacity(0.85),
-    fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle heading2(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 22),
-    fontWeight: FontWeight.w600,
-    color: AuthColors.textPrimary,
-  );
-
-  static TextStyle inputText(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 16),
-    color: AuthColors.textPrimary,
-    fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle inputHint(BuildContext context) => TextStyle(
     fontSize: context.sp(mobile: 14),
-    color: AuthColors.textSecondary,
     fontWeight: FontWeight.w400,
-  );
-
-  static TextStyle rememberMeText(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 14),
-    color: AuthColors.textSecondary,
+    color: AuthColors.subtitleText,
+    fontFamily: 'Inter',
   );
 
   static TextStyle button(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 17),
+    fontSize: context.sp(mobile: 16),
+    fontWeight: FontWeight.w700,
+    color: AuthColors.buttonText,
+    fontFamily: 'Inter',
+    letterSpacing: 0.3,
+  );
+
+  static TextStyle footerNormal(BuildContext context) => TextStyle(
+    fontSize: context.sp(mobile: 14),
+    fontWeight: FontWeight.w400,
+    color: AuthColors.subtitleText,
+    fontFamily: 'Inter',
+  );
+
+  static TextStyle footerLink(BuildContext context) => TextStyle(
+    fontSize: context.sp(mobile: 14),
     fontWeight: FontWeight.w600,
-    color: AuthColors.white,
+    color: AuthColors.linkText,
+    fontFamily: 'Inter',
   );
 
-  // Add to AuthTextStyles
-  static TextStyle welcomeTitle(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 30),
-    fontWeight: FontWeight.w700,
-    color: AuthColors.white,
+  static TextStyle privacyNote(BuildContext context) => TextStyle(
+    fontSize: context.sp(mobile: 13),
+    fontWeight: FontWeight.w400,
+    color: AuthColors.privacyText,
+    fontFamily: 'Inter',
+    height: 1.5,
   );
 
-  static TextStyle userIdText(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 18),
-    color: AuthColors.white.withOpacity(0.85),
+  static TextStyle errorText(BuildContext context) => TextStyle(
+    fontSize: context.sp(mobile: 13),
+    fontWeight: FontWeight.w400,
+    color: AuthColors.errorText,
+    fontFamily: 'Inter',
+  );
+
+  static TextStyle backButton(BuildContext context) => TextStyle(
+    fontSize: context.sp(mobile: 14),
     fontWeight: FontWeight.w500,
-  );
-
-  static TextStyle pinAsterisk(BuildContext context) => TextStyle(
-    fontSize: context.sp(mobile: 28),
-    fontWeight: FontWeight.w700,
-    color: AuthColors.primaryBlue,
+    color: AuthColors.subtitleText,
+    fontFamily: 'Inter',
   );
 }

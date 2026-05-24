@@ -1,4 +1,6 @@
-import 'package:daily_finance_manager/core_import.dart';
+
+
+import 'package:sparkle_lite/core_import.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

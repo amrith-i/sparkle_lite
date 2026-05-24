@@ -1,24 +1,40 @@
-import 'package:daily_finance_manager/core_import.dart';
-import 'package:flutter/material.dart';
+import '../../../core_import.dart';
 
 class AuthColors {
   AuthColors._();
 
-  static const Color primaryBlue = Color(0xFF2582FF);
-  static const Color primaryBlueLight = Color(0xFF80C6FF);
-  static const Color white = Color(0xFFFFFFFF);
-  static const Color textPrimary = Color(0xFF1A1A1A);
-  static const Color textSecondary = Color(0xFF6B7280);
-  static const Color border = Color(0xFFE9EAEB);
-  static const Color background = Color(0xFFFFFFFF);
-  static const inputPrefixIcon = AppColors.inputPrefixIcon;
-  static const Color pinKeyBackground = AppColors.pinKeyBackground;
-  static const Color pinKeyPressed = AppColors.pinKeyPressed;
-  static const Color errorAccent = AppColors.errorAccent;
+  static const Color background = AppColors.background;
+  static const Color surface = AppColors.surface;
 
-  static const LinearGradient primaryBlueGradient = LinearGradient(
-    begin: Alignment(-1.0, -0.5), // Left-center, slightly up
-    end: Alignment(1.0, 0.5), // Right-center, slightly down
-    colors: [Color(0xFF80C6FF), Color(0xFF2582FF)],
-  );
+  static const Color iconSpark = AppColors.textPrimary;
+
+  static const Color titleText = AppColors.textPrimary;
+  static const Color subtitleText = AppColors.textSecondary;
+  static const Color linkText = AppColors.primaryPink;
+
+  static const Color fieldBorder = AppColors.primaryPink;
+  static const Color fieldFocusBorder = AppColors.primaryBlue;
+  static const Color fieldFill = AppColors.white;
+
+  static const Color buttonGradientStart = AppColors.gradientStart;
+  static const Color buttonGradientEnd = AppColors.gradientEnd;
+  static const Color buttonText = AppColors.white;
+
+  static const Color privacyBg = Color(0xFFE6F7F1);
+  static const Color privacyText = AppColors.textSecondary;
+
+  static const Color sensitiveNoteBg = AppColors.primaryLight;
+  static const Color sensitiveNoteText = AppColors.primaryBlue;
+
+  static const Color errorText = AppColors.error;
+
+  static const List<Color> splashGradient = [
+    Color(0xFFFDF2F8),
+    Color(0xFFF3E8FF),
+  ];
+
+  static const List<Color> logoGradient = [
+    AppColors.gradientStart,
+    AppColors.gradientEnd,
+  ];
 }

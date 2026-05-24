@@ -41,28 +41,28 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCNAvIH8xYnof_BDFH54YIg4HYv6uk3ZXc',
-    appId: '1:247606471711:web:8ab2734d5075e46032792a',
-    messagingSenderId: '247606471711',
-    projectId: 'qr-gift-system-a4830',
-    authDomain: 'qr-gift-system-a4830.firebaseapp.com',
-    storageBucket: 'qr-gift-system-a4830.firebasestorage.app',
+    apiKey: 'AIzaSyDjDzrPbMdqvyOVThScA-porG2ZOroYeC0',
+    appId: '1:327706044489:web:258d9d501598588210f798',
+    messagingSenderId: '327706044489',
+    projectId: 'sparkle-lite',
+    authDomain: 'sparkle-lite.firebaseapp.com',
+    storageBucket: 'sparkle-lite.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDMY9P_aMVXgCGX65uDJQ-rjGX4RACMacg',
-    appId: '1:247606471711:android:22eabe65a789f8c832792a',
-    messagingSenderId: '247606471711',
-    projectId: 'qr-gift-system-a4830',
-    storageBucket: 'qr-gift-system-a4830.firebasestorage.app',
+    apiKey: 'AIzaSyCN0gPrcO9P-GdZEvfuPn11vG87OiQ0vo0',
+    appId: '1:327706044489:android:5d437f1177680eff10f798',
+    messagingSenderId: '327706044489',
+    projectId: 'sparkle-lite',
+    storageBucket: 'sparkle-lite.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCGrVR3WnoMn1SQg9YiRIxfczbJhy4uOmQ',
-    appId: '1:247606471711:ios:4806f90aa8c4c71e32792a',
-    messagingSenderId: '247606471711',
-    projectId: 'qr-gift-system-a4830',
-    storageBucket: 'qr-gift-system-a4830.firebasestorage.app',
+    apiKey: 'AIzaSyARKY9I1j7_tSkuNDfPj-oA8SVMBigbs_w',
+    appId: '1:327706044489:ios:85d6a25da2b54e8710f798',
+    messagingSenderId: '327706044489',
+    projectId: 'sparkle-lite',
+    storageBucket: 'sparkle-lite.firebasestorage.app',
     iosBundleId: 'com.dailycoll.dailyFinanceManager',
   );
 
@@ -76,11 +76,12 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCNAvIH8xYnof_BDFH54YIg4HYv6uk3ZXc',
-    appId: '1:247606471711:web:102376a018b55ade32792a',
-    messagingSenderId: '247606471711',
-    projectId: 'qr-gift-system-a4830',
-    authDomain: 'qr-gift-system-a4830.firebaseapp.com',
-    storageBucket: 'qr-gift-system-a4830.firebasestorage.app',
+    apiKey: 'AIzaSyDjDzrPbMdqvyOVThScA-porG2ZOroYeC0',
+    appId: '1:327706044489:web:36454251e17519d110f798',
+    messagingSenderId: '327706044489',
+    projectId: 'sparkle-lite',
+    authDomain: 'sparkle-lite.firebaseapp.com',
+    storageBucket: 'sparkle-lite.firebasestorage.app',
   );
+
 }
