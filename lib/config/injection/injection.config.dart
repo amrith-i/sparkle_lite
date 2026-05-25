@@ -30,10 +30,16 @@ import '../../features/auth/domain/usecases/login_usecase.dart' as _i188;
 import '../../features/auth/domain/usecases/logout_usecase.dart' as _i48;
 import '../../features/auth/domain/usecases/signup_usecase.dart' as _i57;
 import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i797;
+import '../../features/auth/presentation/pages/login_page.dart' as _i326;
 import '../../features/home/data/datasources/home_remote_datasource_impl.dart'
     as _i1002;
 import '../../features/home/data/repositories/home_repository_impl.dart'
     as _i76;
+import '../../features/home/domain/usecases/add_symptom_usecases.dart' as _i655;
+import '../../features/home/domain/usecases/fetch_home_usecases.dart' as _i52;
+import '../../features/home/domain/usecases/upload_record_usecase.dart'
+    as _i371;
+import '../../features/home/presentation/bloc/home_bloc.dart' as _i202;
 import '../../features/onboarding/data/datasources/onboarding_local_datasource.dart'
     as _i804;
 import '../../features/onboarding/data/datasources/onboarding_remote_datasource_impl.dart'
@@ -92,6 +98,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i501.ProfileRemoteDataSource>(
       () => _i857.ProfileRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i501.HomeRemoteDataSource>(
+      () => _i1002.HomeRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i142.NetworkListenerService>(
       () => _i142.NetworkListenerService(
         gh<_i501.NetworkChecker>(),
@@ -113,14 +122,14 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i501.FirebaseFirestore>(),
       ),
     );
+    gh.factory<_i326.ProfileCheckBloc>(
+      () => _i326.ProfileCheckBloc(gh<_i501.ProfileRemoteDataSource>()),
+    );
     gh.factory<_i792.OnboardingBloc>(
       () => _i792.OnboardingBloc(gh<_i501.CompleteOnboardingUsecase>()),
     );
     gh.lazySingleton<_i666.SessionBloc>(
       () => _i666.SessionBloc(gh<_i501.UserSessionStorage>()),
-    );
-    gh.lazySingleton<_i501.HomeRemoteDatasource>(
-      () => _i1002.HomeRemoteDatasourceImpl(gh<_i501.Dio>()),
     );
     gh.lazySingleton<_i501.OnboardingRemoteDatasource>(
       () => _i720.OnboardingRemoteDatasourceImpl(gh<_i501.Dio>()),
@@ -140,17 +149,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.SignUpUsecase>(
       () => _i57.SignUpUsecase(gh<_i501.AuthRepository>()),
     );
-    gh.lazySingleton<_i501.HomeRepository>(
-      () => _i76.HomeRepositoryImpl(
-        gh<_i501.Dio>(),
-        gh<_i501.HomeRemoteDatasource>(),
-      ),
-    );
     gh.lazySingleton<_i591.SaveProfileUsecase>(
       () => _i591.SaveProfileUsecase(gh<_i501.ProfileRepository>()),
     );
     gh.lazySingleton<_i591.GetProfileUsecase>(
       () => _i591.GetProfileUsecase(gh<_i501.ProfileRepository>()),
+    );
+    gh.lazySingleton<_i501.HomeRepository>(
+      () => _i76.HomeRepositoryImpl(
+        gh<_i501.Dio>(),
+        remoteDataSource: gh<_i501.HomeRemoteDataSource>(),
+      ),
     );
     gh.factory<_i797.AuthBloc>(
       () => _i797.AuthBloc(
@@ -161,6 +170,22 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i469.ProfileBloc>(
       () => _i469.ProfileBloc(gh<_i501.SaveProfileUsecase>()),
+    );
+    gh.factory<_i655.AddSymptomUsecase>(
+      () => _i655.AddSymptomUsecase(gh<_i501.HomeRepository>()),
+    );
+    gh.factory<_i371.UploadRecordUsecase>(
+      () => _i371.UploadRecordUsecase(gh<_i501.HomeRepository>()),
+    );
+    gh.lazySingleton<_i52.FetchHomeUsecase>(
+      () => _i52.FetchHomeUsecase(gh<_i501.HomeRepository>()),
+    );
+    gh.factory<_i202.HomeBloc>(
+      () => _i202.HomeBloc(
+        gh<_i501.FetchHomeUsecase>(),
+        gh<_i501.AddSymptomUsecase>(),
+        gh<_i501.UploadRecordUsecase>(),
+      ),
     );
     return this;
   }

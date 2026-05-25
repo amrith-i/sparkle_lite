@@ -6,7 +6,15 @@ class LoginPage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(create: (_) => getIt<AuthBloc>(), child: this);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<AuthBloc>()),
+        BlocProvider(
+          create: (_) => getIt<ProfileCheckBloc>()..add(CheckProfile()),
+        ),
+      ],
+      child: this,
+    );
   }
 
   @override
@@ -37,17 +45,54 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  Future<void> _saveSession() async {
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) return;
+    final storage = getIt<UserSessionStorage>();
+    final existing = storage.read();
+    await storage.save(
+      UserSessionModel(
+        uid: firebaseUser.uid,
+        userId: existing?.userId ?? 0,
+        outletId: existing?.outletId,
+        outletName: existing?.outletName,
+        name: existing?.name ?? firebaseUser.displayName,
+        outletAddress: existing?.outletAddress,
+        role: existing?.role ?? UserRole.user,
+        roleName: existing?.roleName ?? 'User',
+        phone: existing?.phone ?? firebaseUser.phoneNumber ?? '',
+        driverId: existing?.driverId,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          // context.router.replace(const SessionGateRoute());
-          context.router.replaceAll([const OnboardingRoute()]);
-        } else if (state is AuthError) {
-          AppNotifier.show(context, state.message, type: MessageType.error);
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        // ProfileCheckBloc — fires at page open, redirects if profile exists
+        BlocListener<ProfileCheckBloc, ProfileCheckState>(
+          listener: (context, state) {
+            if (state is ProfileExists) {
+              context.router.replaceAll([const HomeRoute()]);
+            }
+            // ProfileNotFound → stay on login, nothing to do
+          },
+        ),
+        // AuthBloc — fires after user submits login form
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) async {
+            if (state is AuthAuthenticated) {
+              await _saveSession();
+              if (!mounted) return;
+              // Re-check profile now that user is logged in
+              context.read<ProfileCheckBloc>().add(CheckProfile());
+            } else if (state is AuthError) {
+              AppNotifier.show(context, state.message, type: MessageType.error);
+            }
+          },
+        ),
+      ],
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           final formState = state is LoginFormState
@@ -103,6 +148,70 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+// ─── ProfileCheckBloc ─────────────────────────────────────────────────────────
+
+// event
+abstract class ProfileCheckEvent extends Equatable {
+  const ProfileCheckEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class CheckProfile extends ProfileCheckEvent {}
+
+// state
+abstract class ProfileCheckState extends Equatable {
+  const ProfileCheckState();
+  @override
+  List<Object?> get props => [];
+}
+
+class ProfileCheckInitial extends ProfileCheckState {}
+
+class ProfileChecking extends ProfileCheckState {}
+
+class ProfileExists extends ProfileCheckState {}
+
+class ProfileNotFound extends ProfileCheckState {}
+
+// bloc
+@injectable
+class ProfileCheckBloc extends Bloc<ProfileCheckEvent, ProfileCheckState> {
+  final ProfileRemoteDataSource profileDataSource;
+
+  ProfileCheckBloc(this.profileDataSource) : super(ProfileCheckInitial()) {
+    on<CheckProfile>(_onCheckProfile);
+  }
+
+  Future<void> _onCheckProfile(
+    CheckProfile event,
+    Emitter<ProfileCheckState> emit,
+  ) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
+    // No Firebase user yet (page opened before login) — stay on login
+    if (uid == null) {
+      emit(ProfileNotFound());
+      return;
+    }
+
+    emit(ProfileChecking());
+
+    try {
+      final data = await profileDataSource.getProfile(uid);
+      if (data != null && data.isNotEmpty) {
+        emit(ProfileExists());
+      } else {
+        emit(ProfileNotFound());
+      }
+    } catch (_) {
+      emit(ProfileNotFound());
+    }
+  }
+}
+
+// ─── Page widgets ─────────────────────────────────────────────────────────────
 
 class _LoginHeader extends StatelessWidget {
   const _LoginHeader();

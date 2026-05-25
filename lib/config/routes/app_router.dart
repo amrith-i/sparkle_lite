@@ -13,5 +13,12 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: OnboardingRoute.page, path: '/onboarding'),
     AutoRoute(page: ProfileSetupRoute.page, path: '/profile-setup'),
     AutoRoute(page: HomeRoute.page, path: '/home'),
+    AutoRoute(
+      page: DoctorVisitSummaryRoute.page,
+      path: '/doctor-summary-visit',
+    ),
+    AutoRoute(page: AiInsightRoute.page, path: '/ai-insights'),
+    AutoRoute(page: AddSymptomRoute.page, path: '/add-symptoms'),
+    AutoRoute(page: UploadRecordRoute.page, path: '/upload-records'),
   ];
 }

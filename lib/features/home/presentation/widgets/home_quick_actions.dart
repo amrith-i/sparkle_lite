@@ -15,7 +15,7 @@ class HomeQuickActions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('QUICK ACTIONS', style: HomeTextStyles.sectionTitle(context)),
+        Text('QUICK ACTIONS', style: HomeTextStyles.cycleDayNumber(context)),
         SizedBox(height: context.h(mobile: 12)),
         Row(
           children: _actions
@@ -51,7 +51,7 @@ class _QuickActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-      decoration: HomeDecorations.quickActionCard(),
+      decoration: HomeDecorations.quickActionItem(context),
       child: Column(
         children: [
           Text(

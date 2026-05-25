@@ -11,6 +11,54 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [AddSymptomPage]
+class AddSymptomRoute extends PageRouteInfo<void> {
+  const AddSymptomRoute({List<PageRouteInfo>? children})
+    : super(AddSymptomRoute.name, initialChildren: children);
+
+  static const String name = 'AddSymptomRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const AddSymptomPage());
+    },
+  );
+}
+
+/// generated route for
+/// [AiInsightPage]
+class AiInsightRoute extends PageRouteInfo<void> {
+  const AiInsightRoute({List<PageRouteInfo>? children})
+    : super(AiInsightRoute.name, initialChildren: children);
+
+  static const String name = 'AiInsightRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AiInsightPage();
+    },
+  );
+}
+
+/// generated route for
+/// [DoctorVisitSummaryPage]
+class DoctorVisitSummaryRoute extends PageRouteInfo<void> {
+  const DoctorVisitSummaryRoute({List<PageRouteInfo>? children})
+    : super(DoctorVisitSummaryRoute.name, initialChildren: children);
+
+  static const String name = 'DoctorVisitSummaryRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const DoctorVisitSummaryPage();
+    },
+  );
+}
+
+/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
@@ -21,7 +69,7 @@ class HomeRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const HomePage();
+      return WrappedRoute(child: const HomePage());
     },
   );
 }
@@ -134,6 +182,22 @@ class SplashRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const SplashPage();
+    },
+  );
+}
+
+/// generated route for
+/// [UploadRecordPage]
+class UploadRecordRoute extends PageRouteInfo<void> {
+  const UploadRecordRoute({List<PageRouteInfo>? children})
+    : super(UploadRecordRoute.name, initialChildren: children);
+
+  static const String name = 'UploadRecordRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const UploadRecordPage());
     },
   );
 }

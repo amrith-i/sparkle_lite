@@ -1,91 +1,75 @@
-// import '../../../../../core_import.dart';
+import '../../../../core_import.dart';
 
-// // ─── Events ───────────────────────────────────────────────────────────────────
+@injectable
+class HomeBloc extends Bloc<HomeEvent, HomeState> {
+  final FetchHomeUsecase fetchHomeUsecase;
+  final AddSymptomUsecase addSymptomUsecase;
+  final UploadRecordUsecase uploadRecordUsecase;
 
-// abstract class HomeEvent extends Equatable {
-//   const HomeEvent();
+  HomeBloc(
+    this.fetchHomeUsecase,
+    this.addSymptomUsecase,
+    this.uploadRecordUsecase,
+  ) : super(HomeInitial()) {
+    on<LoadHome>(_onLoadHome);
+    on<RefreshHome>(_onRefreshHome);
+    on<SubmitSymptom>(_onSubmitSymptom);
+    on<SubmitUploadRecord>(_onSubmitUploadRecord);
+  }
 
-//   @override
-//   List<Object?> get props => [];
-// }
+  Future<void> _onLoadHome(LoadHome event, Emitter<HomeState> emit) async {
+    emit(HomeLoading());
+    final result = await fetchHomeUsecase(
+      FetchHomeParams(userId: event.userId),
+    );
+    if (result.isSuccess) {
+      emit(HomeLoaded(result.data!));
+    } else {
+      emit(HomeError(result.failure!.userMessage));
+    }
+  }
 
-// class HomeDashboardLoaded extends HomeEvent {
-//   final String uid;
-//   const HomeDashboardLoaded(this.uid);
+  Future<void> _onRefreshHome(
+    RefreshHome event,
+    Emitter<HomeState> emit,
+  ) async {
+    final result = await fetchHomeUsecase(
+      FetchHomeParams(userId: event.userId),
+    );
+    if (result.isSuccess) {
+      emit(HomeLoaded(result.data!));
+    } else {
+      emit(HomeError(result.failure!.userMessage));
+    }
+  }
 
-//   @override
-//   List<Object?> get props => [uid];
-// }
+  Future<void> _onSubmitSymptom(
+    SubmitSymptom event,
+    Emitter<HomeState> emit,
+  ) async {
+    emit(SymptomSubmitLoading());
+    final result = await addSymptomUsecase(
+      AddSymptomParams(userId: event.userId, entity: event.entity),
+    );
+    if (result.isSuccess) {
+      emit(SymptomSubmitSuccess());
+    } else {
+      emit(SymptomSubmitFailure(result.failure!.userMessage));
+    }
+  }
 
-// class HomeNavTabChanged extends HomeEvent {
-//   final int index;
-//   const HomeNavTabChanged(this.index);
-
-//   @override
-//   List<Object?> get props => [index];
-// }
-
-// // ─── States ───────────────────────────────────────────────────────────────────
-
-// abstract class HomeState extends Equatable {
-//   const HomeState();
-
-//   @override
-//   List<Object?> get props => [];
-// }
-
-// class HomeInitial extends HomeState {}
-
-// class HomeLoading extends HomeState {}
-
-// class HomeLoaded extends HomeState {
-//   final HomeDashboardEntity dashboard;
-//   final int activeTab;
-
-//   const HomeLoaded({required this.dashboard, this.activeTab = 0});
-
-//   HomeLoaded copyWith({int? activeTab}) =>
-//       HomeLoaded(dashboard: dashboard, activeTab: activeTab ?? this.activeTab);
-
-//   @override
-//   List<Object?> get props => [dashboard, activeTab];
-// }
-
-// class HomeError extends HomeState {
-//   final String message;
-//   const HomeError(this.message);
-
-//   @override
-//   List<Object?> get props => [message];
-// }
-
-// // ─── BLoC ─────────────────────────────────────────────────────────────────────
-
-// @injectable
-// class HomeBloc extends Bloc<HomeEvent, HomeState> {
-//   final GetDashboardUsecase getDashboardUsecase;
-
-//   HomeBloc(this.getDashboardUsecase) : super(HomeInitial()) {
-//     on<HomeDashboardLoaded>(_onLoad);
-//     on<HomeNavTabChanged>(_onTabChanged);
-//   }
-
-//   Future<void> _onLoad(
-//     HomeDashboardLoaded event,
-//     Emitter<HomeState> emit,
-//   ) async {
-//     emit(HomeLoading());
-//     final result = await getDashboardUsecase(event.uid);
-//     if (result.isSuccess) {
-//       emit(HomeLoaded(dashboard: result.data!));
-//     } else {
-//       emit(HomeError(result.failure!.userMessage));
-//     }
-//   }
-
-//   void _onTabChanged(HomeNavTabChanged event, Emitter<HomeState> emit) {
-//     if (state is HomeLoaded) {
-//       emit((state as HomeLoaded).copyWith(activeTab: event.index));
-//     }
-//   }
-// }
+  Future<void> _onSubmitUploadRecord(
+    SubmitUploadRecord event,
+    Emitter<HomeState> emit,
+  ) async {
+    emit(UploadRecordLoading());
+    final result = await uploadRecordUsecase(
+      UploadRecordParams(userId: event.userId, entity: event.entity),
+    );
+    if (result.isSuccess) {
+      emit(UploadRecordSuccess());
+    } else {
+      emit(UploadRecordFailure(result.failure!.userMessage));
+    }
+  }
+}

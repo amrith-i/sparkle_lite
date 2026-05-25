@@ -1,68 +1,59 @@
 import '../../../core_import.dart';
 
-class HomePaddings {
-  HomePaddings._();
-
-  static const EdgeInsets page = EdgeInsets.symmetric(horizontal: 20);
-  static const EdgeInsets cardPadding = EdgeInsets.all(16);
-  static const EdgeInsets sectionSpacing = EdgeInsets.only(top: 24);
-}
-
 class HomeDecorations {
   HomeDecorations._();
 
-  static BoxDecoration card() => BoxDecoration(
-    color: HomeColors.cardBg,
-    borderRadius: BorderRadius.circular(16),
-    border: Border.all(color: HomeColors.cardBorder),
-    boxShadow: [
-      BoxShadow(
-        color: AppColors.black.withOpacity(0.04),
-        blurRadius: 8,
-        offset: const Offset(0, 2),
-      ),
-    ],
+  static BoxDecoration card(BuildContext context) => BoxDecoration(
+    color: HomeColors.white,
+    borderRadius: BorderRadius.circular(context.r(mobile: 14)),
+    border: Border.all(color: HomeColors.border, width: 1),
   );
 
-  static BoxDecoration quickActionCard() => BoxDecoration(
-    color: HomeColors.quickActionBg,
-    borderRadius: BorderRadius.circular(14),
-    border: Border.all(color: HomeColors.quickActionBorder),
-    boxShadow: [
-      BoxShadow(
-        color: AppColors.black.withOpacity(0.03),
-        blurRadius: 6,
-        offset: const Offset(0, 1),
-      ),
-    ],
+  static BoxDecoration cycleDayCard(BuildContext context) => BoxDecoration(
+    color: HomeColors.white,
+    borderRadius: BorderRadius.circular(context.r(mobile: 14)),
+    border: Border.all(color: HomeColors.border, width: 1),
   );
 
-  static BoxDecoration avatar() =>
-      const BoxDecoration(color: HomeColors.avatarBg, shape: BoxShape.circle);
-
-  static BoxDecoration badge() => BoxDecoration(
-    color: HomeColors.badgeBg,
-    borderRadius: BorderRadius.circular(20),
+  static BoxDecoration quickActionItem(BuildContext context) => BoxDecoration(
+    color: HomeColors.white,
+    borderRadius: BorderRadius.circular(context.r(mobile: 12)),
+    border: Border.all(color: HomeColors.border, width: 1),
   );
 
-  static BoxDecoration tag() => BoxDecoration(
-    color: HomeColors.tagBg,
-    borderRadius: BorderRadius.circular(20),
+  static BoxDecoration insightCard(BuildContext context) => BoxDecoration(
+    color: HomeColors.insightCardBg,
+    borderRadius: BorderRadius.circular(context.r(mobile: 14)),
+    border: Border.all(color: HomeColors.insightCardBorder, width: 1),
   );
 
-  static BoxDecoration recordTag() => BoxDecoration(
-    color: HomeColors.recordTagBg,
-    borderRadius: BorderRadius.circular(20),
+  static BoxDecoration reminderCard(BuildContext context) => BoxDecoration(
+    color: HomeColors.reminderCardBg,
+    borderRadius: BorderRadius.circular(context.r(mobile: 14)),
+    border: Border.all(color: HomeColors.reminderCardBorder, width: 1),
   );
 
-  static BoxDecoration navBar() => BoxDecoration(
-    color: HomeColors.navBg,
-    boxShadow: [
-      BoxShadow(
-        color: AppColors.black.withOpacity(0.06),
-        blurRadius: 12,
-        offset: const Offset(0, -2),
-      ),
-    ],
+  static BoxDecoration periodTrackingBadge(BuildContext context) =>
+      BoxDecoration(
+        color: HomeColors.periodTrackingBadgeBg,
+        borderRadius: BorderRadius.circular(context.r(mobile: 20)),
+      );
+
+  static BoxDecoration avatar(BuildContext context) =>
+      BoxDecoration(color: HomeColors.avatarBg, shape: BoxShape.circle);
+
+  static BoxDecoration labReportBadge(BuildContext context) => BoxDecoration(
+    color: HomeColors.labReportBadgeBg,
+    borderRadius: BorderRadius.circular(context.r(mobile: 20)),
+  );
+
+  static BoxDecoration nextPeriodFlower(BuildContext context) => BoxDecoration(
+    color: HomeColors.nextPeriodFlowerBg,
+    shape: BoxShape.circle,
+  );
+
+  static BoxDecoration recordIconBg(BuildContext context) => BoxDecoration(
+    color: HomeColors.quickActionDoctorBg,
+    borderRadius: BorderRadius.circular(context.r(mobile: 10)),
   );
 }

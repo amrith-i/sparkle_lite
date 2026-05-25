@@ -63,14 +63,40 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
     super.dispose();
   }
 
+  /// Always read uid directly from FirebaseAuth — never rely on a Provider.
   String _getCurrentUid() => FirebaseAuth.instance.currentUser?.uid ?? '';
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileBloc, ProfileState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is ProfileSaved) {
-          context.router.replace(const HomeRoute());
+          // Ensure the uid is stored in local session after profile is saved
+          // so HomePage can immediately use it.
+          final uid = _getCurrentUid();
+          if (uid.isNotEmpty) {
+            final storage = getIt<UserSessionStorage>();
+            final existing = storage.read();
+            await storage.save(
+              UserSessionModel(
+                uid: uid,
+                userId: existing?.userId ?? 0,
+                outletId: existing?.outletId,
+                outletName: existing?.outletName,
+                name: existing?.name,
+                outletAddress: existing?.outletAddress,
+                role: existing?.role ?? UserRole.user,
+                roleName: existing?.roleName ?? 'User',
+                phone:
+                    existing?.phone ??
+                    FirebaseAuth.instance.currentUser?.phoneNumber ??
+                    '',
+                driverId: existing?.driverId,
+              ),
+            );
+          }
+          if (!mounted) return;
+          context.router.replaceAll([const HomeRoute()]);
         } else if (state is ProfileError) {
           AppNotifier.show(context, state.message, type: MessageType.error);
         }
@@ -85,16 +111,18 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
   }
 
   Widget _buildBody(BuildContext context, ProfileState state) {
-    if (state is ProfileStep1State)
+    if (state is ProfileStep1State) {
       return _Step1Body(
         bloc: _bloc,
         state: state,
         nameController: _nameController,
         ageRanges: _ageRanges,
       );
-    if (state is ProfileStep2State)
+    }
+    if (state is ProfileStep2State) {
       return _Step2Body(bloc: _bloc, state: state, lifeStages: _lifeStages);
-    if (state is ProfileStep3State)
+    }
+    if (state is ProfileStep3State) {
       return _Step3Body(
         bloc: _bloc,
         state: state,
@@ -102,6 +130,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
         medicationsController: _medicationsController,
         uid: _getCurrentUid(),
       );
+    }
     return const Center(child: CircularProgressIndicator());
   }
 }
@@ -297,8 +326,6 @@ class _Step3Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = false; // ProfileLoading is handled via listener
-
     return Column(
       children: [
         Expanded(

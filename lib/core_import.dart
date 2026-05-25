@@ -21,7 +21,7 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:flutter_svg/flutter_svg.dart';
 export 'package:share_plus/share_plus.dart';
 export 'package:shared_preferences/shared_preferences.dart';
-
+export 'package:file_picker/file_picker.dart';
 // Others
 export 'firebase_options.dart';
 

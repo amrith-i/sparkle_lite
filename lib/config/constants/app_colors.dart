@@ -68,4 +68,18 @@ class AppColors {
 
   // Transparent
   static const transparent = Colors.transparent;
+
+  // Aliases used by feature-level color files
+  static const Color primaryRed = Color(0xFFE8355A);
+  static const Color primaryBlueLight = primaryLight;
+  static const LinearGradient primaryBlueGradient = LinearGradient(
+    colors: [gradientStart, gradientEnd],
+  );
+
+  // Semantic layout tokens
+  static const Color backgroundSecondary = grey100;
+  static const Color border = grey300;
+  static const Color divider = grey200;
+  static const Color neutral = grey500;
+  static const Color progressInActive = grey300;
 }

@@ -1,71 +1,76 @@
-// import '../../../../../core_import.dart';
+import '../../../../core_import.dart';
 
-// class HomeHeader extends StatelessWidget {
-//   final HomeDashboardEntity dashboard;
+class HomeHeaderWidget extends StatelessWidget {
+  final UserProfileEntity profile;
+  final VoidCallback onAvatarTap;
 
-//   const HomeHeader({super.key, required this.dashboard});
+  const HomeHeaderWidget({
+    super.key,
+    required this.profile,
+    required this.onAvatarTap,
+  });
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final initial = dashboard.userName.isNotEmpty
-//         ? dashboard.userName[0].toUpperCase()
-//         : 'U';
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good morning,';
+    if (hour < 17) return 'Good afternoon,';
+    return 'Good evening,';
+  }
 
-//     return Container(
-//       width: double.infinity,
-//       color: HomeColors.headerBg,
-//       padding: HomePaddings.page.copyWith(
-//         top: context.h(mobile: 20),
-//         bottom: context.h(mobile: 20),
-//       ),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text('Good morning,', style: HomeTextStyles.greeting(context)),
-//                 SizedBox(height: context.h(mobile: 2)),
-//                 Row(
-//                   children: [
-//                     Text(
-//                       dashboard.userName,
-//                       style: HomeTextStyles.name(context),
-//                     ),
-//                     const SizedBox(width: 6),
-//                     Icon(
-//                       Icons.auto_awesome,
-//                       size: context.sp(mobile: 18),
-//                       color: HomeColors.nameSpark,
-//                     ),
-//                   ],
-//                 ),
-//                 SizedBox(height: context.h(mobile: 10)),
-//                 Container(
-//                   padding: const EdgeInsets.symmetric(
-//                     horizontal: 10,
-//                     vertical: 4,
-//                   ),
-//                   decoration: HomeDecorations.badge(),
-//                   child: Text(
-//                     dashboard.lifeStage,
-//                     style: HomeTextStyles.badge(context),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Container(
-//             width: context.w(mobile: 44),
-//             height: context.w(mobile: 44),
-//             decoration: HomeDecorations.avatar(),
-//             child: Center(
-//               child: Text(initial, style: HomeTextStyles.avatarLetter(context)),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: HomePaddings.headerPadding(context),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_getGreeting(), style: HomeTextStyles.greeting(context)),
+                SizedBox(height: context.h(mobile: 2)),
+                Row(
+                  children: [
+                    Text(profile.name, style: HomeTextStyles.userName(context)),
+                    SizedBox(width: context.w(mobile: 6)),
+                    const Text('✦', style: TextStyle(fontSize: 18)),
+                  ],
+                ),
+                SizedBox(height: context.h(mobile: 6)),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.w(mobile: 10),
+                    vertical: context.h(mobile: 4),
+                  ),
+                  decoration: HomeDecorations.periodTrackingBadge(context),
+                  child: Text(
+                    profile.lifeStage,
+                    style: HomeTextStyles.periodTrackingBadge(context),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: onAvatarTap,
+            child: Container(
+              width: context.w(mobile: 44),
+              height: context.w(mobile: 44),
+              decoration: HomeDecorations.avatar(context),
+              alignment: Alignment.center,
+              child: Text(
+                profile.name,
+                style: TextStyle(
+                  color: HomeColors.avatarText,
+                  fontSize: context.sp(mobile: 18),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
