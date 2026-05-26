@@ -37,6 +37,8 @@ import '../../features/home/data/repositories/home_repository_impl.dart'
     as _i76;
 import '../../features/home/domain/usecases/add_symptom_usecases.dart' as _i655;
 import '../../features/home/domain/usecases/fetch_home_usecases.dart' as _i52;
+import '../../features/home/domain/usecases/update_symptom_usecase.dart'
+    as _i95;
 import '../../features/home/domain/usecases/upload_record_usecase.dart'
     as _i371;
 import '../../features/home/presentation/bloc/home_bloc.dart' as _i202;
@@ -56,6 +58,15 @@ import '../../features/profile/data/repositories/profile_repository_impl.dart'
     as _i334;
 import '../../features/profile/domain/usecases/profile_usecases.dart' as _i591;
 import '../../features/profile/presentation/bloc/profile_bloc.dart' as _i469;
+import '../../features/symptom/data/datasources/symptom_remote_datasource_impl.dart'
+    as _i796;
+import '../../features/symptom/data/repositories/symptom_repository_impl.dart'
+    as _i448;
+import '../../features/symptom/domain/usecases/delete_symptom_log_usecase.dart'
+    as _i415;
+import '../../features/symptom/domain/usecases/fetch_symptom_logs_usecase.dart'
+    as _i476;
+import '../../features/symptom/presentation/bloc/symptom_bloc.dart' as _i342;
 import '../env/app_config.dart' as _i92;
 import '../routes/app_router.dart' as _i629;
 import 'app_module.dart' as _i460;
@@ -86,6 +97,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i804.OnboardingLocalDataSource>(
       () => _i804.OnboardingLocalDataSourceImpl(gh<_i501.SharedPreferences>()),
+    );
+    gh.lazySingleton<_i501.SymptomRemoteDataSource>(
+      () => _i796.SymptomRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
     );
     gh.lazySingleton<_i501.OnboardingRepository>(
       () => _i452.OnboardingRepositoryImpl(
@@ -120,6 +134,12 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i1071.AuthRemoteDataSourceImpl(
         gh<_i501.FirebaseAuth>(),
         gh<_i501.FirebaseFirestore>(),
+      ),
+    );
+    gh.lazySingleton<_i501.SymptomRepository>(
+      () => _i448.SymptomRepositoryImpl(
+        gh<_i501.Dio>(),
+        remoteDataSource: gh<_i501.SymptomRemoteDataSource>(),
       ),
     );
     gh.factory<_i326.ProfileCheckBloc>(
@@ -161,6 +181,18 @@ extension GetItInjectableX on _i174.GetIt {
         remoteDataSource: gh<_i501.HomeRemoteDataSource>(),
       ),
     );
+    gh.factory<_i415.DeleteSymptomLogUsecase>(
+      () => _i415.DeleteSymptomLogUsecase(gh<_i501.SymptomRepository>()),
+    );
+    gh.factory<_i476.FetchSymptomLogsUsecase>(
+      () => _i476.FetchSymptomLogsUsecase(gh<_i501.SymptomRepository>()),
+    );
+    gh.factory<_i342.SymptomBloc>(
+      () => _i342.SymptomBloc(
+        gh<_i501.FetchSymptomLogsUsecase>(),
+        gh<_i501.DeleteSymptomLogUsecase>(),
+      ),
+    );
     gh.factory<_i797.AuthBloc>(
       () => _i797.AuthBloc(
         gh<_i501.LoginUsecase>(),
@@ -174,6 +206,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i655.AddSymptomUsecase>(
       () => _i655.AddSymptomUsecase(gh<_i501.HomeRepository>()),
     );
+    gh.factory<_i95.UpdateSymptomUsecase>(
+      () => _i95.UpdateSymptomUsecase(gh<_i501.HomeRepository>()),
+    );
     gh.factory<_i371.UploadRecordUsecase>(
       () => _i371.UploadRecordUsecase(gh<_i501.HomeRepository>()),
     );
@@ -184,6 +219,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i202.HomeBloc(
         gh<_i501.FetchHomeUsecase>(),
         gh<_i501.AddSymptomUsecase>(),
+        gh<_i501.UpdateSymptomUsecase>(),
         gh<_i501.UploadRecordUsecase>(),
       ),
     );

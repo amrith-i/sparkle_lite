@@ -8,6 +8,14 @@ abstract class HomeRepository {
     required AddSymptomEntity entity,
   });
 
+  /// Updates an existing symptom log document at [logId].
+  /// The Firestore document UID is preserved — no new document is created.
+  Future<ApiResult<void>> updateSymptom({
+    required String userId,
+    required String logId,
+    required AddSymptomEntity entity,
+  });
+
   Future<ApiResult<void>> uploadRecord({
     required String userId,
     required UploadRecordEntity entity,

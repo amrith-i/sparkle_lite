@@ -29,10 +29,14 @@ class SubmitSymptom extends HomeEvent {
   final String userId;
   final AddSymptomEntity entity;
 
-  const SubmitSymptom({required this.userId, required this.entity});
+  /// When non-null, the existing log at this Firestore document ID is
+  /// **updated**. When null, a new document is created.
+  final String? logId;
+
+  const SubmitSymptom({required this.userId, required this.entity, this.logId});
 
   @override
-  List<Object?> get props => [userId, entity];
+  List<Object?> get props => [userId, entity, logId];
 }
 
 class SubmitUploadRecord extends HomeEvent {

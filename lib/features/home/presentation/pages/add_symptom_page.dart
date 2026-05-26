@@ -2,7 +2,11 @@ import '../../../../core_import.dart';
 
 @RoutePage()
 class AddSymptomPage extends StatefulWidget implements AutoRouteWrapper {
-  const AddSymptomPage({super.key});
+  /// Pass an existing log to pre-fill all fields for editing.
+  /// When null, the page is in "add" mode.
+  final SymptomLogEntity? existingLog;
+
+  const AddSymptomPage({super.key, this.existingLog});
 
   @override
   Widget wrappedRoute(BuildContext context) {
@@ -14,14 +18,17 @@ class AddSymptomPage extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _AddSymptomPageState extends State<AddSymptomPage> {
-  final _notesController = TextEditingController();
+  late final TextEditingController _notesController;
 
-  DateTime _selectedDate = DateTime.now();
-  String _periodStatus = 'No period';
-  String _flowLevel = 'None';
-  double _painLevel = 0;
-  String _mood = 'Calm';
-  final Set<String> _selectedSymptoms = {};
+  late DateTime _selectedDate;
+  late String _periodStatus;
+  late String _flowLevel;
+  late double _painLevel;
+  late String _mood;
+  late Set<String> _selectedSymptoms;
+
+  /// True when editing an existing log, false when adding a new one.
+  bool get _isEditMode => widget.existingLog != null;
 
   static const _periodStatuses = [
     'No period',
@@ -51,6 +58,20 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
     'Irregular bleeding',
     'Other',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    final log = widget.existingLog;
+    // Pre-fill with existing data in edit mode; use defaults in add mode.
+    _selectedDate = log?.date ?? DateTime.now();
+    _periodStatus = log?.periodStatus ?? 'No period';
+    _flowLevel = log?.flowLevel ?? 'None';
+    _painLevel = (log?.painLevel ?? 0).toDouble();
+    _mood = log?.mood ?? 'Calm';
+    _selectedSymptoms = Set<String>.from(log?.symptoms ?? []);
+    _notesController = TextEditingController(text: log?.notes ?? '');
+  }
 
   @override
   void dispose() {
@@ -95,7 +116,10 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
           : _notesController.text.trim(),
     );
 
-    context.read<HomeBloc>().add(SubmitSymptom(userId: uid, entity: entity));
+    // Pass logId only in edit mode — bloc routes to update vs add.
+    context.read<HomeBloc>().add(
+      SubmitSymptom(userId: uid, entity: entity, logId: widget.existingLog?.id),
+    );
   }
 
   @override
@@ -105,10 +129,8 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
           current is SymptomSubmitSuccess || current is SymptomSubmitFailure,
       listener: (context, state) {
         if (state is SymptomSubmitSuccess) {
-          // Pop back and pass 'success' so HomePage can show the notifier
           context.router.pop('success');
         } else if (state is SymptomSubmitFailure) {
-          // Stay on page — show error here
           AppNotifier.show(context, state.message, type: MessageType.error);
         }
       },
@@ -140,17 +162,20 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: context.h(mobile: 4)),
+
+              // ── Page title changes based on mode ──────────────────
               Text(
-                'Log Symptoms',
+                _isEditMode ? 'Edit Symptom Log' : 'Log Symptoms',
                 style: TextStyle(
                   fontSize: context.sp(mobile: 24),
                   fontWeight: FontWeight.w700,
                   color: HomeColors.textPrimary,
                 ),
               ),
+
               SizedBox(height: context.h(mobile: 24)),
 
-              // ── Date ──────────────────────────────────────────────
+              // ── Date ─────────────────────────────────────────────
               _FieldLabel(label: 'Date', required: true),
               SizedBox(height: context.h(mobile: 8)),
               GestureDetector(
@@ -178,7 +203,7 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
 
               SizedBox(height: context.h(mobile: 20)),
 
-              // ── Period Status ──────────────────────────────────────
+              // ── Period Status ─────────────────────────────────────
               _FieldLabel(label: 'Period Status', required: true),
               SizedBox(height: context.h(mobile: 10)),
               Wrap(
@@ -195,7 +220,7 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
 
               SizedBox(height: context.h(mobile: 20)),
 
-              // ── Flow Level ─────────────────────────────────────────
+              // ── Flow Level ────────────────────────────────────────
               _FieldLabel(label: 'Flow Level'),
               SizedBox(height: context.h(mobile: 10)),
               Wrap(
@@ -212,7 +237,7 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
 
               SizedBox(height: context.h(mobile: 20)),
 
-              // ── Pain Level ─────────────────────────────────────────
+              // ── Pain Level ────────────────────────────────────────
               Row(
                 children: [
                   Text(
@@ -238,8 +263,8 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
                 data: SliderTheme.of(context).copyWith(
                   activeTrackColor: HomeColors.textPrimary,
                   inactiveTrackColor: HomeColors.border,
-                  thumbColor: AppColors.success,
-                  overlayColor: AppColors.success.withOpacity(0.1),
+                  thumbColor: AppColors.successAccent,
+                  overlayColor: AppColors.successAccent.withOpacity(0.1),
                   trackHeight: context.h(mobile: 4),
                   thumbShape: RoundSliderThumbShape(
                     enabledThumbRadius: context.r(mobile: 10),
@@ -256,7 +281,7 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
 
               SizedBox(height: context.h(mobile: 20)),
 
-              // ── Mood ───────────────────────────────────────────────
+              // ── Mood ──────────────────────────────────────────────
               _FieldLabel(label: 'Mood'),
               SizedBox(height: context.h(mobile: 10)),
               Wrap(
@@ -266,9 +291,9 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
                   return _SelectChip(
                     label: m,
                     selected: _mood == m,
-                    selectedColor: HomeColors.insightCardBorder,
-                    selectedTextColor: HomeColors.insightText,
-                    selectedBorderColor: HomeColors.insightCardBorder,
+                    selectedColor: const Color(0xFFEDE8FF),
+                    selectedTextColor: const Color(0xFF7B52C1),
+                    selectedBorderColor: const Color(0xFF7B52C1),
                     onTap: () => setState(() => _mood = m),
                   );
                 }).toList(),
@@ -276,7 +301,7 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
 
               SizedBox(height: context.h(mobile: 20)),
 
-              // ── Symptoms ───────────────────────────────────────────
+              // ── Symptoms ──────────────────────────────────────────
               _FieldLabel(label: 'Symptoms'),
               SizedBox(height: context.h(mobile: 10)),
               Wrap(
@@ -302,7 +327,7 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
 
               SizedBox(height: context.h(mobile: 20)),
 
-              // ── Notes ──────────────────────────────────────────────
+              // ── Notes ─────────────────────────────────────────────
               _FieldLabel(label: 'Notes (optional)'),
               SizedBox(height: context.h(mobile: 8)),
               TextField(
@@ -343,7 +368,7 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
 
               SizedBox(height: context.h(mobile: 32)),
 
-              // ── Save Button ────────────────────────────────────────
+              // ── Save / Update Button ───────────────────────────────
               BlocBuilder<HomeBloc, HomeState>(
                 buildWhen: (_, current) =>
                     current is SymptomSubmitLoading ||
@@ -391,7 +416,8 @@ class _AddSymptomPageState extends State<AddSymptomPage> {
                                 ),
                               )
                             : Text(
-                                'Save Log',
+                                // Button label changes in edit mode
+                                _isEditMode ? 'Update Symptom' : 'Save Log',
                                 style: TextStyle(
                                   fontSize: context.sp(mobile: 16),
                                   fontWeight: FontWeight.w600,
@@ -452,7 +478,7 @@ class _SelectChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selBg = selectedColor ?? HomeColors.cycleDayBg;
+    final selBg = selectedColor ?? const Color(0xFFFDE8ED);
     final selText = selectedTextColor ?? HomeColors.primaryRed;
     final selBorder = selectedBorderColor ?? HomeColors.primaryRed;
 

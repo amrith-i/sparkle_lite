@@ -4,11 +4,13 @@ import '../../../../core_import.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final FetchHomeUsecase fetchHomeUsecase;
   final AddSymptomUsecase addSymptomUsecase;
+  final UpdateSymptomUsecase updateSymptomUsecase;
   final UploadRecordUsecase uploadRecordUsecase;
 
   HomeBloc(
     this.fetchHomeUsecase,
     this.addSymptomUsecase,
+    this.updateSymptomUsecase,
     this.uploadRecordUsecase,
   ) : super(HomeInitial()) {
     on<LoadHome>(_onLoadHome);
@@ -48,9 +50,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     emit(SymptomSubmitLoading());
-    final result = await addSymptomUsecase(
-      AddSymptomParams(userId: event.userId, entity: event.entity),
-    );
+
+    final ApiResult<void> result;
+
+    if (event.logId != null && event.logId!.isNotEmpty) {
+      // Edit mode — update the existing Firestore document at the same UID.
+      result = await updateSymptomUsecase(
+        UpdateSymptomParams(
+          userId: event.userId,
+          logId: event.logId!,
+          entity: event.entity,
+        ),
+      );
+    } else {
+      // Add mode — create a brand-new Firestore document.
+      result = await addSymptomUsecase(
+        AddSymptomParams(userId: event.userId, entity: event.entity),
+      );
+    }
+
     if (result.isSuccess) {
       emit(SymptomSubmitSuccess());
     } else {

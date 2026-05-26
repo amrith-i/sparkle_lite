@@ -94,16 +94,30 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
+  Future<void> updateSymptom({
+    required String userId,
+    required String logId,
+    required AddSymptomDto dto,
+  }) async {
+    // update() writes only the supplied fields and keeps the document ID
+    // intact — no new document is created.
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('symptom_logs')
+        .doc(logId)
+        .update(dto.toFirestoreForUpdate());
+  }
+
+  @override
   Future<void> uploadRecord({
     required String userId,
     required UploadRecordDto dto,
     required List<int> fileBytes,
     required String mimeType,
   }) async {
-    // 1. Encode the raw file bytes to a Base64 string.
     final fileData = base64Encode(fileBytes);
 
-    // 2. Build the DTO with the actual encoded data.
     final dtoWithData = UploadRecordDto.fromEntity(
       UploadRecordEntity(
         title: dto.title,
@@ -111,14 +125,13 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         recordType: dto.recordType,
         doctorOrClinic: dto.doctorOrClinic,
         notes: dto.notes,
-        filePath: '', // No Storage path — file lives in Firestore
+        filePath: '',
         fileName: dto.fileName,
       ),
       fileData: fileData,
       mimeType: mimeType,
     );
 
-    // 3. Save everything (metadata + Base64 file) directly to Firestore.
     await firestore
         .collection('users')
         .doc(userId)

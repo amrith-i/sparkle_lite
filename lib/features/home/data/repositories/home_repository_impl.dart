@@ -26,19 +26,34 @@ class HomeRepositoryImpl extends BaseRepository implements HomeRepository {
   }
 
   @override
+  Future<ApiResult<void>> updateSymptom({
+    required String userId,
+    required String logId,
+    required AddSymptomEntity entity,
+  }) {
+    return safeApiCall(() async {
+      final dto = AddSymptomDto.fromEntity(entity);
+      await remoteDataSource.updateSymptom(
+        userId: userId,
+        logId: logId,
+        dto: dto,
+      );
+    });
+  }
+
+  @override
   Future<ApiResult<void>> uploadRecord({
     required String userId,
     required UploadRecordEntity entity,
   }) {
     return safeApiCall(() async {
-      // Read file bytes from the local path picked by FilePicker
       final file = File(entity.filePath);
       final fileBytes = await file.readAsBytes();
       final mimeType = _resolveMimeType(entity.fileName);
 
       final dto = UploadRecordDto.fromEntity(
         entity,
-        fileData: '', // Placeholder — Base64 encoding happens in the datasource
+        fileData: '',
         mimeType: mimeType,
       );
 

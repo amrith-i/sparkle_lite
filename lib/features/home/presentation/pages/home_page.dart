@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeNavTab _currentTab = HomeNavTab.home;
+  // HomeNavTab _currentTab = HomeNavTab.home;
 
   @override
   void initState() {
@@ -29,30 +29,33 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _onTabChanged(HomeNavTab tab) {
-    setState(() => _currentTab = tab);
-    switch (tab) {
-      case HomeNavTab.home:
-        break;
-      case HomeNavTab.symptoms:
-        // context.router.push(const SymptomsRoute());
-        break;
-      case HomeNavTab.records:
-        // context.router.push(const RecordsRoute());
-        break;
-      case HomeNavTab.timeline:
-        // context.router.push(const TimelineRoute());
-        break;
-      case HomeNavTab.profile:
-        // context.router.push(const ProfileRoute());
-        break;
-    }
-  }
+  // void _onTabChanged(HomeNavTab tab) {
+  //   setState(() => _currentTab = tab);
+  //   switch (tab) {
+  //     case HomeNavTab.home:
+  //       break;
+  //     case HomeNavTab.symptoms:
+  //       // Navigate to SymptomPage; reset tab back to home after returning.
+  //       context.router.push(const SymptomRoute()).then((_) {
+  //         if (mounted) setState(() => _currentTab = HomeNavTab.home);
+  //       });
+  //       break;
+  //     case HomeNavTab.records:
+  //       // context.router.push(const RecordsRoute());
+  //       break;
+  //     case HomeNavTab.timeline:
+  //       // context.router.push(const TimelineRoute());
+  //       break;
+  //     case HomeNavTab.profile:
+  //       // context.router.push(const ProfileRoute());
+  //       break;
+  //   }
+  // }
 
-  // ── Navigate to AddSymptomPage and show success notifier on return ──────────
   Future<void> _onLogSymptomTap() async {
-    final result = await context.router.push(const AddSymptomRoute());
+    final result = await context.router.push(AddSymptomRoute());
     if (result == 'success' && mounted) {
+      _loadHome(); // Refresh so the recent-log card updates immediately.
       AppNotifier.show(
         context,
         'Symptoms logged successfully!',
@@ -85,7 +88,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onRecentLogTap() {
-    // context.router.push(const SymptomsRoute());
+    context.router.navigate(const SymptomRoute());
   }
 
   void _onRecentRecordTap(HealthRecordEntity record) {
@@ -129,13 +132,15 @@ class _HomePageState extends State<HomePage> {
           return const SizedBox.shrink();
         },
       ),
-      bottomNavigationBar: HomeBottomNavWidget(
-        currentTab: _currentTab,
-        onTabChanged: _onTabChanged,
-      ),
+      // bottomNavigationBar: HomeBottomNavWidget(
+      //   currentTab: _currentTab,
+      //   onTabChanged: _onTabChanged,
+      // ),
     );
   }
 }
+
+// ─── Home body content ────────────────────────────────────────────────────────
 
 class _HomeContent extends StatelessWidget {
   final HomeDataEntity data;
@@ -238,6 +243,8 @@ class _HomeContent extends StatelessWidget {
     );
   }
 }
+
+// ─── Error view ───────────────────────────────────────────────────────────────
 
 class _ErrorView extends StatelessWidget {
   final String message;

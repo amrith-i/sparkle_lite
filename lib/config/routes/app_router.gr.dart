@@ -12,18 +12,53 @@ part of 'app_router.dart';
 
 /// generated route for
 /// [AddSymptomPage]
-class AddSymptomRoute extends PageRouteInfo<void> {
-  const AddSymptomRoute({List<PageRouteInfo>? children})
-    : super(AddSymptomRoute.name, initialChildren: children);
+class AddSymptomRoute extends PageRouteInfo<AddSymptomRouteArgs> {
+  AddSymptomRoute({
+    Key? key,
+    SymptomLogEntity? existingLog,
+    List<PageRouteInfo>? children,
+  }) : super(
+         AddSymptomRoute.name,
+         args: AddSymptomRouteArgs(key: key, existingLog: existingLog),
+         initialChildren: children,
+       );
 
   static const String name = 'AddSymptomRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return WrappedRoute(child: const AddSymptomPage());
+      final args = data.argsAs<AddSymptomRouteArgs>(
+        orElse: () => const AddSymptomRouteArgs(),
+      );
+      return WrappedRoute(
+        child: AddSymptomPage(key: args.key, existingLog: args.existingLog),
+      );
     },
   );
+}
+
+class AddSymptomRouteArgs {
+  const AddSymptomRouteArgs({this.key, this.existingLog});
+
+  final Key? key;
+
+  final SymptomLogEntity? existingLog;
+
+  @override
+  String toString() {
+    return 'AddSymptomRouteArgs{key: $key, existingLog: $existingLog}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AddSymptomRouteArgs) return false;
+    return key == other.key && existingLog == other.existingLog;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ existingLog.hashCode;
 }
 
 /// generated route for
@@ -86,6 +121,22 @@ class LoginRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return WrappedRoute(child: const LoginPage());
+    },
+  );
+}
+
+/// generated route for
+/// [MainShellPage]
+class MainShellRoute extends PageRouteInfo<void> {
+  const MainShellRoute({List<PageRouteInfo>? children})
+    : super(MainShellRoute.name, initialChildren: children);
+
+  static const String name = 'MainShellRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const MainShellPage();
     },
   );
 }
@@ -182,6 +233,22 @@ class SplashRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return const SplashPage();
+    },
+  );
+}
+
+/// generated route for
+/// [SymptomPage]
+class SymptomRoute extends PageRouteInfo<void> {
+  const SymptomRoute({List<PageRouteInfo>? children})
+    : super(SymptomRoute.name, initialChildren: children);
+
+  static const String name = 'SymptomRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const SymptomPage());
     },
   );
 }
