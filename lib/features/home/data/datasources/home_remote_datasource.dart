@@ -21,4 +21,28 @@ abstract class HomeRemoteDataSource {
     required List<int> fileBytes,
     required String mimeType,
   });
+
+  Future<void> addDoctorVisit({
+    required String userId,
+    required DoctorVisitDto dto,
+  });
+
+  // ── AI Insight ────────────────────────────────────────────────────────────
+
+  /// Fetches the most recent 10 symptom logs for the log-selection page.
+  Future<List<SymptomLogSummaryDto>> fetchSymptomLogs({required String userId});
+
+  /// Calls the Anthropic Messages API with the log summaries, parses the
+  /// JSON response, and returns a [AiInsightDto].
+  /// The insight is also persisted to the user's `insights` Firestore collection.
+  Future<AiInsightDto> generateAiInsight({
+    required String userId,
+    required List<SymptomLogSummaryDto> logDtos,
+  });
+
+  /// Saves a generated insight into the user's `timeline` Firestore collection.
+  Future<void> saveInsightToTimeline({
+    required String userId,
+    required AiInsightDto dto,
+  });
 }

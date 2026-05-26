@@ -24,7 +24,9 @@ class _MainShellPageState extends State<MainShellPage> {
         break;
 
       case HomeNavTab.records:
-        // TODO: Implement Records navigation
+        if (context.router.current.name != RecordsRoute.name) {
+          context.router.push(const RecordsRoute());
+        }
         break;
       case HomeNavTab.timeline:
         // TODO: Implement Timeline navigation

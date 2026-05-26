@@ -29,52 +29,35 @@ class HomeDataEntity extends Equatable {
 // features/symptom/domain/entities/symptom_log_entity.dart
 // Do NOT re-declare it here — it is exported via core_import.dart.
 
-class HealthRecordEntity extends Equatable {
+class InsightEntity extends Equatable {
   final String id;
-  final String title;
-  final DateTime date;
-  final String? doctorName;
-  final String recordType;
-  final String? notes;
-  final String? fileUrl;
+  final String title; // AI Health Insight
+  final String summary; // The summary text
+  final String patternNoticed; // The pattern noticed (shown in card)
+  final List<String> suggestedQuestions;
+  final String whenToSeekCare;
+  final DateTime generatedDate;
 
-  const HealthRecordEntity({
+  const InsightEntity({
     required this.id,
     required this.title,
-    required this.date,
-    this.doctorName,
-    required this.recordType,
-    this.notes,
-    this.fileUrl,
+    required this.summary,
+    required this.patternNoticed,
+    required this.suggestedQuestions,
+    required this.whenToSeekCare,
+    required this.generatedDate,
   });
 
   @override
   List<Object?> get props => [
     id,
     title,
-    date,
-    doctorName,
-    recordType,
-    notes,
-    fileUrl,
+    summary,
+    patternNoticed,
+    suggestedQuestions,
+    whenToSeekCare,
+    generatedDate,
   ];
-}
-
-class InsightEntity extends Equatable {
-  final String id;
-  final String title;
-  final String body;
-  final DateTime generatedDate;
-
-  const InsightEntity({
-    required this.id,
-    required this.title,
-    required this.body,
-    required this.generatedDate,
-  });
-
-  @override
-  List<Object?> get props => [id, title, body, generatedDate];
 }
 
 class ReminderEntity extends Equatable {

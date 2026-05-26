@@ -20,6 +20,7 @@ class AppRouter extends RootStackRouter {
       children: [
         AutoRoute(page: HomeRoute.page, path: '', initial: true),
         AutoRoute(page: SymptomRoute.page, path: 'symptoms'),
+        AutoRoute(page: RecordsRoute.page, path: 'records'),
       ],
     ),
 
@@ -28,6 +29,11 @@ class AppRouter extends RootStackRouter {
       path: '/doctor-summary-visit',
     ),
     AutoRoute(page: AiInsightRoute.page, path: '/ai-insights'),
+    AutoRoute(
+      page: AiInsightProcessingRoute.page,
+      path: '/ai-insights-processing',
+    ),
+    AutoRoute(page: AiInsightResultRoute.page, path: '/ai-insights-result'),
     AutoRoute(page: AddSymptomRoute.page, path: '/add-symptoms'),
     AutoRoute(page: UploadRecordRoute.page, path: '/upload-records'),
   ];

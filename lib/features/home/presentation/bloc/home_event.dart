@@ -48,3 +48,54 @@ class SubmitUploadRecord extends HomeEvent {
   @override
   List<Object?> get props => [userId, entity];
 }
+
+class SubmitDoctorVisit extends HomeEvent {
+  final String userId;
+  final DoctorVisitEntity entity;
+
+  const SubmitDoctorVisit({required this.userId, required this.entity});
+
+  @override
+  List<Object?> get props => [userId, entity];
+}
+
+// ── AI Insight events ─────────────────────────────────────────────────────────
+
+/// Fetches the recent symptom logs to display on the log-selection page.
+class FetchSymptomLogsForInsight extends HomeEvent {
+  final String userId;
+
+  const FetchSymptomLogsForInsight({required this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}
+
+/// Sends selected logs to the AI and stores the generated insight.
+class GenerateAiInsight extends HomeEvent {
+  final String userId;
+  final List<SymptomLogSummaryEntity> selectedLogs;
+
+  const GenerateAiInsight({required this.userId, required this.selectedLogs});
+
+  @override
+  List<Object?> get props => [userId, selectedLogs];
+}
+
+/// Saves the generated insight to the timeline / Firestore.
+class SaveInsightToTimeline extends HomeEvent {
+  final String userId;
+  final AiInsightEntity insight;
+
+  const SaveInsightToTimeline({required this.userId, required this.insight});
+
+  @override
+  List<Object?> get props => [userId, insight];
+}
+
+class ResetAiInsightState extends HomeEvent {
+  const ResetAiInsightState();
+
+  @override
+  List<Object?> get props => [];
+}

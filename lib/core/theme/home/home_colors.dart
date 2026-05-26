@@ -67,4 +67,7 @@ class HomeColors {
   static const Color nextPeriodCardBg = Color(0xFFFFFFFF);
   static const Color nextPeriodCardBorder = AppColors.border;
   static const Color nextPeriodFlowerBg = Color(0xFFFCE4EC);
+
+  // Reminder Icon Bg
+  static const Color reminderIconBg = Color(0xFFF0F7FF);
 }

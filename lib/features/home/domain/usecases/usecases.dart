@@ -3,3 +3,7 @@ export 'fetch_home_usecases.dart';
 export 'add_symptom_usecases.dart';
 export 'upload_record_usecase.dart';
 export 'update_symptom_usecase.dart';
+export 'add_doctor_visit_usecase.dart';
+export 'fetch_symptom_logs_for_insight_usecase.dart';
+export 'generate_ai_insight_usecase.dart';
+export 'save_insights_to_timeline_usecase.dart';

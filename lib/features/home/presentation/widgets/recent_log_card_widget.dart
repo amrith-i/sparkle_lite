@@ -10,6 +10,24 @@ class RecentLogCardWidget extends StatelessWidget {
     required this.onTap,
   });
 
+  String _formatDate(DateTime date) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
   String _getMoodEmoji(String mood) {
     switch (mood.toLowerCase()) {
       case 'calm':
@@ -30,16 +48,16 @@ class RecentLogCardWidget extends StatelessWidget {
   }
 
   Color _getTagBg(String tag) {
-    if (tag.toLowerCase() == 'period ongoing' ||
-        tag.toLowerCase() == 'period started') {
+    final lowerTag = tag.toLowerCase();
+    if (lowerTag == 'period ongoing' || lowerTag == 'period started') {
       return HomeColors.tagPeriodBg;
     }
     return HomeColors.tagCrampsBg;
   }
 
   Color _getTagText(String tag) {
-    if (tag.toLowerCase() == 'period ongoing' ||
-        tag.toLowerCase() == 'period started') {
+    final lowerTag = tag.toLowerCase();
+    if (lowerTag == 'period ongoing' || lowerTag == 'period started') {
       return HomeColors.tagPeriodText;
     }
     return HomeColors.tagCrampsText;
@@ -70,7 +88,7 @@ class RecentLogCardWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "12/10/2026",
+                    _formatDate(log.date),
                     style: HomeTextStyles.recentLogDate(context),
                   ),
                   Text(

@@ -75,8 +75,15 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _onDoctorVisitTap() {
-    context.router.push(const DoctorVisitSummaryRoute());
+  void _onDoctorVisitTap() async {
+    final result = await context.router.push(const DoctorVisitSummaryRoute());
+    if (result == 'success' && mounted) {
+      AppNotifier.show(
+        context,
+        'Doctor visit saved successfully!',
+        type: MessageType.success,
+      );
+    }
   }
 
   void _onAiInsightTap() {

@@ -67,77 +67,63 @@ class UserProfileDto {
   );
 }
 
-class HealthRecordDto {
-  final String id;
-  final String title;
-  final DateTime date;
-  final String? doctorName;
-  final String recordType;
-  final String? notes;
-  final String? fileUrl;
-
-  HealthRecordDto({
-    required this.id,
-    required this.title,
-    required this.date,
-    this.doctorName,
-    required this.recordType,
-    this.notes,
-    this.fileUrl,
-  });
-
-  factory HealthRecordDto.fromFirestore(Map<String, dynamic> data, String id) {
-    return HealthRecordDto(
-      id: id,
-      title: data['title'] as String? ?? '',
-      date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      doctorName: data['doctorName'] as String?,
-      recordType: data['recordType'] as String? ?? 'Lab Report',
-      notes: data['notes'] as String?,
-      fileUrl: data['fileUrl'] as String?,
-    );
-  }
-
-  HealthRecordEntity toEntity() => HealthRecordEntity(
-    id: id,
-    title: title,
-    date: date,
-    doctorName: doctorName,
-    recordType: recordType,
-    notes: notes,
-    fileUrl: fileUrl,
-  );
-}
-
 class InsightDto {
   final String id;
   final String title;
-  final String body;
+  final String summary;
+  final String patternNoticed;
+  final List<String> suggestedQuestions;
+  final String whenToSeekCare;
   final DateTime generatedDate;
 
   InsightDto({
     required this.id,
     required this.title,
-    required this.body,
+    required this.summary,
+    required this.patternNoticed,
+    required this.suggestedQuestions,
+    required this.whenToSeekCare,
     required this.generatedDate,
   });
 
   factory InsightDto.fromFirestore(Map<String, dynamic> data, String id) {
     return InsightDto(
       id: id,
-      title: data['title'] as String? ?? '',
-      body: data['body'] as String? ?? '',
+      title: data['title'] as String? ?? 'AI Health Insight',
+      summary: data['summary'] as String? ?? '',
+      patternNoticed: data['patternNoticed'] as String? ?? '',
+      suggestedQuestions: List<String>.from(
+        data['suggestedQuestions'] as List? ?? [],
+      ),
+      whenToSeekCare: data['whenToSeekCare'] as String? ?? '',
       generatedDate:
           (data['generatedDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
-  InsightEntity toEntity() => InsightEntity(
-    id: id,
-    title: title,
-    body: body,
-    generatedDate: generatedDate,
-  );
+  Map<String, dynamic> toFirestore() {
+    return {
+      'title': title,
+      'summary': summary,
+      'patternNoticed': patternNoticed,
+      'suggestedQuestions': suggestedQuestions,
+      'whenToSeekCare': whenToSeekCare,
+      'generatedDate': Timestamp.fromDate(generatedDate),
+      'createdAt': FieldValue.serverTimestamp(),
+    };
+  }
+
+  InsightEntity toEntity() {
+    return InsightEntity(
+      id: id,
+      title: title,
+      summary: summary,
+      patternNoticed: patternNoticed,
+      suggestedQuestions: suggestedQuestions,
+      whenToSeekCare: whenToSeekCare,
+      generatedDate: generatedDate,
+    );
+  }
 }
 
 class ReminderDto {

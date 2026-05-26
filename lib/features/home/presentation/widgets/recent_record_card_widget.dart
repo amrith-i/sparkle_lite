@@ -10,6 +10,24 @@ class RecentRecordCardWidget extends StatelessWidget {
     required this.onTap,
   });
 
+  String _formatDate(DateTime date) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
   String _getRecordEmoji(String type) {
     switch (type.toLowerCase()) {
       case 'lab report':
@@ -56,12 +74,12 @@ class RecentRecordCardWidget extends StatelessWidget {
                     Text(
                       record.title,
                       style: HomeTextStyles.recordTitle(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: context.h(mobile: 2)),
                     Text(
-                      // '${DateFormat('MMM d, yyyy').format(record.date)}'
-                      "12/12/2026"
-                      '${record.doctorName != null ? ' · ${record.doctorName}' : ''}',
+                      '${_formatDate(record.date)}${record.doctorName != null && record.doctorName!.isNotEmpty ? ' · ${record.doctorName}' : ''}',
                       style: HomeTextStyles.recordSubtitle(context),
                     ),
                   ],

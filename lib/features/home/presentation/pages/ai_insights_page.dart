@@ -1,287 +1,221 @@
 import '../../../../core_import.dart';
 
 @RoutePage()
-class AiInsightPage extends StatefulWidget {
+class AiInsightPage extends StatefulWidget implements AutoRouteWrapper {
   const AiInsightPage({super.key});
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return BlocProvider(create: (_) => getIt<HomeBloc>(), child: this);
+  }
 
   @override
   State<AiInsightPage> createState() => _AiInsightPageState();
 }
 
 class _AiInsightPageState extends State<AiInsightPage> {
-  final List<String> _focusAreas = [
-    'Cycle patterns',
-    'Pain & symptoms',
-    'Energy & fatigue',
-    'Mood & emotions',
-    'Sleep quality',
-    'Nutrition & diet',
-  ];
+  final Set<String> _selectedLogIds = {};
 
-  final Set<String> _selectedFocusAreas = {};
-  String _selectedRange = 'Last 3 months';
+  @override
+  void initState() {
+    super.initState();
+    _fetchLogs();
+  }
 
-  final List<String> _dateRanges = [
-    'Last month',
-    'Last 3 months',
-    'Last 6 months',
-    'All time',
-  ];
+  void _fetchLogs() {
+    final uid = getIt<UserSessionStorage>().uid;
+    if (uid != null && uid.isNotEmpty) {
+      context.read<HomeBloc>().add(FetchSymptomLogsForInsight(userId: uid));
+    }
+  }
 
-  void _onGenerateInsight() {
-    // TODO: dispatch AiInsightRequestEvent via BLoC / navigate to result
-    // context.router.push(const AiInsightResultRoute(insightId: 'new'));
+  void _onToggleLog(String id) {
+    setState(() {
+      if (_selectedLogIds.contains(id)) {
+        _selectedLogIds.remove(id);
+      } else {
+        _selectedLogIds.add(id);
+      }
+    });
+  }
+
+  void _onGenerate(List<SymptomLogSummaryEntity> allLogs) {
+    final uid = getIt<UserSessionStorage>().uid;
+    if (uid == null || uid.isEmpty) return;
+
+    final selected = allLogs
+        .where((log) => _selectedLogIds.contains(log.id))
+        .toList();
+
+    if (selected.isEmpty) return;
+
+    // Add the generate event - navigation will happen when AiInsightGenerating state is emitted
+    context.read<HomeBloc>().add(
+      GenerateAiInsight(userId: uid, selectedLogs: selected),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: HomeColors.background,
-      appBar: AppBar(
-        backgroundColor: HomeColors.background,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          color: HomeColors.textPrimary,
-          onPressed: () => context.router.pop(),
-        ),
-        title: Text(
-          'AI Insight',
-          style: TextStyle(
-            fontSize: context.sp(mobile: 18),
-            fontWeight: FontWeight.w700,
-            color: HomeColors.textPrimary,
+    return BlocListener<HomeBloc, HomeState>(
+      listenWhen: (_, current) =>
+          current is AiInsightGenerating ||
+          current is AiInsightGenerated ||
+          current is AiInsightGenerateFailure,
+      listener: (context, state) {
+        if (state is AiInsightGenerating) {
+          // Navigate to processing page when generation starts
+          context.router.push(const AiInsightProcessingRoute());
+        } else if (state is AiInsightGenerated) {
+          // Replace processing page with result page
+          context.router.replace(AiInsightResultRoute(insight: state.insight));
+        } else if (state is AiInsightGenerateFailure) {
+          // Pop processing page if it exists
+          if (context.router.canPop()) {
+            context.router.pop();
+          }
+          AppNotifier.show(context, state.message, type: MessageType.error);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AiInsightColors.background,
+        appBar: AppBar(
+          backgroundColor: AiInsightColors.background,
+          elevation: 0,
+          leading: TextButton.icon(
+            onPressed: () => context.router.pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 14,
+              color: AiInsightColors.textSecondary,
+            ),
+            label: Text(
+              'Back',
+              style: TextStyle(
+                fontSize: context.sp(mobile: 14),
+                color: AiInsightColors.textSecondary,
+              ),
+            ),
           ),
+          leadingWidth: 90,
         ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: HomePaddings.pagePadding(context),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: context.h(mobile: 8)),
-
-            // Hero Card
-            Container(
-              width: double.infinity,
-              padding: HomePaddings.cardPadding(context),
-              decoration: HomeDecorations.insightCard(context),
-              child: Row(
-                children: [
-                  Container(
-                    width: context.w(mobile: 44),
-                    height: context.w(mobile: 44),
-                    decoration: BoxDecoration(
-                      color: HomeColors.insightIcon.withOpacity(0.15),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.auto_awesome_rounded,
-                      color: HomeColors.insightIcon,
-                      size: context.w(mobile: 24),
-                    ),
-                  ),
-                  SizedBox(width: context.w(mobile: 14)),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Generate Health Insight',
-                          style: HomeTextStyles.insightTitle(context),
-                        ),
-                        SizedBox(height: context.h(mobile: 4)),
-                        Text(
-                          'AI will analyze your logs and records to find patterns.',
-                          style: HomeTextStyles.insightBody(context),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: context.h(mobile: 24)),
-
-            // Date Range
-            _SectionLabel(label: 'ANALYSIS PERIOD'),
-            SizedBox(height: context.h(mobile: 10)),
-            Row(
-              children: _dateRanges.map((range) {
-                final selected = _selectedRange == range;
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => _selectedRange = range),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      margin: EdgeInsets.only(
-                        right: range != _dateRanges.last
-                            ? context.w(mobile: 8)
-                            : 0,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: context.h(mobile: 10),
-                      ),
-                      decoration: BoxDecoration(
-                        color: selected
-                            ? HomeColors.insightIcon
-                            : HomeColors.white,
-                        borderRadius: BorderRadius.circular(
-                          context.r(mobile: 10),
-                        ),
-                        border: Border.all(
-                          color: selected
-                              ? HomeColors.insightIcon
-                              : HomeColors.border,
-                        ),
-                      ),
-                      child: Text(
-                        range,
+        body: BlocBuilder<HomeBloc, HomeState>(
+          buildWhen: (_, current) =>
+              current is SymptomLogsLoading ||
+              current is SymptomLogsLoaded ||
+              current is SymptomLogsFailure,
+          builder: (context, state) {
+            if (state is SymptomLogsLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is SymptomLogsFailure) {
+              return Center(
+                child: Padding(
+                  padding: AiInsightPaddings.pagePadding(context),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.message,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: context.sp(mobile: 10),
-                          fontWeight: FontWeight.w600,
-                          color: selected
-                              ? HomeColors.white
-                              : HomeColors.textSecondary,
+                        style: AiInsightTextStyles.pageSubtitle(context),
+                      ),
+                      SizedBox(height: context.h(mobile: 16)),
+                      ElevatedButton(
+                        onPressed: _fetchLogs,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AiInsightColors.insightPurple,
+                          foregroundColor: AiInsightColors.white,
                         ),
+                        child: const Text('Retry'),
                       ),
-                    ),
+                    ],
                   ),
-                );
-              }).toList(),
-            ),
-
-            SizedBox(height: context.h(mobile: 24)),
-
-            // Focus Areas
-            _SectionLabel(label: 'FOCUS AREAS (OPTIONAL)'),
-            SizedBox(height: context.h(mobile: 6)),
-            Text(
-              'Select areas you want the AI to focus on.',
-              style: HomeTextStyles.recordSubtitle(context),
-            ),
-            SizedBox(height: context.h(mobile: 10)),
-            Wrap(
-              spacing: context.w(mobile: 8),
-              runSpacing: context.h(mobile: 8),
-              children: _focusAreas.map((area) {
-                final selected = _selectedFocusAreas.contains(area);
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (selected) {
-                        _selectedFocusAreas.remove(area);
-                      } else {
-                        _selectedFocusAreas.add(area);
-                      }
-                    });
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: context.w(mobile: 14),
-                      vertical: context.h(mobile: 8),
-                    ),
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? HomeColors.insightCardBg
-                          : HomeColors.white,
-                      borderRadius: BorderRadius.circular(
-                        context.r(mobile: 20),
-                      ),
-                      border: Border.all(
-                        color: selected
-                            ? HomeColors.insightCardBorder
-                            : HomeColors.border,
-                      ),
-                    ),
-                    child: Text(
-                      area,
-                      style: HomeTextStyles.tagText(context).copyWith(
-                        color: selected
-                            ? HomeColors.insightText
-                            : HomeColors.textPrimary,
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-
-            SizedBox(height: context.h(mobile: 24)),
-
-            // Disclaimer
-            Container(
-              width: double.infinity,
-              padding: HomePaddings.cardPadding(context),
-              decoration: BoxDecoration(
-                color: HomeColors.backgroundSecondary,
-                borderRadius: BorderRadius.circular(context.r(mobile: 12)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.info_outline_rounded,
-                    color: HomeColors.neutral,
-                    size: 18,
-                  ),
-                  SizedBox(width: context.w(mobile: 10)),
-                  Expanded(
-                    child: Text(
-                      'AI insights are for informational purposes only and do not constitute medical advice. Always consult a healthcare professional.',
-                      style: HomeTextStyles.recordSubtitle(context),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: context.h(mobile: 32)),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _onGenerateInsight,
-                icon: const Icon(Icons.auto_awesome_rounded, size: 18),
-                label: Text(
-                  'Generate Insight',
-                  style: AppTextStyles.button(context),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: HomeColors.insightIcon,
-                  foregroundColor: HomeColors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(context.r(mobile: 14)),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    vertical: context.h(mobile: 16),
-                  ),
-                  elevation: 0,
-                ),
-              ),
-            ),
-
-            SizedBox(height: context.h(mobile: 24)),
-          ],
+              );
+            }
+            if (state is SymptomLogsLoaded) {
+              return _LogSelectionBody(
+                logs: state.logs,
+                selectedLogIds: _selectedLogIds,
+                onToggle: _onToggleLog,
+                onGenerate: () => _onGenerate(state.logs),
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
   }
 }
 
-class _SectionLabel extends StatelessWidget {
-  final String label;
-  const _SectionLabel({required this.label});
+class _LogSelectionBody extends StatelessWidget {
+  final List<SymptomLogSummaryEntity> logs;
+  final Set<String> selectedLogIds;
+  final ValueChanged<String> onToggle;
+  final VoidCallback onGenerate;
+
+  const _LogSelectionBody({
+    required this.logs,
+    required this.selectedLogIds,
+    required this.onToggle,
+    required this.onGenerate,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: context.w(mobile: 2)),
-      child: Text(label, style: HomeTextStyles.sectionLabel(context)),
+    return SingleChildScrollView(
+      padding: AiInsightPaddings.pagePadding(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: context.h(mobile: 4)),
+          Text(
+            'AI Health Insight',
+            style: AiInsightTextStyles.pageTitle(context),
+          ),
+          SizedBox(height: context.h(mobile: 4)),
+          Text(
+            'Select logs to analyse',
+            style: AiInsightTextStyles.pageSubtitle(context),
+          ),
+          SizedBox(height: context.h(mobile: 20)),
+          Text(
+            'Select recent symptom logs to include in your insight:',
+            style: AiInsightTextStyles.pageSubtitle(context),
+          ),
+          SizedBox(height: context.h(mobile: 12)),
+          ...logs.map(
+            (log) => Padding(
+              padding: EdgeInsets.only(bottom: context.h(mobile: 10)),
+              child: AiLogSelectionCard(
+                log: log,
+                selected: selectedLogIds.contains(log.id),
+                onTap: () => onToggle(log.id),
+              ),
+            ),
+          ),
+          SizedBox(height: context.h(mobile: 8)),
+          const AiInsightDisclaimerBanner(),
+          SizedBox(height: context.h(mobile: 24)),
+          BlocBuilder<HomeBloc, HomeState>(
+            buildWhen: (_, current) => current is AiInsightGenerating,
+            builder: (context, state) {
+              final isLoading = state is AiInsightGenerating;
+              return SizedBox(
+                width: double.infinity,
+                child: AiInsightGenerateButton(
+                  selectedCount: selectedLogIds.length,
+                  isLoading: isLoading,
+                  onPressed: onGenerate,
+                ),
+              );
+            },
+          ),
+          SizedBox(height: context.h(mobile: 32)),
+        ],
+      ),
     );
   }
 }

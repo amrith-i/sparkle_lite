@@ -7,3 +7,5 @@ export 'recent_log_card_widget.dart';
 export 'recent_record_card_widget.dart';
 export 'reminder_card_widget.dart';
 export 'section_label_widget.dart';
+export 'ai_insight_result_widgets.dart';
+export 'ai_insight_log_selection_widgets.dart';

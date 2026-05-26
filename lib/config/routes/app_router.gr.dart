@@ -72,9 +72,74 @@ class AiInsightRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const AiInsightPage();
+      return WrappedRoute(child: const AiInsightPage());
     },
   );
+}
+
+/// generated route for
+/// [AiInsightProcessingPage]
+class AiInsightProcessingRoute extends PageRouteInfo<void> {
+  const AiInsightProcessingRoute({List<PageRouteInfo>? children})
+    : super(AiInsightProcessingRoute.name, initialChildren: children);
+
+  static const String name = 'AiInsightProcessingRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const AiInsightProcessingPage();
+    },
+  );
+}
+
+/// generated route for
+/// [AiInsightResultPage]
+class AiInsightResultRoute extends PageRouteInfo<AiInsightResultRouteArgs> {
+  AiInsightResultRoute({
+    Key? key,
+    required AiInsightEntity insight,
+    List<PageRouteInfo>? children,
+  }) : super(
+         AiInsightResultRoute.name,
+         args: AiInsightResultRouteArgs(key: key, insight: insight),
+         initialChildren: children,
+       );
+
+  static const String name = 'AiInsightResultRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AiInsightResultRouteArgs>();
+      return WrappedRoute(
+        child: AiInsightResultPage(key: args.key, insight: args.insight),
+      );
+    },
+  );
+}
+
+class AiInsightResultRouteArgs {
+  const AiInsightResultRouteArgs({this.key, required this.insight});
+
+  final Key? key;
+
+  final AiInsightEntity insight;
+
+  @override
+  String toString() {
+    return 'AiInsightResultRouteArgs{key: $key, insight: $insight}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AiInsightResultRouteArgs) return false;
+    return key == other.key && insight == other.insight;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ insight.hashCode;
 }
 
 /// generated route for
@@ -88,7 +153,7 @@ class DoctorVisitSummaryRoute extends PageRouteInfo<void> {
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      return const DoctorVisitSummaryPage();
+      return WrappedRoute(child: const DoctorVisitSummaryPage());
     },
   );
 }
@@ -185,6 +250,22 @@ class ProfileSetupRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return WrappedRoute(child: const ProfileSetupPage());
+    },
+  );
+}
+
+/// generated route for
+/// [RecordsPage]
+class RecordsRoute extends PageRouteInfo<void> {
+  const RecordsRoute({List<PageRouteInfo>? children})
+    : super(RecordsRoute.name, initialChildren: children);
+
+  static const String name = 'RecordsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const RecordsPage());
     },
   );
 }

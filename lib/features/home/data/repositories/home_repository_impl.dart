@@ -80,4 +80,72 @@ class HomeRepositoryImpl extends BaseRepository implements HomeRepository {
         return 'application/octet-stream';
     }
   }
+
+  @override
+  Future<ApiResult<void>> addDoctorVisit({
+    required String userId,
+    required DoctorVisitEntity entity,
+  }) {
+    return safeApiCall(() async {
+      final dto = DoctorVisitDto.fromEntity(entity);
+      await remoteDataSource.addDoctorVisit(userId: userId, dto: dto);
+    });
+  }
+
+  // ── AI Insight ──────────────────────────────────────────────────────────────
+
+  @override
+  Future<ApiResult<List<SymptomLogSummaryEntity>>> fetchSymptomLogs({
+    required String userId,
+  }) {
+    return safeApiCall(() async {
+      final dtos = await remoteDataSource.fetchSymptomLogs(userId: userId);
+      return dtos.map((d) => d.toEntity()).toList();
+    });
+  }
+
+  @override
+  Future<ApiResult<AiInsightEntity>> generateAiInsight({
+    required String userId,
+    required List<SymptomLogSummaryEntity> selectedLogs,
+  }) {
+    return safeApiCall(() async {
+      final logDtos = selectedLogs
+          .map(
+            (e) => SymptomLogSummaryDto(
+              id: e.id,
+              date: e.date,
+              periodStatus: e.periodStatus,
+              painLevel: e.painLevel,
+              mood: e.mood,
+            ),
+          )
+          .toList();
+
+      final dto = await remoteDataSource.generateAiInsight(
+        userId: userId,
+        logDtos: logDtos,
+      );
+      return dto.toEntity();
+    });
+  }
+
+  @override
+  Future<ApiResult<void>> saveInsightToTimeline({
+    required String userId,
+    required AiInsightEntity insight,
+  }) {
+    return safeApiCall(() async {
+      final dto = AiInsightDto(
+        id: insight.id,
+        summary: insight.summary,
+        patternNoticed: insight.patternNoticed,
+        suggestedQuestions: insight.suggestedQuestions,
+        whenToSeekCare: insight.whenToSeekCare,
+        generatedDate: insight.generatedDate,
+        logIds: insight.logIds,
+      );
+      await remoteDataSource.saveInsightToTimeline(userId: userId, dto: dto);
+    });
+  }
 }

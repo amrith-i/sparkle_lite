@@ -35,8 +35,16 @@ import '../../features/home/data/datasources/home_remote_datasource_impl.dart'
     as _i1002;
 import '../../features/home/data/repositories/home_repository_impl.dart'
     as _i76;
+import '../../features/home/domain/usecases/add_doctor_visit_usecase.dart'
+    as _i72;
 import '../../features/home/domain/usecases/add_symptom_usecases.dart' as _i655;
 import '../../features/home/domain/usecases/fetch_home_usecases.dart' as _i52;
+import '../../features/home/domain/usecases/fetch_symptom_logs_for_insight_usecase.dart'
+    as _i490;
+import '../../features/home/domain/usecases/generate_ai_insight_usecase.dart'
+    as _i513;
+import '../../features/home/domain/usecases/save_insights_to_timeline_usecase.dart'
+    as _i902;
 import '../../features/home/domain/usecases/update_symptom_usecase.dart'
     as _i95;
 import '../../features/home/domain/usecases/upload_record_usecase.dart'
@@ -58,6 +66,15 @@ import '../../features/profile/data/repositories/profile_repository_impl.dart'
     as _i334;
 import '../../features/profile/domain/usecases/profile_usecases.dart' as _i591;
 import '../../features/profile/presentation/bloc/profile_bloc.dart' as _i469;
+import '../../features/records/data/datasources/records_remote_datasource_impl.dart'
+    as _i27;
+import '../../features/records/data/repositories/records_repository_impl.dart'
+    as _i84;
+import '../../features/records/domain/usecases/delete_health_record_usecase.dart'
+    as _i1045;
+import '../../features/records/domain/usecases/fetch_health_records_usecase.dart'
+    as _i534;
+import '../../features/records/presentation/bloc/records_bloc.dart' as _i358;
 import '../../features/symptom/data/datasources/symptom_remote_datasource_impl.dart'
     as _i796;
 import '../../features/symptom/data/repositories/symptom_repository_impl.dart'
@@ -101,6 +118,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i501.SymptomRemoteDataSource>(
       () => _i796.SymptomRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i501.RecordsRemoteDataSource>(
+      () => _i27.RecordsRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i501.OnboardingRepository>(
       () => _i452.OnboardingRepositoryImpl(
         localDataSource: gh<_i501.OnboardingLocalDataSource>(),
@@ -112,9 +132,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i501.ProfileRemoteDataSource>(
       () => _i857.ProfileRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
     );
-    gh.lazySingleton<_i501.HomeRemoteDataSource>(
-      () => _i1002.HomeRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
-    );
     gh.lazySingleton<_i142.NetworkListenerService>(
       () => _i142.NetworkListenerService(
         gh<_i501.NetworkChecker>(),
@@ -122,6 +139,24 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.lazySingleton<_i361.Dio>(() => appModule.dio(gh<_i92.AppConfig>()));
+    gh.lazySingleton<_i501.RecordsRepository>(
+      () => _i84.RecordsRepositoryImpl(
+        gh<_i501.Dio>(),
+        remoteDataSource: gh<_i501.RecordsRemoteDataSource>(),
+      ),
+    );
+    gh.factory<_i1045.DeleteHealthRecordUsecase>(
+      () => _i1045.DeleteHealthRecordUsecase(gh<_i501.RecordsRepository>()),
+    );
+    gh.factory<_i534.FetchHealthRecordsUsecase>(
+      () => _i534.FetchHealthRecordsUsecase(gh<_i501.RecordsRepository>()),
+    );
+    gh.lazySingleton<_i501.HomeRemoteDataSource>(
+      () => _i1002.HomeRemoteDataSourceImpl(
+        gh<_i501.FirebaseFirestore>(),
+        gh<_i501.Dio>(),
+      ),
+    );
     gh.lazySingleton<_i360.CompleteOnboardingUsecase>(
       () => _i360.CompleteOnboardingUsecase(gh<_i501.OnboardingRepository>()),
     );
@@ -150,6 +185,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i666.SessionBloc>(
       () => _i666.SessionBloc(gh<_i501.UserSessionStorage>()),
+    );
+    gh.factory<_i358.RecordsBloc>(
+      () => _i358.RecordsBloc(
+        gh<_i501.FetchHealthRecordsUsecase>(),
+        gh<_i501.DeleteHealthRecordUsecase>(),
+      ),
     );
     gh.lazySingleton<_i501.OnboardingRemoteDatasource>(
       () => _i720.OnboardingRemoteDatasourceImpl(gh<_i501.Dio>()),
@@ -203,8 +244,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i469.ProfileBloc>(
       () => _i469.ProfileBloc(gh<_i501.SaveProfileUsecase>()),
     );
+    gh.factory<_i72.AddDoctorVisitUsecase>(
+      () => _i72.AddDoctorVisitUsecase(gh<_i501.HomeRepository>()),
+    );
     gh.factory<_i655.AddSymptomUsecase>(
       () => _i655.AddSymptomUsecase(gh<_i501.HomeRepository>()),
+    );
+    gh.factory<_i490.FetchSymptomLogsForInsightUsecase>(
+      () => _i490.FetchSymptomLogsForInsightUsecase(gh<_i501.HomeRepository>()),
+    );
+    gh.factory<_i513.GenerateAiInsightUsecase>(
+      () => _i513.GenerateAiInsightUsecase(gh<_i501.HomeRepository>()),
+    );
+    gh.factory<_i902.SaveInsightToTimelineUsecase>(
+      () => _i902.SaveInsightToTimelineUsecase(gh<_i501.HomeRepository>()),
     );
     gh.factory<_i95.UpdateSymptomUsecase>(
       () => _i95.UpdateSymptomUsecase(gh<_i501.HomeRepository>()),
@@ -221,6 +274,10 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i501.AddSymptomUsecase>(),
         gh<_i501.UpdateSymptomUsecase>(),
         gh<_i501.UploadRecordUsecase>(),
+        gh<_i501.AddDoctorVisitUsecase>(),
+        gh<_i501.FetchSymptomLogsForInsightUsecase>(),
+        gh<_i501.GenerateAiInsightUsecase>(),
+        gh<_i501.SaveInsightToTimelineUsecase>(),
       ),
     );
     return this;
