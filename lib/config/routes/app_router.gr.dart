@@ -29,7 +29,9 @@ class AddFamilyMemberRoute extends PageRouteInfo<AddFamilyMemberRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<AddFamilyMemberRouteArgs>();
-      return AddFamilyMemberPage(key: args.key, userId: args.userId);
+      return WrappedRoute(
+        child: AddFamilyMemberPage(key: args.key, userId: args.userId),
+      );
     },
   );
 }
@@ -224,7 +226,9 @@ class FamilyProfilesRoute extends PageRouteInfo<FamilyProfilesRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<FamilyProfilesRouteArgs>();
-      return FamilyProfilesPage(key: args.key, profile: args.profile);
+      return WrappedRoute(
+        child: FamilyProfilesPage(key: args.key, profile: args.profile),
+      );
     },
   );
 }
@@ -351,7 +355,9 @@ class PrivacySettingsRoute extends PageRouteInfo<PrivacySettingsRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<PrivacySettingsRouteArgs>();
-      return PrivacySettingsPage(key: args.key, profile: args.profile);
+      return WrappedRoute(
+        child: PrivacySettingsPage(key: args.key, profile: args.profile),
+      );
     },
   );
 }

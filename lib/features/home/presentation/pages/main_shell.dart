@@ -12,6 +12,8 @@ class _MainShellPageState extends State<MainShellPage> {
   HomeNavTab _currentTab = HomeNavTab.home;
 
   void _onTabChanged(HomeNavTab tab) {
+    if (_currentTab == tab) return; // Prevent unnecessary navigation
+
     setState(() => _currentTab = tab);
 
     switch (tab) {
@@ -24,32 +26,31 @@ class _MainShellPageState extends State<MainShellPage> {
         break;
 
       case HomeNavTab.records:
-        if (context.router.current.name != RecordsRoute.name) {
-          context.router.push(const RecordsRoute());
-        }
+        context.router.replace(const RecordsRoute());
         break;
+
       case HomeNavTab.timeline:
-        // Navigate to the new Timeline feature.
-        if (context.router.current.name != TimelineRoute.name) {
-          context.router.push(const TimelineRoute());
-        }
+        context.router.replace(const TimelineRoute());
         break;
+
       case HomeNavTab.profile:
-        if (context.router.current.name != ProfileSettingsRoute.name) {
-          context.router.push(const ProfileSettingsRoute());
-        }
+        context.router.replace(const ProfileSettingsRoute());
         break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = context.isDesktop;
+
     return Scaffold(
       body: const AutoRouter(),
-      bottomNavigationBar: HomeBottomNavWidget(
-        currentTab: _currentTab,
-        onTabChanged: _onTabChanged,
-      ),
+      bottomNavigationBar: isDesktop
+          ? null
+          : HomeBottomNavWidget(
+              currentTab: _currentTab,
+              onTabChanged: _onTabChanged,
+            ),
     );
   }
 }
