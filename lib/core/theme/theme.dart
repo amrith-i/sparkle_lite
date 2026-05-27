@@ -5,3 +5,4 @@ export 'home/home.dart';
 export 'symptom/symptom.dart';
 export 'records/records.dart';
 export 'ai_insight/ai_insight.dart';
+export 'timeline/timeline.dart';

@@ -29,7 +29,10 @@ class _MainShellPageState extends State<MainShellPage> {
         }
         break;
       case HomeNavTab.timeline:
-        // TODO: Implement Timeline navigation
+        // Navigate to the new Timeline feature.
+        if (context.router.current.name != TimelineRoute.name) {
+          context.router.push(const TimelineRoute());
+        }
         break;
       case HomeNavTab.profile:
         // TODO: Implement Profile navigation

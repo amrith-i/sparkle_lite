@@ -21,6 +21,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: HomeRoute.page, path: '', initial: true),
         AutoRoute(page: SymptomRoute.page, path: 'symptoms'),
         AutoRoute(page: RecordsRoute.page, path: 'records'),
+        AutoRoute(page: TimelineRoute.page, path: 'timeline'),
       ],
     ),
 

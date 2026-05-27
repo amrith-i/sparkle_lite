@@ -84,6 +84,13 @@ import '../../features/symptom/domain/usecases/delete_symptom_log_usecase.dart'
 import '../../features/symptom/domain/usecases/fetch_symptom_logs_usecase.dart'
     as _i476;
 import '../../features/symptom/presentation/bloc/symptom_bloc.dart' as _i342;
+import '../../features/timeline/data/datasources/timeline_remote_datasource_impl.dart'
+    as _i531;
+import '../../features/timeline/data/repositories/timeline_repository_impl.dart'
+    as _i396;
+import '../../features/timeline/domain/usecases/fetch_timeline_usecase.dart'
+    as _i525;
+import '../../features/timeline/presentation/bloc/timeline_bloc.dart' as _i897;
 import '../env/app_config.dart' as _i92;
 import '../routes/app_router.dart' as _i629;
 import 'app_module.dart' as _i460;
@@ -132,6 +139,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i501.ProfileRemoteDataSource>(
       () => _i857.ProfileRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
     );
+    gh.lazySingleton<_i501.TimelineRemoteDataSource>(
+      () => _i531.TimelineRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i142.NetworkListenerService>(
       () => _i142.NetworkListenerService(
         gh<_i501.NetworkChecker>(),
@@ -163,6 +173,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i501.ProfileRepository>(
       () => _i334.ProfileRepositoryImpl(
         remoteDataSource: gh<_i501.ProfileRemoteDataSource>(),
+      ),
+    );
+    gh.lazySingleton<_i501.TimelineRepository>(
+      () => _i396.TimelineRepositoryImpl(
+        gh<_i501.Dio>(),
+        remoteDataSource: gh<_i501.TimelineRemoteDataSource>(),
       ),
     );
     gh.lazySingleton<_i501.AuthRemoteDataSource>(
@@ -210,6 +226,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i57.SignUpUsecase>(
       () => _i57.SignUpUsecase(gh<_i501.AuthRepository>()),
     );
+    gh.factory<_i525.FetchTimelineUsecase>(
+      () => _i525.FetchTimelineUsecase(gh<_i501.TimelineRepository>()),
+    );
     gh.lazySingleton<_i591.SaveProfileUsecase>(
       () => _i591.SaveProfileUsecase(gh<_i501.ProfileRepository>()),
     );
@@ -221,6 +240,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i501.Dio>(),
         remoteDataSource: gh<_i501.HomeRemoteDataSource>(),
       ),
+    );
+    gh.factory<_i897.TimelineBloc>(
+      () => _i897.TimelineBloc(gh<_i501.FetchTimelineUsecase>()),
     );
     gh.factory<_i415.DeleteSymptomLogUsecase>(
       () => _i415.DeleteSymptomLogUsecase(gh<_i501.SymptomRepository>()),

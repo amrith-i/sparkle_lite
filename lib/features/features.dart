@@ -4,3 +4,4 @@ export 'profile/profile.dart';
 export 'home/home.dart';
 export 'symptom/symptom.dart';
 export 'records/records.dart';
+export 'timeline/timeline.dart';

@@ -335,6 +335,22 @@ class SymptomRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [TimelinePage]
+class TimelineRoute extends PageRouteInfo<void> {
+  const TimelineRoute({List<PageRouteInfo>? children})
+    : super(TimelineRoute.name, initialChildren: children);
+
+  static const String name = 'TimelineRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const TimelinePage());
+    },
+  );
+}
+
+/// generated route for
 /// [UploadRecordPage]
 class UploadRecordRoute extends PageRouteInfo<void> {
   const UploadRecordRoute({List<PageRouteInfo>? children})
