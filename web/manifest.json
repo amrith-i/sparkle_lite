@@ -1,6 +1,6 @@
 {
-    "name": "daily_finance_manager",
-    "short_name": "daily_finance_manager",
+    "name": "sparkle_lite",
+    "short_name": "sparkle_lite",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -48,4 +48,12 @@ class AuthDecorations {
 
   static BoxDecoration pageBackground() =>
       const BoxDecoration(color: AuthColors.background);
+
+  static BoxDecoration desktopBrandBackground() => const BoxDecoration(
+    gradient: LinearGradient(
+      colors: AuthColors.desktopBrandGradient,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+  );
 }

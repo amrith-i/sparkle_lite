@@ -8,33 +8,55 @@ class SplashPage extends StatefulWidget {
   State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashPageState extends State<SplashPage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animController;
+  late final Animation<double> _fadeIn;
+
   @override
   void initState() {
     super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+    _fadeIn = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _animController.forward();
     _navigate();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
   }
 
   Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
-    // Replace with your AutoRoute navigation logic
     // e.g. context.router.replace(const LoginRoute());
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = context.isDesktop;
+
     return Scaffold(
       body: Container(
         decoration: AuthDecorations.splashBackground(),
-        child: const _SplashContent(),
+        child: FadeTransition(
+          opacity: _fadeIn,
+          child: isDesktop ? const _SplashDesktop() : const _SplashMobile(),
+        ),
       ),
     );
   }
 }
 
-class _SplashContent extends StatelessWidget {
-  const _SplashContent();
+// ─── Mobile splash (unchanged) ────────────────────────────────────────────────
+
+class _SplashMobile extends StatelessWidget {
+  const _SplashMobile();
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +79,59 @@ class _SplashContent extends StatelessWidget {
     );
   }
 }
+
+// ─── Desktop splash — centred, with subtle card + larger type ─────────────────
+
+class _SplashDesktop extends StatelessWidget {
+  const _SplashDesktop();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Logo — fixed size, not mobile-scaled
+          Container(
+            width: 96,
+            height: 96,
+            decoration: AuthDecorations.logoContainer(context),
+            child: const Center(
+              child: Icon(
+                Icons.auto_awesome,
+                color: AuthColors.buttonText,
+                size: 44,
+              ),
+            ),
+          ),
+          const SizedBox(height: 28),
+          const Text(
+            'Sparkle Lite',
+            style: TextStyle(
+              color: AuthColors.buttonText,
+              fontSize: 36,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Your private health companion',
+            style: TextStyle(
+              color: AuthColors.buttonText.withOpacity(0.8),
+              fontSize: 17,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 40),
+          const _SplashDots(),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Dots — shared between mobile and desktop ─────────────────────────────────
 
 class _SplashDots extends StatelessWidget {
   const _SplashDots();

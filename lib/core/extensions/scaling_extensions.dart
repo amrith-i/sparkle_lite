@@ -22,12 +22,4 @@ extension ResponsiveScale on BuildContext {
     final value = pick(mobile: mobile, tablet: tablet, desktop: desktop);
     return ScreenScaler.instance.scale(value);
   }
-
-  // double wp(double percent) {
-  //   return (MediaQuery.of(this).size.width * percent) / 100;
-  // }
-
-  // double hp(double percent) {
-  //   return (MediaQuery.of(this).size.height * percent) / 100;
-  // }
 }

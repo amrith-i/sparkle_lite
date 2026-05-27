@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# daily_finance_manager
+# Sparkle Lite
 A Flutter mobile app for Sparkle Lite clean architecture + TDD.
 # Running the file to create a new feature
 how to run the .sh file to create a new feature?

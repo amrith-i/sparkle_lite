@@ -37,4 +37,10 @@ class AuthColors {
     AppColors.gradientStart,
     AppColors.gradientEnd,
   ];
+
+  // Web
+  static const List<Color> desktopBrandGradient = [
+    Color(0xFF7B2FF7),
+    Color(0xFFE91E8C),
+  ];
 }

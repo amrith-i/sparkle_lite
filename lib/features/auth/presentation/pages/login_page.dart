@@ -70,22 +70,18 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        // ProfileCheckBloc — fires at page open, redirects if profile exists
         BlocListener<ProfileCheckBloc, ProfileCheckState>(
           listener: (context, state) {
             if (state is ProfileExists) {
               context.router.replaceAll([const HomeRoute()]);
             }
-            // ProfileNotFound → stay on login, nothing to do
           },
         ),
-        // AuthBloc — fires after user submits login form
         BlocListener<AuthBloc, AuthState>(
           listener: (context, state) async {
             if (state is AuthAuthenticated) {
               await _saveSession();
               if (!mounted) return;
-              // Re-check profile now that user is logged in
               context.read<ProfileCheckBloc>().add(CheckProfile());
             } else if (state is AuthError) {
               AppNotifier.show(context, state.message, type: MessageType.error);
@@ -99,59 +95,281 @@ class _LoginPageState extends State<LoginPage> {
               ? state
               : const LoginFormState();
           final isLoading = state is AuthLoading;
+          final isDesktop = context.isDesktop;
 
-          return Scaffold(
-            backgroundColor: AuthColors.background,
-            body: SafeArea(
-              child: SingleChildScrollView(
-                padding: AuthPaddings.page,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: context.h(mobile: 48)),
-                    const _LoginHeader(),
-                    SizedBox(height: context.h(mobile: 40)),
-                    _LoginForm(
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                      obscurePassword: formState.obscurePassword,
-                      emailError: formState.emailError,
-                      passwordError: formState.passwordError,
-                      onTogglePassword: () =>
-                          _bloc.add(const LoginPasswordVisibilityToggled()),
-                      onFieldSubmitted: () =>
-                          _bloc.add(const LoginFormValidated()),
-                    ),
-                    SizedBox(height: context.h(mobile: 8)),
-                    AuthGradientButton(
-                      label: 'Sign In',
-                      isLoading: isLoading,
-                      onPressed: () => _bloc.add(const LoginFormValidated()),
-                    ),
-                    SizedBox(height: context.h(mobile: 20)),
-                    _LoginFooter(),
-                    SizedBox(height: context.h(mobile: 20)),
-                    AuthNoteCard(
-                      text:
-                          'Your data is private and never shared without your consent.',
-                      emoji: '🔒',
-                      decoration: AuthDecorations.privacyNoteCard(),
-                    ),
-                    SizedBox(height: context.h(mobile: 24)),
-                  ],
-                ),
-              ),
-            ),
-          );
+          return isDesktop
+              ? _LoginDesktop(
+                  emailController: _emailController,
+                  passwordController: _passwordController,
+                  formState: formState,
+                  isLoading: isLoading,
+                  bloc: _bloc,
+                )
+              : _LoginMobile(
+                  emailController: _emailController,
+                  passwordController: _passwordController,
+                  formState: formState,
+                  isLoading: isLoading,
+                  bloc: _bloc,
+                );
         },
       ),
     );
   }
 }
 
-// ─── ProfileCheckBloc ─────────────────────────────────────────────────────────
+// ─── Mobile layout — 100% unchanged from original ────────────────────────────
 
-// event
+class _LoginMobile extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final LoginFormState formState;
+  final bool isLoading;
+  final AuthBloc bloc;
+
+  const _LoginMobile({
+    required this.emailController,
+    required this.passwordController,
+    required this.formState,
+    required this.isLoading,
+    required this.bloc,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AuthColors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: AuthPaddings.page,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: context.h(mobile: 48)),
+              const _LoginHeader(),
+              SizedBox(height: context.h(mobile: 40)),
+              _LoginForm(
+                emailController: emailController,
+                passwordController: passwordController,
+                obscurePassword: formState.obscurePassword,
+                emailError: formState.emailError,
+                passwordError: formState.passwordError,
+                onTogglePassword: () =>
+                    bloc.add(const LoginPasswordVisibilityToggled()),
+                onFieldSubmitted: () => bloc.add(const LoginFormValidated()),
+              ),
+              SizedBox(height: context.h(mobile: 8)),
+              AuthGradientButton(
+                label: 'Sign In',
+                isLoading: isLoading,
+                onPressed: () => bloc.add(const LoginFormValidated()),
+              ),
+              SizedBox(height: context.h(mobile: 20)),
+              _LoginFooter(),
+              SizedBox(height: context.h(mobile: 20)),
+              AuthNoteCard(
+                text:
+                    'Your data is private and never shared without your consent.',
+                emoji: '🔒',
+                decoration: AuthDecorations.privacyNoteCard(),
+              ),
+              SizedBox(height: context.h(mobile: 24)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Desktop layout — proper two-column, constrained form ────────────────────
+
+class _LoginDesktop extends StatelessWidget {
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final LoginFormState formState;
+  final bool isLoading;
+  final AuthBloc bloc;
+
+  const _LoginDesktop({
+    required this.emailController,
+    required this.passwordController,
+    required this.formState,
+    required this.isLoading,
+    required this.bloc,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AuthColors.background,
+      body: Row(
+        children: [
+          // Left — gradient brand panel (55% width)
+          const Expanded(flex: 55, child: AuthDesktopBrandPanel()),
+
+          // Right — white form panel (45% width)
+          Expanded(
+            flex: 45,
+            child: AuthDesktopFormShell(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // App wordmark
+                  Row(
+                    children: const [
+                      AuthWebLogo(size: 36),
+                      SizedBox(width: 10),
+                      Text(
+                        'Sparkle Lite',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: AuthColors.titleText,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 36),
+
+                  // Heading
+                  const Text(
+                    'Welcome back',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w700,
+                      color: AuthColors.titleText,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Sign in to your health space',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AuthColors.subtitleText,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Email field
+                  const Text(
+                    'Email address',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: AuthColors.titleText,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  AuthWebFormField(
+                    controller: emailController,
+                    hint: 'priya@example.com',
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    borderColor: formState.emailError != null
+                        ? AppColors.error
+                        : AuthColors.fieldBorder,
+                  ),
+                  if (formState.emailError != null)
+                    AuthWebErrorText(message: formState.emailError!),
+                  const SizedBox(height: 16),
+
+                  // Password field
+                  const Text(
+                    'Password',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: AuthColors.titleText,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  AuthWebFormField(
+                    controller: passwordController,
+                    hint: '••••••••',
+                    obscureText: formState.obscurePassword,
+                    textInputAction: TextInputAction.done,
+                    borderColor: formState.passwordError != null
+                        ? AppColors.error
+                        : AuthColors.fieldBorder,
+                    suffixIcon: Icon(
+                      formState.obscurePassword
+                          ? AuthIcons.visibilityOff
+                          : AuthIcons.visibility,
+                      size: 18,
+                      color: AuthColors.subtitleText,
+                    ),
+                    onSuffixPressed: () =>
+                        bloc.add(const LoginPasswordVisibilityToggled()),
+                    onFieldSubmitted: (_) =>
+                        bloc.add(const LoginFormValidated()),
+                  ),
+                  if (formState.passwordError != null)
+                    AuthWebErrorText(message: formState.passwordError!),
+                  const SizedBox(height: 24),
+
+                  // Sign in button — constrained, not full screen
+                  AuthWebGradientButton(
+                    label: 'Sign In',
+                    isLoading: isLoading,
+                    onPressed: () => bloc.add(const LoginFormValidated()),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Sign up link
+                  Center(
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => context.router.push(const SignUpRoute()),
+                        child: RichText(
+                          text: TextSpan(
+                            style: const TextStyle(fontSize: 13),
+                            children: [
+                              const TextSpan(
+                                text: 'New here?  ',
+                                style: TextStyle(
+                                  color: AuthColors.subtitleText,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'Create account',
+                                style: TextStyle(
+                                  color: AuthColors.buttonGradientEnd,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+
+                  // Privacy note
+                  AuthWebNoteCard(
+                    text:
+                        'Your data is private and never shared without your consent.',
+                    emoji: '🔒',
+                    decoration: AuthDecorations.privacyNoteCard(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── ProfileCheckBloc (local to login feature) ───────────────────────────────
+
 abstract class ProfileCheckEvent extends Equatable {
   const ProfileCheckEvent();
   @override
@@ -160,7 +378,6 @@ abstract class ProfileCheckEvent extends Equatable {
 
 class CheckProfile extends ProfileCheckEvent {}
 
-// state
 abstract class ProfileCheckState extends Equatable {
   const ProfileCheckState();
   @override
@@ -175,7 +392,6 @@ class ProfileExists extends ProfileCheckState {}
 
 class ProfileNotFound extends ProfileCheckState {}
 
-// bloc
 @injectable
 class ProfileCheckBloc extends Bloc<ProfileCheckEvent, ProfileCheckState> {
   final ProfileRemoteDataSource profileDataSource;
@@ -189,29 +405,23 @@ class ProfileCheckBloc extends Bloc<ProfileCheckEvent, ProfileCheckState> {
     Emitter<ProfileCheckState> emit,
   ) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
-
-    // No Firebase user yet (page opened before login) — stay on login
     if (uid == null) {
       emit(ProfileNotFound());
       return;
     }
-
     emit(ProfileChecking());
-
     try {
       final data = await profileDataSource.getProfile(uid);
-      if (data != null && data.isNotEmpty) {
-        emit(ProfileExists());
-      } else {
-        emit(ProfileNotFound());
-      }
+      emit(
+        data != null && data.isNotEmpty ? ProfileExists() : ProfileNotFound(),
+      );
     } catch (_) {
       emit(ProfileNotFound());
     }
   }
 }
 
-// ─── Page widgets ─────────────────────────────────────────────────────────────
+// ─── Shared mobile sub-widgets (unchanged) ───────────────────────────────────
 
 class _LoginHeader extends StatelessWidget {
   const _LoginHeader();
