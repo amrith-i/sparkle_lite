@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mockito/annotations.dart';
@@ -49,7 +47,7 @@ import 'package:sparkle_lite/core/networks/api_failure.dart';
 
 import 'unit_test.mocks.dart';
 
-// ─── Mock generation ──────────────────────────────────────────────────────────
+// Mock generation
 @GenerateMocks([
   LoginUsecase,
   SignUpUsecase,
@@ -63,9 +61,7 @@ import 'unit_test.mocks.dart';
   SignOutUsecase,
 ])
 void main() {
-  // ════════════════════════════════════════════════════════════════════════════
   // 1. SYMPTOM LOG VALIDATION
-  // ════════════════════════════════════════════════════════════════════════════
 
   group('Symptom Log Validation', () {
     test('AddSymptomEntity accepts valid pain level within range', () {
@@ -222,9 +218,7 @@ void main() {
     });
   });
 
-  // ════════════════════════════════════════════════════════════════════════════
   // 2. AI INSIGHT MOCK RULE
-  // ════════════════════════════════════════════════════════════════════════════
 
   group('AI Insight Mock Rule', () {
     test('AiInsightEntity holds all insight fields correctly', () {
@@ -403,9 +397,7 @@ void main() {
     });
   });
 
-  // ════════════════════════════════════════════════════════════════════════════
   // 3. DOCTOR VISIT SUMMARY GENERATION
-  // ════════════════════════════════════════════════════════════════════════════
 
   group('Doctor Visit Summary Generation', () {
     test('DoctorVisitEntity holds all required fields', () {
@@ -539,9 +531,7 @@ void main() {
     });
   });
 
-  // ════════════════════════════════════════════════════════════════════════════
   // 4. PRIVACY PREFERENCE LOGIC
-  // ════════════════════════════════════════════════════════════════════════════
 
   group('Privacy Preference Logic', () {
     test('PrivacySettingsEntity defaults all flags to false', () {
@@ -693,9 +683,7 @@ void main() {
     );
   });
 
-  // ════════════════════════════════════════════════════════════════════════════
   // 5. AUTH BLOC — FORM VALIDATION
-  // ════════════════════════════════════════════════════════════════════════════
 
   group('AuthBloc — Form Validation', () {
     late MockLoginUsecase mockLoginUsecase;
@@ -896,9 +884,7 @@ void main() {
     );
   });
 
-  // ════════════════════════════════════════════════════════════════════════════
   // 6. SYMPTOM BLOC
-  // ════════════════════════════════════════════════════════════════════════════
 
   group('SymptomBloc', () {
     late MockFetchSymptomLogsUsecase mockFetchLogs;
@@ -1038,9 +1024,7 @@ void main() {
     );
   });
 
-  // ════════════════════════════════════════════════════════════════════════════
   // 7. PROFILE SETTINGS BLOC — PRIVACY TOGGLE
-  // ════════════════════════════════════════════════════════════════════════════
 
   group('ProfileSettingsBloc — Privacy Toggle', () {
     late MockFetchProfileSettingsUsecase mockFetchProfile;
