@@ -1,5 +1,12 @@
 import '../../../../../core_import.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SplashPage
+//
+// Pure display page — shows the branded splash animation then navigates to
+// SessionGatePage which owns all routing decisions (profile check, auth check).
+// ─────────────────────────────────────────────────────────────────────────────
+
 @RoutePage()
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -34,7 +41,7 @@ class _SplashPageState extends State<SplashPage>
   Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
-    // e.g. context.router.replace(const LoginRoute());
+    context.router.replace(const SessionGateRoute());
   }
 
   @override
@@ -80,7 +87,7 @@ class _SplashMobile extends StatelessWidget {
   }
 }
 
-// ─── Desktop splash — centred, with subtle card + larger type ─────────────────
+// ─── Desktop splash — centred, with larger type ───────────────────────────────
 
 class _SplashDesktop extends StatelessWidget {
   const _SplashDesktop();
@@ -91,7 +98,6 @@ class _SplashDesktop extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Logo — fixed size, not mobile-scaled
           Container(
             width: 96,
             height: 96,
@@ -131,7 +137,7 @@ class _SplashDesktop extends StatelessWidget {
   }
 }
 
-// ─── Dots — shared between mobile and desktop ─────────────────────────────────
+// ─── Dots — shared ────────────────────────────────────────────────────────────
 
 class _SplashDots extends StatelessWidget {
   const _SplashDots();

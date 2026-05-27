@@ -1,5 +1,19 @@
 import '../../../../core_import.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// LoginPage
+//
+// Auth flow after a successful sign-in:
+//   1. _saveSession()  — persist Firebase uid into local storage
+//   2. ProfileCheckBloc.CheckProfile()  — hit the backend
+//      • ProfileExists   → replaceAll HomeRoute    (returning user)
+//      • ProfileNotFound → replaceAll OnboardingRoute (new user, needs setup)
+//
+// On page load, ProfileCheckBloc also runs immediately:
+//   • If the user is already authenticated AND has a profile they land on Home
+//     without ever seeing the login form.
+// ─────────────────────────────────────────────────────────────────────────────
+
 @RoutePage()
 class LoginPage extends StatefulWidget implements AutoRouteWrapper {
   const LoginPage({super.key});
@@ -70,18 +84,31 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        // ── Profile check result ─────────────────────────────────────────────
         BlocListener<ProfileCheckBloc, ProfileCheckState>(
           listener: (context, state) {
             if (state is ProfileExists) {
+              // Profile found → go straight Home
               context.router.replaceAll([const HomeRoute()]);
+            } else if (state is ProfileNotFound) {
+              // Profile missing after auth → start onboarding
+              // (Only act when auth has already completed — guard with AuthBloc)
+              final authState = context.read<AuthBloc>().state;
+              if (authState is AuthAuthenticated) {
+                context.router.replaceAll([const OnboardingRoute()]);
+              }
+              // If auth hasn't fired yet (initial load with no user) stay on page
             }
           },
         ),
+
+        // ── Auth result ──────────────────────────────────────────────────────
         BlocListener<AuthBloc, AuthState>(
           listener: (context, state) async {
             if (state is AuthAuthenticated) {
               await _saveSession();
               if (!mounted) return;
+              // Trigger profile check — listener above will route accordingly
               context.read<ProfileCheckBloc>().add(CheckProfile());
             } else if (state is AuthError) {
               AppNotifier.show(context, state.message, type: MessageType.error);
@@ -241,23 +268,22 @@ class _LoginDesktop extends StatelessWidget {
                       fontSize: 26,
                       fontWeight: FontWeight.w700,
                       color: AuthColors.titleText,
-                      letterSpacing: -0.5,
+                      letterSpacing: -0.3,
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
+                  Text(
                     'Sign in to your health space',
                     style: TextStyle(
                       fontSize: 14,
                       color: AuthColors.subtitleText,
-                      height: 1.5,
                     ),
                   ),
                   const SizedBox(height: 32),
 
                   // Email field
                   const Text(
-                    'Email address',
+                    'Email',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -269,14 +295,13 @@ class _LoginDesktop extends StatelessWidget {
                     controller: emailController,
                     hint: 'priya@example.com',
                     keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
                     borderColor: formState.emailError != null
                         ? AppColors.error
                         : AuthColors.fieldBorder,
                   ),
                   if (formState.emailError != null)
                     AuthWebErrorText(message: formState.emailError!),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
 
                   // Password field
                   const Text(
@@ -312,7 +337,7 @@ class _LoginDesktop extends StatelessWidget {
                     AuthWebErrorText(message: formState.passwordError!),
                   const SizedBox(height: 24),
 
-                  // Sign in button — constrained, not full screen
+                  // Sign in button
                   AuthWebGradientButton(
                     label: 'Sign In',
                     isLoading: isLoading,
@@ -368,7 +393,7 @@ class _LoginDesktop extends StatelessWidget {
   }
 }
 
-// ─── ProfileCheckBloc (local to login feature) ───────────────────────────────
+// ─── ProfileCheckBloc ─────────────────────────────────────────────────────────
 
 abstract class ProfileCheckEvent extends Equatable {
   const ProfileCheckEvent();

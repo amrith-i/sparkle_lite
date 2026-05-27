@@ -1,5 +1,16 @@
 import '../../../../core_import.dart';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SessionGatePage
+//
+// Routing logic:
+//   • No Firebase user          → LoginRoute
+//   • Firebase user + profile   → HomeRoute
+//   • Firebase user, no profile → LoginRoute
+//     (Login page will run ProfileCheckBloc after auth and route to Onboarding
+//      if the profile is still absent.)
+// ─────────────────────────────────────────────────────────────────────────────
+
 @RoutePage()
 class SessionGatePage extends StatefulWidget {
   const SessionGatePage({super.key});
@@ -16,52 +27,67 @@ class _SessionGatePageState extends State<SessionGatePage> {
   }
 
   Future<void> _checkSession() async {
-    // Small delay to let the splash animate if needed
-    await Future.delayed(const Duration(milliseconds: 300));
+    // Small delay so the splash animates before we navigate
+    await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
 
-    // FirebaseAuth is the source of truth.
-    // If the user is still signed in, Firebase Auth persists the token.
     final firebaseUser = FirebaseAuth.instance.currentUser;
 
-    if (firebaseUser != null) {
-      // Sync uid into local storage in case it was never saved
-      // (handles upgrade from old app version without uid field).
-      final storage = getIt<UserSessionStorage>();
-      if (storage.uid == null) {
-        final existing = storage.read();
-        if (existing != null) {
-          await storage.save(
-            UserSessionModel(
-              uid: firebaseUser.uid,
-              userId: existing.userId,
-              outletId: existing.outletId,
-              outletName: existing.outletName,
-              name: existing.name,
-              outletAddress: existing.outletAddress,
-              role: existing.role,
-              roleName: existing.roleName,
-              phone: existing.phone,
-              driverId: existing.driverId,
-            ),
-          );
-        } else {
-          // No prior session at all — save a minimal one
-          await storage.save(
-            UserSessionModel(
-              uid: firebaseUser.uid,
-              userId: 0,
-              role: UserRole.user,
-              roleName: 'User',
-              phone: firebaseUser.phoneNumber ?? '',
-            ),
-          );
-        }
-      }
+    // ── No authenticated user ────────────────────────────────────────────────
+    if (firebaseUser == null) {
+      context.router.replaceAll([const LoginRoute()]);
+      return;
+    }
+
+    // ── Authenticated user — check if profile exists ─────────────────────────
+    try {
+      final profileDataSource = getIt<ProfileRemoteDataSource>();
+      final data = await profileDataSource.getProfile(firebaseUser.uid);
+      final profileExists = data != null && data.isNotEmpty;
 
       if (!mounted) return;
-      context.router.replaceAll([const HomeRoute()]);
-    } else {
+
+      if (profileExists) {
+        // Profile found — sync uid into local storage if needed then go Home
+        final storage = getIt<UserSessionStorage>();
+        if (storage.uid == null) {
+          final existing = storage.read();
+          if (existing != null) {
+            await storage.save(
+              UserSessionModel(
+                uid: firebaseUser.uid,
+                userId: existing.userId,
+                outletId: existing.outletId,
+                outletName: existing.outletName,
+                name: existing.name,
+                outletAddress: existing.outletAddress,
+                role: existing.role,
+                roleName: existing.roleName,
+                phone: existing.phone,
+                driverId: existing.driverId,
+              ),
+            );
+          } else {
+            await storage.save(
+              UserSessionModel(
+                uid: firebaseUser.uid,
+                userId: 0,
+                role: UserRole.user,
+                roleName: 'User',
+                phone: firebaseUser.phoneNumber ?? '',
+              ),
+            );
+          }
+        }
+
+        if (!mounted) return;
+        context.router.replaceAll([const HomeRoute()]);
+      } else {
+        // No profile — send to Login so the full auth + onboarding flow runs
+        context.router.replaceAll([const LoginRoute()]);
+      }
+    } catch (_) {
+      // On any error default to Login
       if (!mounted) return;
       context.router.replaceAll([const LoginRoute()]);
     }
@@ -69,7 +95,6 @@ class _SessionGatePageState extends State<SessionGatePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Show splash while checking session
     return Scaffold(
       body: Container(
         decoration: AuthDecorations.splashBackground(),
@@ -78,6 +103,8 @@ class _SessionGatePageState extends State<SessionGatePage> {
     );
   }
 }
+
+// ─── Splash content shown while the session check is running ─────────────────
 
 class _SplashContent extends StatelessWidget {
   const _SplashContent();
