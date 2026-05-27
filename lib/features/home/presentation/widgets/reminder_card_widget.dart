@@ -3,11 +3,13 @@ import '../../../../core_import.dart';
 class ReminderCardWidget extends StatelessWidget {
   final ReminderEntity reminder;
   final VoidCallback onTap;
+  final bool genericNotification; // Keep this name
 
   const ReminderCardWidget({
     super.key,
     required this.reminder,
     required this.onTap,
+    required this.genericNotification, // Match this parameter name
   });
 
   String _formatSchedule(DateTime dt) {
@@ -52,6 +54,13 @@ class ReminderCardWidget extends StatelessWidget {
     return '$displayHour:${minute.toString().padLeft(2, '0')} $period';
   }
 
+  String _getReminderTitle() {
+    if (genericNotification) {
+      return 'Health Reminder';
+    }
+    return reminder.title;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -67,12 +76,14 @@ class ReminderCardWidget extends StatelessWidget {
                 width: context.w(mobile: 36),
                 height: context.w(mobile: 36),
                 decoration: BoxDecoration(
-                  color: HomeColors.reminderIconBg,
+                  color: genericNotification
+                      ? HomeColors.reminderIconBg.withOpacity(0.5)
+                      : HomeColors.reminderIconBg,
                   borderRadius: BorderRadius.circular(context.r(mobile: 10)),
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  '🔔',
+                  genericNotification ? '🔒' : '🔔',
                   style: TextStyle(fontSize: context.sp(mobile: 18)),
                 ),
               ),
@@ -82,8 +93,12 @@ class ReminderCardWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      reminder.title,
-                      style: HomeTextStyles.reminderTitle(context),
+                      _getReminderTitle(),
+                      style: HomeTextStyles.reminderTitle(context).copyWith(
+                        fontStyle: genericNotification
+                            ? FontStyle.italic
+                            : null,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -93,12 +108,19 @@ class ReminderCardWidget extends StatelessWidget {
                         Icon(
                           Icons.calendar_today_rounded,
                           size: context.sp(mobile: 12),
-                          color: HomeColors.reminderIcon,
+                          color: genericNotification
+                              ? HomeColors.reminderIcon.withOpacity(0.5)
+                              : HomeColors.reminderIcon,
                         ),
                         SizedBox(width: context.w(mobile: 4)),
                         Text(
                           _formatSchedule(reminder.scheduledAt),
-                          style: HomeTextStyles.reminderSubtitle(context),
+                          style: HomeTextStyles.reminderSubtitle(context)
+                              .copyWith(
+                                color: genericNotification
+                                    ? HomeColors.reminderIcon.withOpacity(0.5)
+                                    : null,
+                              ),
                         ),
                       ],
                     ),
@@ -108,7 +130,9 @@ class ReminderCardWidget extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 size: context.sp(mobile: 20),
-                color: HomeColors.reminderCardBg,
+                color: genericNotification
+                    ? HomeColors.reminderCardBg.withOpacity(0.5)
+                    : HomeColors.reminderCardBg,
               ),
             ],
           ),

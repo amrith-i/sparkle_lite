@@ -3,11 +3,13 @@ import '../../../../core_import.dart';
 class LatestInsightCardWidget extends StatelessWidget {
   final InsightEntity insight;
   final VoidCallback onTap;
+  final bool hideSensitive;
 
   const LatestInsightCardWidget({
     super.key,
     required this.insight,
     required this.onTap,
+    required this.hideSensitive,
   });
 
   String _formatDate(DateTime date) {
@@ -41,10 +43,12 @@ class LatestInsightCardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '✦',
+                hideSensitive ? '🔒' : '✦',
                 style: TextStyle(
                   fontSize: context.sp(mobile: 18),
-                  color: HomeColors.insightIcon,
+                  color: hideSensitive
+                      ? HomeColors.insightIcon.withOpacity(0.5)
+                      : HomeColors.insightIcon,
                 ),
               ),
               SizedBox(width: context.w(mobile: 12)),
@@ -53,16 +57,43 @@ class LatestInsightCardWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'AI Health Insight · ${_formatDate(insight.generatedDate)}',
-                      style: HomeTextStyles.insightTitle(context),
+                      hideSensitive
+                          ? 'AI Health Insight · Protected'
+                          : 'AI Health Insight · ${_formatDate(insight.generatedDate)}',
+                      style: HomeTextStyles.insightTitle(context).copyWith(
+                        color: hideSensitive
+                            ? HomeColors.insightTitle.withOpacity(0.6)
+                            : null,
+                      ),
                     ),
                     SizedBox(height: context.h(mobile: 6)),
-                    Text(
-                      insight.patternNoticed, // Show patternNoticed, not body
-                      style: HomeTextStyles.insightBody(context),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    if (hideSensitive)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          context.r(mobile: 4),
+                        ),
+                        child: Container(
+                          height: context.h(mobile: 40),
+                          width: double.infinity,
+                          color: Colors.grey.withOpacity(0.1),
+                          child: Center(
+                            child: Text(
+                              '🔒 Content hidden for privacy',
+                              style: TextStyle(
+                                fontSize: context.sp(mobile: 12),
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      Text(
+                        insight.patternNoticed,
+                        style: HomeTextStyles.insightBody(context),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                   ],
                 ),
               ),

@@ -24,6 +24,8 @@ class HomeColors {
   // Home Specific
   static const Color cycleDay = Color(0xFFE8355A);
   static const Color cycleDayBg = Color(0xFFFFF0F3);
+  static const Color nextPeriodLabel = Color(0xFF666666);
+  static const Color nextPeriodDate = Color(0xFF333333);
 
   static const Color quickActionBg = Color(0xFFFFF8F8);
   static const Color quickActionLogBg = Color(0xFFFFF0F0);
@@ -48,6 +50,7 @@ class HomeColors {
   static const Color insightCardBorder = Color(0xFFD1C4E9);
   static const Color insightText = Color(0xFF5C35A5);
   static const Color insightIcon = Color(0xFF7B52C1);
+  static const Color insightTitle = Color(0xFF5C35A5);
 
   static const Color reminderCardBg = Color(0xFFE8F5E9);
   static const Color reminderCardBorder = Color(0xFFC8E6C9);
@@ -70,4 +73,10 @@ class HomeColors {
 
   // Reminder Icon Bg
   static const Color reminderIconBg = Color(0xFFF0F7FF);
+
+  // Record specific colors
+  static const Color recordIconBg = Color(0xFFE8F4FD);
+  static const Color recordTitle = Color(0xFF333333);
+  static const Color recordSubtitle = Color(0xFF666666);
+  static const Color recordCardBg = Color(0xFFFFFFFF);
 }

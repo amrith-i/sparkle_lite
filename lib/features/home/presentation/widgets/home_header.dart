@@ -17,6 +17,22 @@ class HomeHeaderWidget extends StatelessWidget {
     return 'Good evening,';
   }
 
+  String _getInitials(String name) {
+    if (name.isEmpty) return '';
+
+    final nameParts = name.trim().split(' ');
+
+    if (nameParts.length == 1) {
+      // Single name - take first letter
+      return nameParts[0][0].toUpperCase();
+    } else {
+      // Two or more names - take first letter of first and last name
+      final firstInitial = nameParts[0][0].toUpperCase();
+      final lastInitial = nameParts[nameParts.length - 1][0].toUpperCase();
+      return '$firstInitial$lastInitial';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -60,7 +76,7 @@ class HomeHeaderWidget extends StatelessWidget {
               decoration: HomeDecorations.avatar(context),
               alignment: Alignment.center,
               child: Text(
-                profile.name,
+                _getInitials(profile.name),
                 style: TextStyle(
                   color: HomeColors.avatarText,
                   fontSize: context.sp(mobile: 18),

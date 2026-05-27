@@ -6,7 +6,13 @@ class HomePage extends StatefulWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(create: (_) => getIt<HomeBloc>(), child: this);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<HomeBloc>()),
+        BlocProvider(create: (_) => getIt<ProfileSettingsBloc>()),
+      ],
+      child: this,
+    );
   }
 
   @override
@@ -14,12 +20,11 @@ class HomePage extends StatefulWidget implements AutoRouteWrapper {
 }
 
 class _HomePageState extends State<HomePage> {
-  // HomeNavTab _currentTab = HomeNavTab.home;
-
   @override
   void initState() {
     super.initState();
     _loadHome();
+    _loadPrivacySettings();
   }
 
   void _loadHome() {
@@ -29,33 +34,17 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // void _onTabChanged(HomeNavTab tab) {
-  //   setState(() => _currentTab = tab);
-  //   switch (tab) {
-  //     case HomeNavTab.home:
-  //       break;
-  //     case HomeNavTab.symptoms:
-  //       // Navigate to SymptomPage; reset tab back to home after returning.
-  //       context.router.push(const SymptomRoute()).then((_) {
-  //         if (mounted) setState(() => _currentTab = HomeNavTab.home);
-  //       });
-  //       break;
-  //     case HomeNavTab.records:
-  //       // context.router.push(const RecordsRoute());
-  //       break;
-  //     case HomeNavTab.timeline:
-  //       // context.router.push(const TimelineRoute());
-  //       break;
-  //     case HomeNavTab.profile:
-  //       // context.router.push(const ProfileRoute());
-  //       break;
-  //   }
-  // }
+  void _loadPrivacySettings() {
+    final uid = getIt<UserSessionStorage>().uid;
+    if (uid != null && uid.isNotEmpty) {
+      context.read<ProfileSettingsBloc>().add(LoadProfileSettings(userId: uid));
+    }
+  }
 
   Future<void> _onLogSymptomTap() async {
     final result = await context.router.push(AddSymptomRoute());
     if (result == 'success' && mounted) {
-      _loadHome(); // Refresh so the recent-log card updates immediately.
+      _loadHome();
       AppNotifier.show(
         context,
         'Symptoms logged successfully!',
@@ -90,67 +79,68 @@ class _HomePageState extends State<HomePage> {
     context.router.push(const AiInsightRoute());
   }
 
-  void _onAvatarTap() {
-    // context.router.push(const ProfileRoute());
-  }
+  void _onAvatarTap() {}
 
   void _onRecentLogTap() {
     context.router.navigate(const SymptomRoute());
   }
 
-  void _onRecentRecordTap(HealthRecordEntity record) {
-    // context.router.push(RecordDetailRoute(recordId: record.id));
-  }
+  void _onRecentRecordTap(HealthRecordEntity record) {}
 
-  void _onInsightTap(InsightEntity insight) {
-    // context.router.push(AiInsightResultRoute(insightId: insight.id));
-  }
+  void _onInsightTap(InsightEntity insight) {}
 
-  void _onReminderTap() {
-    // context.router.push(const ProfileRoute());
-  }
+  void _onReminderTap() {}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: HomeColors.background,
-      body: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          if (state is HomeLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is HomeError) {
-            return _ErrorView(message: state.message, onRetry: _loadHome);
-          }
-          if (state is HomeLoaded) {
-            return _HomeContent(
-              data: state.data,
-              onAvatarTap: _onAvatarTap,
-              onLogSymptom: _onLogSymptomTap,
-              onUploadRecord: _onUploadRecordTap,
-              onDoctorVisit: _onDoctorVisitTap,
-              onAiInsight: _onAiInsightTap,
-              onRecentLogTap: _onRecentLogTap,
-              onRecentRecordTap: _onRecentRecordTap,
-              onInsightTap: _onInsightTap,
-              onReminderTap: _onReminderTap,
-            );
-          }
-          return const SizedBox.shrink();
+      body: BlocBuilder<ProfileSettingsBloc, ProfileSettingsState>(
+        builder: (context, privacyState) {
+          final hideSensitive = privacyState is ProfileSettingsLoaded
+              ? privacyState.profile.privacySettings.hideSensitiveDashboard
+              : false;
+          final genericNotification = privacyState is ProfileSettingsLoaded
+              ? privacyState.profile.privacySettings.genericNotificationText
+              : false;
+
+          return BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              if (state is HomeLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is HomeError) {
+                return _ErrorView(message: state.message, onRetry: _loadHome);
+              }
+              if (state is HomeLoaded) {
+                return _HomeContent(
+                  data: state.data,
+                  hideSensitiveDashboard: hideSensitive,
+                  genericNotificationText: genericNotification,
+                  onAvatarTap: _onAvatarTap,
+                  onLogSymptom: _onLogSymptomTap,
+                  onUploadRecord: _onUploadRecordTap,
+                  onDoctorVisit: _onDoctorVisitTap,
+                  onAiInsight: _onAiInsightTap,
+                  onRecentLogTap: _onRecentLogTap,
+                  onRecentRecordTap: _onRecentRecordTap,
+                  onInsightTap: _onInsightTap,
+                  onReminderTap: _onReminderTap,
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          );
         },
       ),
-      // bottomNavigationBar: HomeBottomNavWidget(
-      //   currentTab: _currentTab,
-      //   onTabChanged: _onTabChanged,
-      // ),
     );
   }
 }
 
-// ─── Home body content ────────────────────────────────────────────────────────
-
 class _HomeContent extends StatelessWidget {
   final HomeDataEntity data;
+  final bool hideSensitiveDashboard;
+  final bool genericNotificationText;
   final VoidCallback onAvatarTap;
   final VoidCallback onLogSymptom;
   final VoidCallback onUploadRecord;
@@ -163,6 +153,8 @@ class _HomeContent extends StatelessWidget {
 
   const _HomeContent({
     required this.data,
+    required this.hideSensitiveDashboard,
+    required this.genericNotificationText,
     required this.onAvatarTap,
     required this.onLogSymptom,
     required this.onUploadRecord,
@@ -174,8 +166,27 @@ class _HomeContent extends StatelessWidget {
     required this.onReminderTap,
   });
 
+  DateTime? _getLastPeriodStartDate() {
+    // Check if recentLog has period started
+    if (data.recentLog != null &&
+        (data.recentLog!.periodStatus == 'Period started' ||
+            data.recentLog!.periodStatus == 'Period ongoing')) {
+      return data.recentLog!.date;
+    }
+
+    return null;
+  }
+
+  int _getCycleLength() {
+    // Use default cycle length of 28 days
+    return 28;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final lastPeriodStartDate = _getLastPeriodStartDate();
+    final cycleLength = _getCycleLength();
+
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -190,10 +201,18 @@ class _HomeContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: context.h(mobile: 8)),
-
               HomeHeaderWidget(profile: data.profile, onAvatarTap: onAvatarTap),
+              SizedBox(height: context.h(mobile: 10)),
 
-              SizedBox(height: context.h(mobile: 24)),
+              // Cycle Day Card - only shows if period data exists
+              if (lastPeriodStartDate != null)
+                CycleDayCardWidget(
+                  profile: data.profile,
+                  lastPeriodStartDate: lastPeriodStartDate,
+                  cycleLength: cycleLength,
+                  hideSensitive: hideSensitiveDashboard,
+                ),
+              SizedBox(height: context.h(mobile: 20)),
 
               const SectionLabelWidget(label: 'QUICK ACTIONS'),
               SizedBox(height: context.h(mobile: 10)),
@@ -203,7 +222,6 @@ class _HomeContent extends StatelessWidget {
                 onDoctorVisit: onDoctorVisit,
                 onAiInsight: onAiInsight,
               ),
-
               if (data.recentLog != null) ...[
                 SizedBox(height: context.h(mobile: 24)),
                 const SectionLabelWidget(label: 'RECENT LOG'),
@@ -211,9 +229,9 @@ class _HomeContent extends StatelessWidget {
                 RecentLogCardWidget(
                   log: data.recentLog!,
                   onTap: onRecentLogTap,
+                  hideSensitive: hideSensitiveDashboard,
                 ),
               ],
-
               if (data.recentRecord != null) ...[
                 SizedBox(height: context.h(mobile: 24)),
                 const SectionLabelWidget(label: 'RECENT RECORD'),
@@ -221,9 +239,9 @@ class _HomeContent extends StatelessWidget {
                 RecentRecordCardWidget(
                   record: data.recentRecord!,
                   onTap: () => onRecentRecordTap(data.recentRecord!),
+                  hideSensitive: hideSensitiveDashboard,
                 ),
               ],
-
               if (data.latestInsight != null || data.reminder != null) ...[
                 SizedBox(height: context.h(mobile: 24)),
                 const SectionLabelWidget(label: 'LATEST INSIGHT'),
@@ -232,16 +250,17 @@ class _HomeContent extends StatelessWidget {
                   LatestInsightCardWidget(
                     insight: data.latestInsight!,
                     onTap: () => onInsightTap(data.latestInsight!),
+                    hideSensitive: hideSensitiveDashboard,
                   ),
                 if (data.reminder != null) ...[
                   SizedBox(height: context.h(mobile: 10)),
                   ReminderCardWidget(
                     reminder: data.reminder!,
                     onTap: onReminderTap,
+                    genericNotification: genericNotificationText,
                   ),
                 ],
               ],
-
               SizedBox(height: context.h(mobile: 24)),
             ],
           ),
@@ -250,8 +269,6 @@ class _HomeContent extends StatelessWidget {
     );
   }
 }
-
-// ─── Error view ───────────────────────────────────────────────────────────────
 
 class _ErrorView extends StatelessWidget {
   final String message;

@@ -3,11 +3,13 @@ import '../../../../core_import.dart';
 class RecentRecordCardWidget extends StatelessWidget {
   final HealthRecordEntity record;
   final VoidCallback onTap;
+  final bool hideSensitive;
 
   const RecentRecordCardWidget({
     super.key,
     required this.record,
     required this.onTap,
+    required this.hideSensitive,
   });
 
   String _formatDate(DateTime date) {
@@ -29,6 +31,7 @@ class RecentRecordCardWidget extends StatelessWidget {
   }
 
   String _getRecordEmoji(String type) {
+    if (hideSensitive) return '🔒';
     switch (type.toLowerCase()) {
       case 'lab report':
         return '💉';
@@ -59,7 +62,12 @@ class RecentRecordCardWidget extends StatelessWidget {
               Container(
                 width: context.w(mobile: 42),
                 height: context.w(mobile: 42),
-                decoration: HomeDecorations.recordIconBg(context),
+                decoration: BoxDecoration(
+                  color: hideSensitive
+                      ? HomeColors.recordIconBg.withOpacity(0.3)
+                      : HomeColors.recordIconBg,
+                  borderRadius: BorderRadius.circular(context.r(mobile: 12)),
+                ),
                 alignment: Alignment.center,
                 child: Text(
                   _getRecordEmoji(record.recordType),
@@ -72,32 +80,43 @@ class RecentRecordCardWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      record.title,
-                      style: HomeTextStyles.recordTitle(context),
+                      hideSensitive ? 'Health Record' : record.title,
+                      style: HomeTextStyles.recordTitle(context).copyWith(
+                        color: hideSensitive
+                            ? HomeColors.recordTitle.withOpacity(0.6)
+                            : HomeColors.recordTitle,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: context.h(mobile: 2)),
                     Text(
-                      '${_formatDate(record.date)}${record.doctorName != null && record.doctorName!.isNotEmpty ? ' · ${record.doctorName}' : ''}',
-                      style: HomeTextStyles.recordSubtitle(context),
+                      hideSensitive
+                          ? 'Content hidden for privacy'
+                          : '${_formatDate(record.date)}${record.doctorName != null && record.doctorName!.isNotEmpty ? ' · ${record.doctorName}' : ''}',
+                      style: HomeTextStyles.recordSubtitle(context).copyWith(
+                        color: hideSensitive
+                            ? HomeColors.recordSubtitle.withOpacity(0.5)
+                            : HomeColors.recordSubtitle,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.w(mobile: 10),
-                  vertical: context.h(mobile: 4),
+              if (!hideSensitive)
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.w(mobile: 10),
+                    vertical: context.h(mobile: 4),
+                  ),
+                  decoration: HomeDecorations.labReportBadge(context),
+                  child: Text(
+                    record.recordType,
+                    style: HomeTextStyles.badgeText(
+                      context,
+                    ).copyWith(color: HomeColors.labReportBadgeText),
+                  ),
                 ),
-                decoration: HomeDecorations.labReportBadge(context),
-                child: Text(
-                  record.recordType,
-                  style: HomeTextStyles.badgeText(
-                    context,
-                  ).copyWith(color: HomeColors.labReportBadgeText),
-                ),
-              ),
             ],
           ),
         ),
