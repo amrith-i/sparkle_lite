@@ -35,7 +35,9 @@ class _MainShellPageState extends State<MainShellPage> {
         }
         break;
       case HomeNavTab.profile:
-        // TODO: Implement Profile navigation
+        if (context.router.current.name != ProfileSettingsRoute.name) {
+          context.router.push(const ProfileSettingsRoute());
+        }
         break;
     }
   }

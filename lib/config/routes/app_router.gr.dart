@@ -11,6 +11,53 @@
 part of 'app_router.dart';
 
 /// generated route for
+/// [AddFamilyMemberPage]
+class AddFamilyMemberRoute extends PageRouteInfo<AddFamilyMemberRouteArgs> {
+  AddFamilyMemberRoute({
+    Key? key,
+    required String userId,
+    List<PageRouteInfo>? children,
+  }) : super(
+         AddFamilyMemberRoute.name,
+         args: AddFamilyMemberRouteArgs(key: key, userId: userId),
+         initialChildren: children,
+       );
+
+  static const String name = 'AddFamilyMemberRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<AddFamilyMemberRouteArgs>();
+      return AddFamilyMemberPage(key: args.key, userId: args.userId);
+    },
+  );
+}
+
+class AddFamilyMemberRouteArgs {
+  const AddFamilyMemberRouteArgs({this.key, required this.userId});
+
+  final Key? key;
+
+  final String userId;
+
+  @override
+  String toString() {
+    return 'AddFamilyMemberRouteArgs{key: $key, userId: $userId}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! AddFamilyMemberRouteArgs) return false;
+    return key == other.key && userId == other.userId;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ userId.hashCode;
+}
+
+/// generated route for
 /// [AddSymptomPage]
 class AddSymptomRoute extends PageRouteInfo<AddSymptomRouteArgs> {
   AddSymptomRoute({
@@ -159,6 +206,53 @@ class DoctorVisitSummaryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [FamilyProfilesPage]
+class FamilyProfilesRoute extends PageRouteInfo<FamilyProfilesRouteArgs> {
+  FamilyProfilesRoute({
+    Key? key,
+    required ProfileSettingsEntity profile,
+    List<PageRouteInfo>? children,
+  }) : super(
+         FamilyProfilesRoute.name,
+         args: FamilyProfilesRouteArgs(key: key, profile: profile),
+         initialChildren: children,
+       );
+
+  static const String name = 'FamilyProfilesRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<FamilyProfilesRouteArgs>();
+      return FamilyProfilesPage(key: args.key, profile: args.profile);
+    },
+  );
+}
+
+class FamilyProfilesRouteArgs {
+  const FamilyProfilesRouteArgs({this.key, required this.profile});
+
+  final Key? key;
+
+  final ProfileSettingsEntity profile;
+
+  @override
+  String toString() {
+    return 'FamilyProfilesRouteArgs{key: $key, profile: $profile}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! FamilyProfilesRouteArgs) return false;
+    return key == other.key && profile == other.profile;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ profile.hashCode;
+}
+
+/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
@@ -234,6 +328,69 @@ class OnboardingRoute extends PageRouteInfo<void> {
     name,
     builder: (data) {
       return WrappedRoute(child: const OnboardingPage());
+    },
+  );
+}
+
+/// generated route for
+/// [PrivacySettingsPage]
+class PrivacySettingsRoute extends PageRouteInfo<PrivacySettingsRouteArgs> {
+  PrivacySettingsRoute({
+    Key? key,
+    required ProfileSettingsEntity profile,
+    List<PageRouteInfo>? children,
+  }) : super(
+         PrivacySettingsRoute.name,
+         args: PrivacySettingsRouteArgs(key: key, profile: profile),
+         initialChildren: children,
+       );
+
+  static const String name = 'PrivacySettingsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PrivacySettingsRouteArgs>();
+      return PrivacySettingsPage(key: args.key, profile: args.profile);
+    },
+  );
+}
+
+class PrivacySettingsRouteArgs {
+  const PrivacySettingsRouteArgs({this.key, required this.profile});
+
+  final Key? key;
+
+  final ProfileSettingsEntity profile;
+
+  @override
+  String toString() {
+    return 'PrivacySettingsRouteArgs{key: $key, profile: $profile}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PrivacySettingsRouteArgs) return false;
+    return key == other.key && profile == other.profile;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ profile.hashCode;
+}
+
+/// generated route for
+/// [ProfileSettingsPage]
+class ProfileSettingsRoute extends PageRouteInfo<void> {
+  const ProfileSettingsRoute({List<PageRouteInfo>? children})
+    : super(ProfileSettingsRoute.name, initialChildren: children);
+
+  static const String name = 'ProfileSettingsRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return WrappedRoute(child: const ProfileSettingsPage());
     },
   );
 }

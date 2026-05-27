@@ -66,6 +66,14 @@ import '../../features/profile/data/repositories/profile_repository_impl.dart'
     as _i334;
 import '../../features/profile/domain/usecases/profile_usecases.dart' as _i591;
 import '../../features/profile/presentation/bloc/profile_bloc.dart' as _i469;
+import '../../features/profile_settings/data/datasources/profile_settings_remote_datasource_impl.dart'
+    as _i784;
+import '../../features/profile_settings/data/repositories/profile_settings_repository_impl.dart'
+    as _i527;
+import '../../features/profile_settings/domain/usecases/profile_settings_usecases.dart'
+    as _i1046;
+import '../../features/profile_settings/presentation/bloc/profile_settings_bloc.dart'
+    as _i821;
 import '../../features/records/data/datasources/records_remote_datasource_impl.dart'
     as _i27;
 import '../../features/records/data/repositories/records_repository_impl.dart'
@@ -141,6 +149,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i501.TimelineRemoteDataSource>(
       () => _i531.TimelineRemoteDataSourceImpl(gh<_i501.FirebaseFirestore>()),
+    );
+    gh.lazySingleton<_i501.ProfileSettingsRemoteDataSource>(
+      () => _i784.ProfileSettingsRemoteDataSourceImpl(
+        gh<_i501.FirebaseFirestore>(),
+        gh<_i501.FirebaseAuth>(),
+      ),
     );
     gh.lazySingleton<_i142.NetworkListenerService>(
       () => _i142.NetworkListenerService(
@@ -241,6 +255,12 @@ extension GetItInjectableX on _i174.GetIt {
         remoteDataSource: gh<_i501.HomeRemoteDataSource>(),
       ),
     );
+    gh.lazySingleton<_i501.ProfileSettingsRepository>(
+      () => _i527.ProfileSettingsRepositoryImpl(
+        gh<_i501.Dio>(),
+        remoteDataSource: gh<_i501.ProfileSettingsRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i897.TimelineBloc>(
       () => _i897.TimelineBloc(gh<_i501.FetchTimelineUsecase>()),
     );
@@ -266,6 +286,28 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i469.ProfileBloc>(
       () => _i469.ProfileBloc(gh<_i501.SaveProfileUsecase>()),
     );
+    gh.factory<_i1046.FetchProfileSettingsUsecase>(
+      () => _i1046.FetchProfileSettingsUsecase(
+        gh<_i501.ProfileSettingsRepository>(),
+      ),
+    );
+    gh.factory<_i1046.UpdatePrivacySettingsUsecase>(
+      () => _i1046.UpdatePrivacySettingsUsecase(
+        gh<_i501.ProfileSettingsRepository>(),
+      ),
+    );
+    gh.factory<_i1046.AddFamilyMemberUsecase>(
+      () =>
+          _i1046.AddFamilyMemberUsecase(gh<_i501.ProfileSettingsRepository>()),
+    );
+    gh.factory<_i1046.RemoveFamilyMemberUsecase>(
+      () => _i1046.RemoveFamilyMemberUsecase(
+        gh<_i501.ProfileSettingsRepository>(),
+      ),
+    );
+    gh.factory<_i1046.SignOutUsecase>(
+      () => _i1046.SignOutUsecase(gh<_i501.ProfileSettingsRepository>()),
+    );
     gh.factory<_i72.AddDoctorVisitUsecase>(
       () => _i72.AddDoctorVisitUsecase(gh<_i501.HomeRepository>()),
     );
@@ -289,6 +331,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i52.FetchHomeUsecase>(
       () => _i52.FetchHomeUsecase(gh<_i501.HomeRepository>()),
+    );
+    gh.factory<_i821.ProfileSettingsBloc>(
+      () => _i821.ProfileSettingsBloc(
+        gh<_i501.FetchProfileSettingsUsecase>(),
+        gh<_i501.UpdatePrivacySettingsUsecase>(),
+        gh<_i501.AddFamilyMemberUsecase>(),
+        gh<_i501.RemoveFamilyMemberUsecase>(),
+        gh<_i501.SignOutUsecase>(),
+      ),
     );
     gh.factory<_i202.HomeBloc>(
       () => _i202.HomeBloc(

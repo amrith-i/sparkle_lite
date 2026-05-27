@@ -22,6 +22,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: SymptomRoute.page, path: 'symptoms'),
         AutoRoute(page: RecordsRoute.page, path: 'records'),
         AutoRoute(page: TimelineRoute.page, path: 'timeline'),
+        AutoRoute(page: ProfileSettingsRoute.page, path: 'profile'),
       ],
     ),
 
@@ -37,5 +38,9 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: AiInsightResultRoute.page, path: '/ai-insights-result'),
     AutoRoute(page: AddSymptomRoute.page, path: '/add-symptoms'),
     AutoRoute(page: UploadRecordRoute.page, path: '/upload-records'),
+
+    AutoRoute(page: PrivacySettingsRoute.page, path: '/profile/privacy'),
+    AutoRoute(page: FamilyProfilesRoute.page, path: '/profile/family'),
+    AutoRoute(page: AddFamilyMemberRoute.page, path: '/profile/family/add'),
   ];
 }

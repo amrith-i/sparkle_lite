@@ -5,3 +5,4 @@ export 'home/home.dart';
 export 'symptom/symptom.dart';
 export 'records/records.dart';
 export 'timeline/timeline.dart';
+export 'profile_settings/profile_settings.dart';
