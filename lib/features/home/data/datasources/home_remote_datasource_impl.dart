@@ -75,7 +75,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     if (upcomingVisitsSnapshot.docs.isNotEmpty) {
       final doc = upcomingVisitsSnapshot.docs.first;
       final data = doc.data();
-      // Convert doctor visit to reminder format
       reminder = ReminderDto(
         id: doc.id,
         title: 'Doctor Visit with ${data['doctorName'] ?? 'Doctor'}',
@@ -160,7 +159,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         .add(dto.toFirestore());
   }
 
-  // ── AI Insight with Free Gemini API ─────────────────────────────────────────
+  // AI Insight with Free Gemini API
 
   @override
   Future<List<SymptomLogSummaryDto>> fetchSymptomLogs({
@@ -230,9 +229,9 @@ $logLines
         .collection('insights')
         .add(dto.toFirestore());
 
-    print(
-      '✅ Insight saved to Firestore at: users/$userId/insights/${docRef.id}',
-    );
+    // print(
+    //   '✅ Insight saved to Firestore at: users/$userId/insights/${docRef.id}',
+    // );
 
     // Return DTO with the generated ID
     return AiInsightDto(
@@ -307,7 +306,7 @@ $logLines
           throw Exception('No text in Groq response');
         }
 
-        print('✅ Groq success! Response length: ${text.length}');
+        // print('✅ Groq success! Response length: ${text.length}');
         return text;
       } else {
         throw Exception(

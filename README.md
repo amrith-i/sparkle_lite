@@ -312,6 +312,9 @@ feature_name/
     ├── bloc/          # BLoC: events, states, handler methods
     ├── pages/         # @RoutePage()-annotated full-screen widgets
     └── widgets/       # Reusable sub-widgets scoped to this feature
+        ├── shared/    # Reusable shared widgets
+        ├── mobile/    # Mobile feature widgets   
+        └── web/       # Web feature widgets
 ```
 
 ### Routing
