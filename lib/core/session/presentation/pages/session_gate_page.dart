@@ -1,16 +1,5 @@
 import '../../../../core_import.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SessionGatePage
-//
-// Routing logic:
-//   • No Firebase user          → LoginRoute
-//   • Firebase user + profile   → HomeRoute
-//   • Firebase user, no profile → LoginRoute
-//     (Login page will run ProfileCheckBloc after auth and route to Onboarding
-//      if the profile is still absent.)
-// ─────────────────────────────────────────────────────────────────────────────
-
 @RoutePage()
 class SessionGatePage extends StatefulWidget {
   const SessionGatePage({super.key});
@@ -33,13 +22,13 @@ class _SessionGatePageState extends State<SessionGatePage> {
 
     final firebaseUser = FirebaseAuth.instance.currentUser;
 
-    // ── No authenticated user ────────────────────────────────────────────────
+    // No authenticated user
     if (firebaseUser == null) {
       context.router.replaceAll([const LoginRoute()]);
       return;
     }
 
-    // ── Authenticated user — check if profile exists ─────────────────────────
+    // Authenticated user — check if profile exists
     try {
       final profileDataSource = getIt<ProfileRemoteDataSource>();
       final data = await profileDataSource.getProfile(firebaseUser.uid);
@@ -104,7 +93,7 @@ class _SessionGatePageState extends State<SessionGatePage> {
   }
 }
 
-// ─── Splash content shown while the session check is running ─────────────────
+// Splash content shown while the session check is running 
 
 class _SplashContent extends StatelessWidget {
   const _SplashContent();

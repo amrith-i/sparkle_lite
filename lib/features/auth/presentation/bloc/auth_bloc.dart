@@ -21,7 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutRequested>(_onLogoutRequested);
   }
 
-  // ─── Login Form ───────────────────────────────────────────────
+  // Login Form
 
   void _onLoginEmailChanged(LoginEmailChanged event, Emitter<AuthState> emit) {
     final current = _loginForm;
@@ -62,7 +62,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     add(LoginRequested(email: current.email, password: current.password));
   }
 
-  // ─── Sign Up Form ─────────────────────────────────────────────
+  // Sign Up Form
 
   void _onSignUpNameChanged(SignUpNameChanged event, Emitter<AuthState> emit) {
     final current = _signUpForm;
@@ -114,7 +114,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  // ─── Auth Actions ─────────────────────────────────────────────
+  // Auth Actions
 
   Future<void> _onLoginRequested(
     LoginRequested event,
@@ -163,7 +163,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  // ─── Helpers ──────────────────────────────────────────────────
+  // Helpers
 
   LoginFormState get _loginForm => state is LoginFormState
       ? state as LoginFormState

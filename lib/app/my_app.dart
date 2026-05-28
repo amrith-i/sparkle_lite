@@ -12,18 +12,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'Sparkle Lite',
         debugShowCheckedModeBanner: false,
-        // routerConfig: appRouter.config(
-        //   navigatorObservers: () => [routeObserver],
-        // ),
         routerConfig: appRouter.config(),
         theme: ThemeData(
           fontFamily: 'Inter',
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryBlue),
           useMaterial3: true,
         ),
-        // builder: (context, child) {
-        //   return EnvBanner(child: child ?? const SizedBox());
-        // },
       ),
     );
   }

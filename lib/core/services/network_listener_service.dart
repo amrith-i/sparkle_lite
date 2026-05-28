@@ -1,4 +1,3 @@
-
 import '../../core_import.dart';
 
 @LazySingleton()
@@ -37,16 +36,6 @@ class NetworkListenerService {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_router.canPop()) {
         _router.pop();
-
-        // final ctx = _router.navigatorKey.currentContext;
-        // if (ctx != null) {
-        //   ScaffoldMessenger.of(ctx).showSnackBar(
-        //     const SnackBar(
-        //       content: Text('Back online'),
-        //       backgroundColor: Colors.green,
-        //     ),
-        //   );
-        // }
       }
     });
   }

@@ -1,19 +1,5 @@
 import '../../../../core_import.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// LoginPage
-//
-// Auth flow after a successful sign-in:
-//   1. _saveSession()  — persist Firebase uid into local storage
-//   2. ProfileCheckBloc.CheckProfile()  — hit the backend
-//      • ProfileExists   → replaceAll HomeRoute    (returning user)
-//      • ProfileNotFound → replaceAll OnboardingRoute (new user, needs setup)
-//
-// On page load, ProfileCheckBloc also runs immediately:
-//   • If the user is already authenticated AND has a profile they land on Home
-//     without ever seeing the login form.
-// ─────────────────────────────────────────────────────────────────────────────
-
 @RoutePage()
 class LoginPage extends StatefulWidget implements AutoRouteWrapper {
   const LoginPage({super.key});
@@ -84,31 +70,27 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        // ── Profile check result ─────────────────────────────────────────────
+        // Profile check result
         BlocListener<ProfileCheckBloc, ProfileCheckState>(
           listener: (context, state) {
             if (state is ProfileExists) {
-              // Profile found → go straight Home
               context.router.replaceAll([const HomeRoute()]);
             } else if (state is ProfileNotFound) {
-              // Profile missing after auth → start onboarding
-              // (Only act when auth has already completed — guard with AuthBloc)
               final authState = context.read<AuthBloc>().state;
               if (authState is AuthAuthenticated) {
                 context.router.replaceAll([const OnboardingRoute()]);
               }
-              // If auth hasn't fired yet (initial load with no user) stay on page
             }
           },
         ),
 
-        // ── Auth result ──────────────────────────────────────────────────────
+        // Auth result
         BlocListener<AuthBloc, AuthState>(
           listener: (context, state) async {
             if (state is AuthAuthenticated) {
               await _saveSession();
               if (!mounted) return;
-              // Trigger profile check — listener above will route accordingly
+
               context.read<ProfileCheckBloc>().add(CheckProfile());
             } else if (state is AuthError) {
               AppNotifier.show(context, state.message, type: MessageType.error);
@@ -145,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-// ─── Mobile layout — 100% unchanged from original ────────────────────────────
+// Mobile layout
 
 class _LoginMobile extends StatelessWidget {
   final TextEditingController emailController;
@@ -209,7 +191,7 @@ class _LoginMobile extends StatelessWidget {
   }
 }
 
-// ─── Desktop layout — proper two-column, constrained form ────────────────────
+// Desktop layout
 
 class _LoginDesktop extends StatelessWidget {
   final TextEditingController emailController;
@@ -232,10 +214,8 @@ class _LoginDesktop extends StatelessWidget {
       backgroundColor: AuthColors.background,
       body: Row(
         children: [
-          // Left — gradient brand panel (55% width)
           const Expanded(flex: 55, child: AuthDesktopBrandPanel()),
 
-          // Right — white form panel (45% width)
           Expanded(
             flex: 45,
             child: AuthDesktopFormShell(
@@ -393,7 +373,7 @@ class _LoginDesktop extends StatelessWidget {
   }
 }
 
-// ─── ProfileCheckBloc ─────────────────────────────────────────────────────────
+// ProfileCheckBloc
 
 abstract class ProfileCheckEvent extends Equatable {
   const ProfileCheckEvent();
@@ -446,8 +426,7 @@ class ProfileCheckBloc extends Bloc<ProfileCheckEvent, ProfileCheckState> {
   }
 }
 
-// ─── Shared mobile sub-widgets (unchanged) ───────────────────────────────────
-
+// Shared mobile sub-widgets
 class _LoginHeader extends StatelessWidget {
   const _LoginHeader();
 

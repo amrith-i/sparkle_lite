@@ -23,11 +23,6 @@ abstract class AppModule {
         contentType: 'application/json',
       ),
     );
-
-    // Add interceptors here later
-    // dio.interceptors.add(AuthInterceptor(...));
-    // dio.interceptors.add(ApiInterceptor(dio));
-
     return dio;
   }
 

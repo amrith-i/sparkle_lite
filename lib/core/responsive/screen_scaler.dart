@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-/// Base design dimensions — these are the mobile Figma canvas dimensions.
-/// Desktop layouts use fixed values directly and bypass the scaler.
 const double _kBaseWidth = 375.0;
 const double _kBaseHeight = 812.0;
 
@@ -13,8 +11,6 @@ class ScreenScaler {
   late Size _deviceSize;
   bool _initialized = false;
 
-  /// On web/desktop we treat the scaler as a no-op (scale factor = 1.0)
-  /// so that desktop layouts that use fixed values are unaffected.
   bool get _isDesktopContext =>
       kIsWeb ? _deviceSize.width >= 900 : (_deviceSize.shortestSide >= 900);
 

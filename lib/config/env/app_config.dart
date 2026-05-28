@@ -17,23 +17,23 @@ class AppConfig {
     switch (EnvResolver.current) {
       case AppEnvironment.prod:
         return const AppConfig(
-          baseUrl: 'https://api.dailyfinance.app',
-          socketUrl: 'https://api.dailyfinance.app',
+          baseUrl: 'https://api.sparklelight.app',
+          socketUrl: 'https://api.sparklelight.app',
           enableLogs: false,
           enableCrashlytics: true,
         );
 
       case AppEnvironment.dev:
         return const AppConfig(
-          baseUrl: 'https://dev.api.dailyfinance.app',
-          socketUrl: 'https://dev.api.dailyfinance.app',
+          baseUrl: 'https://dev.api.sparklelight.app',
+          socketUrl: 'https://dev.api.sparklelight.app',
           enableLogs: true,
           enableCrashlytics: false,
         );
 
       case AppEnvironment.staging:
         return const AppConfig(
-          baseUrl: 'http://192.168.1.100:3000', // your local machine IP
+          baseUrl: 'http://192.168.1.100:3000',
           socketUrl: 'http://192.168.1.100:3000',
           enableLogs: true,
           enableCrashlytics: false,
@@ -41,7 +41,7 @@ class AppConfig {
 
       case AppEnvironment.local:
         return const AppConfig(
-          baseUrl: 'http://192.168.1.100:3000', // your local machine IP
+          baseUrl: 'http://192.168.1.100:3000',
           socketUrl: 'http://192.168.1.100:3000',
           enableLogs: true,
           enableCrashlytics: false,

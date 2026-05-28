@@ -1,4 +1,3 @@
-// user_model.dart
 enum UserRole { admin, user }
 
 class AppUser {
