@@ -1,4 +1,4 @@
-import '../../../../../core_import.dart';
+import '../../../../../../core_import.dart';
 
 class AuthGradientButton extends StatelessWidget {
   final String label;

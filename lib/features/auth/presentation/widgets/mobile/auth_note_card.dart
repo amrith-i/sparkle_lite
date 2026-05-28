@@ -1,4 +1,4 @@
-import '../../../../../core_import.dart';
+import '../../../../../../core_import.dart';
 
 class AuthNoteCard extends StatelessWidget {
   final String text;

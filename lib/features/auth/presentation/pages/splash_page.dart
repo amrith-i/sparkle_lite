@@ -1,12 +1,5 @@
 import '../../../../../core_import.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SplashPage
-//
-// Pure display page — shows the branded splash animation then navigates to
-// SessionGatePage which owns all routing decisions (profile check, auth check).
-// ─────────────────────────────────────────────────────────────────────────────
-
 @RoutePage()
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -53,112 +46,9 @@ class _SplashPageState extends State<SplashPage>
         decoration: AuthDecorations.splashBackground(),
         child: FadeTransition(
           opacity: _fadeIn,
-          child: isDesktop ? const _SplashDesktop() : const _SplashMobile(),
+          child: isDesktop ? const SplashDesktop() : const SplashMobile(),
         ),
       ),
-    );
-  }
-}
-
-// ─── Mobile splash (unchanged) ────────────────────────────────────────────────
-
-class _SplashMobile extends StatelessWidget {
-  const _SplashMobile();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const AuthSparkLogo(size: 80),
-          SizedBox(height: context.h(mobile: 24)),
-          Text('Sparkle Lite', style: AuthTextStyles.appName(context)),
-          SizedBox(height: context.h(mobile: 8)),
-          Text(
-            'Your private health companion',
-            style: AuthTextStyles.tagline(context),
-          ),
-          SizedBox(height: context.h(mobile: 32)),
-          const _SplashDots(),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Desktop splash — centred, with larger type ───────────────────────────────
-
-class _SplashDesktop extends StatelessWidget {
-  const _SplashDesktop();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 96,
-            height: 96,
-            decoration: AuthDecorations.logoContainer(context),
-            child: const Center(
-              child: Icon(
-                Icons.auto_awesome,
-                color: AuthColors.buttonText,
-                size: 44,
-              ),
-            ),
-          ),
-          const SizedBox(height: 28),
-          const Text(
-            'Sparkle Lite',
-            style: TextStyle(
-              color: AuthColors.buttonText,
-              fontSize: 36,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Your private health companion',
-            style: TextStyle(
-              color: AuthColors.buttonText.withOpacity(0.8),
-              fontSize: 17,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          const SizedBox(height: 40),
-          const _SplashDots(),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Dots — shared ────────────────────────────────────────────────────────────
-
-class _SplashDots extends StatelessWidget {
-  const _SplashDots();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(3, (i) {
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          width: i == 0 ? 10 : 8,
-          height: i == 0 ? 10 : 8,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: i == 0
-                ? AuthColors.buttonGradientEnd
-                : AuthColors.fieldBorder.withOpacity(0.3),
-          ),
-        );
-      }),
     );
   }
 }

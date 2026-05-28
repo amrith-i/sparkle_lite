@@ -1,4 +1,4 @@
-import '../../../../../core_import.dart';
+import '../../../../../../core_import.dart';
 
 class AuthSparkLogo extends StatelessWidget {
   final double size;

@@ -1,12 +1,4 @@
-import '../../../../../core_import.dart';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Web-only auth widgets
-// These are ONLY used by the desktop layouts. Mobile widgets are untouched.
-// ─────────────────────────────────────────────────────────────────────────────
-
-// ── Web gradient button ───────────────────────────────────────────────────────
-// Fixed height, constrained width — never stretches full screen.
+import '../../../../../../core_import.dart';
 
 class AuthWebGradientButton extends StatefulWidget {
   final String label;
@@ -85,9 +77,6 @@ class _AuthWebGradientButtonState extends State<AuthWebGradientButton> {
     );
   }
 }
-
-// ── Web form field ─────────────────────────────────────────────────────────────
-// Fixed 48px height, clean border styling — no mobile scaling.
 
 class AuthWebFormField extends StatefulWidget {
   final TextEditingController controller;
@@ -177,8 +166,6 @@ class _AuthWebFormFieldState extends State<AuthWebFormField> {
   }
 }
 
-// ── Web note card ──────────────────────────────────────────────────────────────
-
 class AuthWebNoteCard extends StatelessWidget {
   final String text;
   final String emoji;
@@ -217,8 +204,6 @@ class AuthWebNoteCard extends StatelessWidget {
     );
   }
 }
-
-// ── Web error text ─────────────────────────────────────────────────────────────
 
 class AuthWebErrorText extends StatelessWidget {
   final String message;
@@ -267,8 +252,6 @@ class AuthWebLogo extends StatelessWidget {
   }
 }
 
-// ── Web back button ────────────────────────────────────────────────────────────
-
 class AuthWebBackButton extends StatelessWidget {
   final VoidCallback onTap;
 
@@ -303,8 +286,6 @@ class AuthWebBackButton extends StatelessWidget {
     );
   }
 }
-
-// ── Brand panel (left side on desktop) ────────────────────────────────────────
 
 class AuthDesktopBrandPanel extends StatelessWidget {
   const AuthDesktopBrandPanel({super.key});
@@ -412,9 +393,6 @@ class _FeatureTile extends StatelessWidget {
     );
   }
 }
-
-// ── Desktop form card shell ─────────────────────────────────────────────────
-// The white right panel — constrains max width to 400px so nothing stretches.
 
 class AuthDesktopFormShell extends StatelessWidget {
   final Widget child;

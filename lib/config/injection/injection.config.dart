@@ -30,7 +30,7 @@ import '../../features/auth/domain/usecases/login_usecase.dart' as _i188;
 import '../../features/auth/domain/usecases/logout_usecase.dart' as _i48;
 import '../../features/auth/domain/usecases/signup_usecase.dart' as _i57;
 import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i797;
-import '../../features/auth/presentation/pages/login_page.dart' as _i326;
+import '../../features/auth/presentation/bloc/profile_check_bloc.dart' as _i494;
 import '../../features/home/data/datasources/home_remote_datasource_impl.dart'
     as _i1002;
 import '../../features/home/data/repositories/home_repository_impl.dart'
@@ -207,8 +207,8 @@ extension GetItInjectableX on _i174.GetIt {
         remoteDataSource: gh<_i501.SymptomRemoteDataSource>(),
       ),
     );
-    gh.factory<_i326.ProfileCheckBloc>(
-      () => _i326.ProfileCheckBloc(gh<_i501.ProfileRemoteDataSource>()),
+    gh.factory<_i494.ProfileCheckBloc>(
+      () => _i494.ProfileCheckBloc(gh<_i501.ProfileRemoteDataSource>()),
     );
     gh.factory<_i792.OnboardingBloc>(
       () => _i792.OnboardingBloc(gh<_i501.CompleteOnboardingUsecase>()),

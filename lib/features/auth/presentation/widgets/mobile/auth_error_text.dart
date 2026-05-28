@@ -1,4 +1,4 @@
-import '../../../../../core_import.dart';
+import '../../../../../../core_import.dart';
 
 class AuthErrorText extends StatelessWidget {
   final String message;
