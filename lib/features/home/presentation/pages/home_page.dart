@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// ─── Desktop Layout ───────────────────────────────────────────────────────────
+// Desktop Layout
 
 class _HomeDesktopLayout extends StatefulWidget {
   final HomeDataEntity data;
@@ -250,7 +250,7 @@ class _HomeDesktopLayoutState extends State<_HomeDesktopLayout> {
 
     return Row(
       children: [
-        // ── Left Sidebar ──────────────────────────────────────────────────────
+        // Left Sidebar
         _HomeSidebar(
           selectedIndex: _selectedNavIndex,
           navItems: _navItems
@@ -261,7 +261,7 @@ class _HomeDesktopLayoutState extends State<_HomeDesktopLayout> {
           onAvatarTap: widget.onAvatarTap,
         ),
 
-        // ── Main Content ──────────────────────────────────────────────────────
+        // Main Content
         Expanded(
           child: Column(
             children: [
@@ -361,7 +361,7 @@ class _HomeDesktopLayoutState extends State<_HomeDesktopLayout> {
   }
 }
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
+// Sidebar
 
 class _HomeSidebar extends StatelessWidget {
   final int selectedIndex;
@@ -618,7 +618,7 @@ class _SidebarNavItemState extends State<_SidebarNavItem> {
   }
 }
 
-// ─── Desktop Header ───────────────────────────────────────────────────────────
+// Desktop Header
 
 class _HomeDesktopHeader extends StatelessWidget {
   final String greeting;
@@ -778,9 +778,7 @@ class _HomeLogSymptomButtonState extends State<_HomeLogSymptomButton> {
   }
 }
 
-// ─── Stats Row ────────────────────────────────────────────────────────────────
-
-// ─── Stats Row ────────────────────────────────────────────────────────────────
+// Stats Row
 
 class _HomeStatsRow extends StatelessWidget {
   final HomeDataEntity data;
@@ -968,7 +966,7 @@ class _HomeStatCard extends StatelessWidget {
   }
 }
 
-// ─── Section wrapper ──────────────────────────────────────────────────────────
+// Section wrapper
 
 class _HomeDesktopSection extends StatelessWidget {
   final String title;
@@ -1060,7 +1058,7 @@ class _HomeLinkButtonState extends State<_HomeLinkButton> {
   }
 }
 
-// ─── Recent Activity List ─────────────────────────────────────────────────────
+// Recent Activity List
 
 class _HomeRecentActivityList extends StatelessWidget {
   final HomeDataEntity data;
@@ -1348,7 +1346,7 @@ class _HomeActivityRowState extends State<_HomeActivityRow> {
   }
 }
 
-// ─── AI Insight Banner ────────────────────────────────────────────────────────
+// AI Insight Banner
 
 class _HomeAiInsightBanner extends StatefulWidget {
   final InsightEntity insight;
@@ -1480,7 +1478,7 @@ class _HomeAiInsightBannerState extends State<_HomeAiInsightBanner> {
   }
 }
 
-// ─── Right Panel ──────────────────────────────────────────────────────────────
+// Right Panel
 
 class _HomeRightPanel extends StatelessWidget {
   final HomeDataEntity data;
@@ -1567,49 +1565,6 @@ class _HomeRightPanel extends StatelessWidget {
             ],
           ),
         ),
-
-        // Family
-        // if (data.familyMembers != null && data.familyMembers!.isNotEmpty) ...[
-        //   const SizedBox(height: 16),
-        //   _RightPanelCard(
-        //     emoji: '👨‍👩‍👧',
-        //     title: 'Family',
-        //     child: Column(
-        //       children: [
-        //         ...data.familyMembers!
-        //             .take(3)
-        //             .map(
-        //               (member) => _FamilyMemberItem(
-        //                 name: member.name ?? '',
-        //                 relation: member.relation ?? '',
-        //               ),
-        //             ),
-        //         const Padding(
-        //           padding: EdgeInsets.fromLTRB(14, 10, 14, 14),
-        //           child: Row(
-        //             children: [
-        //               Icon(
-        //                 Icons.lock_rounded,
-        //                 size: 11,
-        //                 color: Color(0xFFB0A0C0),
-        //               ),
-        //               SizedBox(width: 5),
-        //               Expanded(
-        //                 child: Text(
-        //                   'Personal health data is kept separate from family records.',
-        //                   style: TextStyle(
-        //                     fontSize: 10.5,
-        //                     color: Color(0xFFB0A0C0),
-        //                   ),
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ],
       ],
     );
   }
@@ -1914,7 +1869,7 @@ class _FamilyMemberItem extends StatelessWidget {
   }
 }
 
-// ─── Mobile Content (UNTOUCHED) ───────────────────────────────────────────────
+// Mobile Content
 
 class _HomeContent extends StatelessWidget {
   final HomeDataEntity data;

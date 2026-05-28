@@ -24,7 +24,6 @@ class _UploadRecordPageState extends State<UploadRecordPage> {
   String? _pickedFilePath;
   List<int>? _pickedFileBytes;
 
-  // Validation flag — only show errors after first upload attempt
   bool _showValidation = false;
 
   static const _recordTypes = [
@@ -36,7 +35,6 @@ class _UploadRecordPageState extends State<UploadRecordPage> {
     'Other',
   ];
 
-  // Maps keywords in file names to record types for auto-fill
   static const _typeKeywords = {
     'lab': 'Lab Report',
     'blood': 'Lab Report',
@@ -65,7 +63,6 @@ class _UploadRecordPageState extends State<UploadRecordPage> {
     super.dispose();
   }
 
-  // ── Auto-fill fields from file name ────────────────────────────────────────
   void _autoFillFromFileName(String fileName) {
     final nameWithoutExt = fileName.contains('.')
         ? fileName.substring(0, fileName.lastIndexOf('.'))
@@ -244,9 +241,7 @@ class _UploadRecordPageState extends State<UploadRecordPage> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // DESKTOP LAYOUT
-// ═══════════════════════════════════════════════════════════════════════════════
 
 class _UploadRecordDesktopLayout extends StatelessWidget {
   final TextEditingController titleController;
@@ -289,10 +284,8 @@ class _UploadRecordDesktopLayout extends StatelessWidget {
       backgroundColor: HomeColors.background,
       body: Row(
         children: [
-          // ── Left Sidebar — exact copy of HomePage sidebar ──────────────────
           _UploadSidebar(onBack: onBack),
 
-          // ── Main content ───────────────────────────────────────────────────
           Expanded(
             child: Column(
               children: [
@@ -306,7 +299,6 @@ class _UploadRecordDesktopLayout extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ── LEFT COLUMN: file + metadata ───────────────────
                         Expanded(
                           flex: 55,
                           child: Column(
@@ -405,7 +397,6 @@ class _UploadRecordDesktopLayout extends StatelessWidget {
 
                         const SizedBox(width: 24),
 
-                        // ── RIGHT COLUMN: type + notes + action ────────────
                         Expanded(
                           flex: 45,
                           child: Column(
@@ -512,8 +503,7 @@ class _UploadRecordDesktopLayout extends StatelessWidget {
   }
 }
 
-// ─── Desktop Sidebar ──────────────────────────────────────────────────────────
-// Identical dark sidebar from HomePage. "Health Records" tab (index 1) active.
+// Desktop Sidebar
 
 class _UploadSidebar extends StatelessWidget {
   final VoidCallback onBack;
@@ -589,7 +579,6 @@ class _UploadSidebar extends StatelessWidget {
             ),
           ),
 
-          // Nav — "Health Records" (index 1) pre-selected
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -693,7 +682,7 @@ class _UploadSidebarItemState extends State<_UploadSidebarItem> {
   }
 }
 
-// ─── Desktop Header ───────────────────────────────────────────────────────────
+// Desktop Header
 
 class _UploadDesktopHeader extends StatelessWidget {
   final VoidCallback onBack;
@@ -762,8 +751,7 @@ class _UploadDesktopHeader extends StatelessWidget {
   }
 }
 
-// ─── Section card wrapper ─────────────────────────────────────────────────────
-// White card with colored icon accent — matches _HomeDesktopSection exactly.
+// Section card wrapper
 
 class _DeskSection extends StatelessWidget {
   final IconData icon;
@@ -856,7 +844,7 @@ class _DeskSection extends StatelessWidget {
   }
 }
 
-// ─── Drop Zone ────────────────────────────────────────────────────────────────
+// Drop Zone
 
 class _UploadDropZone extends StatefulWidget {
   final String? pickedFileName;
@@ -1019,7 +1007,7 @@ class _UploadDropZoneState extends State<_UploadDropZone> {
   }
 }
 
-// ─── Field row (label + input side by side) ───────────────────────────────────
+// Field row (label + input side by side)
 
 class _DeskFieldRow extends StatelessWidget {
   final String label;
@@ -1065,7 +1053,7 @@ class _DeskFieldRow extends StatelessWidget {
   }
 }
 
-// ─── Text field (desktop) ─────────────────────────────────────────────────────
+// Text field (desktop)
 
 class _DeskTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -1119,7 +1107,7 @@ class _DeskTextField extends StatelessWidget {
   }
 }
 
-// ─── Date button (desktop) ────────────────────────────────────────────────────
+// Date button (desktop)
 
 class _DeskDateButton extends StatefulWidget {
   final String label;
@@ -1194,7 +1182,7 @@ class _DeskDateButtonState extends State<_DeskDateButton> {
   }
 }
 
-// ─── Type chip (desktop) ──────────────────────────────────────────────────────
+// Type chip (desktop)
 
 class _DeskTypeChip extends StatefulWidget {
   final String label;
@@ -1214,7 +1202,6 @@ class _DeskTypeChip extends StatefulWidget {
 class _DeskTypeChipState extends State<_DeskTypeChip> {
   bool _hovered = false;
 
-  // Each type gets its own accent colour pair for visual differentiation.
   static const _typeColors = {
     'Lab Report': (bg: Color(0xFFFFF8ED), text: Color(0xFFF5A623)),
     'Prescription': (bg: Color(0xFFEEF3FF), text: Color(0xFF5B8DEF)),
@@ -1293,7 +1280,7 @@ class _DeskTypeChipState extends State<_DeskTypeChip> {
   }
 }
 
-// ─── Upload summary + CTA card ────────────────────────────────────────────────
+// Upload summary + CTA card
 
 class _UploadSummaryCard extends StatelessWidget {
   final String? pickedFileName;
@@ -1502,8 +1489,7 @@ class _SummaryRow extends StatelessWidget {
   }
 }
 
-// ─── Back button ──────────────────────────────────────────────────────────────
-
+// Back button
 class _DeskBackButton extends StatefulWidget {
   final VoidCallback onTap;
   const _DeskBackButton({required this.onTap});
@@ -1560,7 +1546,7 @@ class _DeskBackButtonState extends State<_DeskBackButton> {
   }
 }
 
-// ─── Cancel button ────────────────────────────────────────────────────────────
+// Cancel button
 
 class _DeskCancelButton extends StatefulWidget {
   final VoidCallback onTap;
@@ -1607,8 +1593,7 @@ class _DeskCancelButtonState extends State<_DeskCancelButton> {
   }
 }
 
-// ─── Upload CTA button ────────────────────────────────────────────────────────
-// Matches _HomeLogSymptomButton: gradient + hover glow, isValid dims gradient.
+// Upload CTA button
 
 class _DeskUploadButton extends StatefulWidget {
   final bool isLoading;
@@ -1693,7 +1678,7 @@ class _DeskUploadButtonState extends State<_DeskUploadButton> {
   }
 }
 
-// ─── Validation text (desktop) ────────────────────────────────────────────────
+// Validation text (desktop)
 
 class _DeskValidationText extends StatelessWidget {
   final String message;
@@ -1718,9 +1703,7 @@ class _DeskValidationText extends StatelessWidget {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// MOBILE LAYOUT — completely untouched from the original
-// ═══════════════════════════════════════════════════════════════════════════════
+// MOBILE LAYOUT
 
 class _UploadRecordMobileLayout extends StatelessWidget {
   final TextEditingController titleController;
@@ -1833,7 +1816,6 @@ class _UploadRecordMobileLayout extends StatelessWidget {
             ),
             SizedBox(height: context.h(mobile: 24)),
 
-            // ── File Picker ────────────────────────────────────────
             GestureDetector(
               onTap: onPickFile,
               child: AnimatedContainer(
@@ -1904,7 +1886,6 @@ class _UploadRecordMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Report Title ───────────────────────────────────────
             _MobFieldLabel(label: 'Report title', required: true),
             SizedBox(height: context.h(mobile: 8)),
             TextField(
@@ -1928,7 +1909,6 @@ class _UploadRecordMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Date ───────────────────────────────────────────────
             _MobFieldLabel(label: 'Date', required: true),
             SizedBox(height: context.h(mobile: 8)),
             GestureDetector(
@@ -1956,7 +1936,6 @@ class _UploadRecordMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Doctor / Clinic ────────────────────────────────────
             _MobFieldLabel(label: 'Doctor / clinic'),
             SizedBox(height: context.h(mobile: 8)),
             TextField(
@@ -1971,7 +1950,6 @@ class _UploadRecordMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Report Type ────────────────────────────────────────
             _MobFieldLabel(label: 'Report type', required: true),
             SizedBox(height: context.h(mobile: 10)),
             Wrap(
@@ -2024,7 +2002,6 @@ class _UploadRecordMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Notes ──────────────────────────────────────────────
             _MobFieldLabel(label: 'Notes (optional)'),
             SizedBox(height: context.h(mobile: 8)),
             TextField(
@@ -2044,7 +2021,6 @@ class _UploadRecordMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 32)),
 
-            // ── Upload Button ──────────────────────────────────────
             BlocBuilder<HomeBloc, HomeState>(
               buildWhen: (_, current) =>
                   current is UploadRecordLoading ||
@@ -2115,7 +2091,7 @@ class _UploadRecordMobileLayout extends StatelessWidget {
   }
 }
 
-// ─── Mobile-only helpers (untouched) ─────────────────────────────────────────
+// Mobile-only helpers
 
 class _MobValidationText extends StatelessWidget {
   final String message;

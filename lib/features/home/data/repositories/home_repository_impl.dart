@@ -92,8 +92,6 @@ class HomeRepositoryImpl extends BaseRepository implements HomeRepository {
     });
   }
 
-  // ── AI Insight ──────────────────────────────────────────────────────────────
-
   @override
   Future<ApiResult<List<SymptomLogSummaryEntity>>> fetchSymptomLogs({
     required String userId,

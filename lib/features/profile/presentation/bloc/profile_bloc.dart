@@ -16,7 +16,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<ProfileBackPressed>(_onBackPressed);
   }
 
-  // ─── Step 1 ───────────────────────────────────────────────────
+  // Step 1
 
   void _onNameChanged(ProfileNameChanged event, Emitter<ProfileState> emit) {
     final s = _step1;
@@ -47,7 +47,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(ProfileStep2State(name: s.name.trim(), ageRange: s.ageRange!));
   }
 
-  // ─── Step 2 ───────────────────────────────────────────────────
+  // Step 2
 
   void _onLifeStageSelected(
     ProfileLifeStageSelected event,
@@ -75,7 +75,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     );
   }
 
-  // ─── Step 3 ───────────────────────────────────────────────────
+  // Step 3
 
   void _onConditionToggled(
     ProfileConditionToggled event,
@@ -121,7 +121,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  // ─── Navigation ───────────────────────────────────────────────
+  // Navigation
 
   void _onBackPressed(ProfileBackPressed event, Emitter<ProfileState> emit) {
     if (state is ProfileStep2State) {
@@ -139,7 +139,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  // ─── Helpers ──────────────────────────────────────────────────
+  // Helpers
 
   ProfileStep1State get _step1 => state is ProfileStep1State
       ? state as ProfileStep1State

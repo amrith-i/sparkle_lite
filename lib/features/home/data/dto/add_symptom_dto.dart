@@ -31,8 +31,6 @@ class AddSymptomDto {
     );
   }
 
-  /// Used when **creating** a new symptom log document.
-  /// Includes createdAt so Firestore timestamps the first write.
   Map<String, dynamic> toFirestore() {
     return {
       'date': Timestamp.fromDate(date),
@@ -46,9 +44,6 @@ class AddSymptomDto {
     };
   }
 
-  /// Used when **updating** an existing symptom log document.
-  /// Does NOT touch createdAt — preserves the original timestamp.
-  /// Uses FieldValue.delete() to remove the notes field when cleared.
   Map<String, dynamic> toFirestoreForUpdate() {
     return {
       'date': Timestamp.fromDate(date),

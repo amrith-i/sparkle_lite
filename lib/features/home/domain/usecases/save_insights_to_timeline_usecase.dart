@@ -1,7 +1,5 @@
 import '../../../../core_import.dart';
 
-// ─── Params ───────────────────────────────────────────────────────────────────
-
 class SaveInsightParams extends Equatable {
   final String userId;
   final AiInsightEntity insight;
@@ -11,8 +9,6 @@ class SaveInsightParams extends Equatable {
   @override
   List<Object?> get props => [userId, insight];
 }
-
-// ─── Usecase ──────────────────────────────────────────────────────────────────
 
 @injectable
 class SaveInsightToTimelineUsecase {

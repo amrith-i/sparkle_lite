@@ -15,7 +15,7 @@ class OnboardingPage extends StatefulWidget implements AutoRouteWrapper {
 
 class _OnboardingPageState extends State<OnboardingPage> {
   late final OnboardingBloc _bloc;
-  // Mobile-only — desktop does NOT use a PageView at all
+  // Mobile-only
   late final PageController _mobilePageController;
 
   static const List<OnboardingItemEntity> _items = [
@@ -77,11 +77,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
         if (state is OnboardingComplete) {
           context.router.replace(const ProfileSetupRoute());
         } else if (state is OnboardingInProgress && !isDesktop) {
-          // Only mobile needs PageController animation
           _animateMobileToPage(state.currentIndex);
         }
-        // Desktop: no PageController, no animateToPage — content is driven
-        // purely by currentIndex passed as a constructor argument.
       },
       builder: (context, state) {
         final current = state is OnboardingInProgress ? state : null;
@@ -109,7 +106,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 }
 
-// ─── Mobile layout — 100% unchanged ──────────────────────────────────────────
+// Mobile layout
 
 class _OnboardingMobile extends StatelessWidget {
   final List<OnboardingItemEntity> items;
@@ -174,13 +171,7 @@ class _OnboardingMobile extends StatelessWidget {
   }
 }
 
-// ─── Desktop layout ───────────────────────────────────────────────────────────
-//
-// KEY DESIGN DECISION: Desktop has NO PageView and NO PageController.
-// The left panel and right panel both read `currentIndex` directly.
-// Transitions are handled by AnimationControllers triggered in didUpdateWidget.
-// This completely eliminates the "PageController not attached" crash because
-// there is no PageController on desktop at all.
+// Desktop layout
 
 class _OnboardingDesktop extends StatefulWidget {
   final List<OnboardingItemEntity> items;
@@ -222,7 +213,6 @@ class _OnboardingDesktopState extends State<_OnboardingDesktop>
       begin: const Offset(0, 0.06),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOut));
-    // Start fully visible on first load
     _fadeController.value = 1.0;
     _slideController.value = 1.0;
   }
@@ -231,7 +221,6 @@ class _OnboardingDesktopState extends State<_OnboardingDesktop>
   void didUpdateWidget(_OnboardingDesktop oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.currentIndex != widget.currentIndex) {
-      // Only trigger visual transition — no PageController involved
       _fadeController.reset();
       _slideController.reset();
       _fadeController.forward();
@@ -254,7 +243,6 @@ class _OnboardingDesktopState extends State<_OnboardingDesktop>
       backgroundColor: OnboardingColors.background,
       body: Row(
         children: [
-          // ── Left: gradient brand panel (55%) ─────────────────────────────
           Expanded(
             flex: 55,
             child: _OnboardingBrandPanel(
@@ -266,7 +254,6 @@ class _OnboardingDesktopState extends State<_OnboardingDesktop>
             ),
           ),
 
-          // ── Right: controls panel (45%) ───────────────────────────────────
           Expanded(
             flex: 45,
             child: _OnboardingControlPanel(
@@ -281,8 +268,6 @@ class _OnboardingDesktopState extends State<_OnboardingDesktop>
     );
   }
 }
-
-// ── Left brand panel ──────────────────────────────────────────────────────────
 
 class _OnboardingBrandPanel extends StatelessWidget {
   final OnboardingItemEntity item;
@@ -383,7 +368,6 @@ class _OnboardingBrandPanel extends StatelessWidget {
 
                 const Spacer(),
 
-                // Animated illustration card — driven by index, no PageView
                 FadeTransition(
                   opacity: fadeAnim,
                   child: SlideTransition(
@@ -400,7 +384,6 @@ class _OnboardingBrandPanel extends StatelessWidget {
 
                 const SizedBox(height: 48),
 
-                // Step counter + segmented progress bar
                 FadeTransition(
                   opacity: fadeAnim,
                   child: Column(
@@ -449,7 +432,7 @@ class _OnboardingBrandPanel extends StatelessWidget {
   }
 }
 
-// ── Illustration card ──────────────────────────────────────────────────────────
+// Illustration card
 
 class _IllustrationCard extends StatelessWidget {
   final OnboardingItemEntity item;
@@ -525,7 +508,7 @@ class _IllustrationCard extends StatelessWidget {
   }
 }
 
-// ── Right control panel ────────────────────────────────────────────────────────
+// Right control panel
 
 class _OnboardingControlPanel extends StatelessWidget {
   final List<OnboardingItemEntity> items;
@@ -633,7 +616,7 @@ class _OnboardingControlPanel extends StatelessWidget {
   }
 }
 
-// ── Step tile ──────────────────────────────────────────────────────────────────
+// Step tile
 
 class _StepTile extends StatefulWidget {
   final OnboardingItemEntity item;
@@ -754,7 +737,7 @@ class _StepTileState extends State<_StepTile> {
   }
 }
 
-// ── Web CTA button ─────────────────────────────────────────────────────────────
+// Web CTA button
 
 class _OnboardingWebButton extends StatefulWidget {
   final String label;

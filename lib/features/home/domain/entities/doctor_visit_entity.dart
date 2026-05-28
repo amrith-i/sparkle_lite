@@ -1,7 +1,7 @@
 import '../../../../core_import.dart';
 
 class DoctorVisitEntity extends Equatable {
-  final String? id; // Optional: for editing existing visits
+  final String? id;
   final DateTime date;
   final String doctorName;
   final String? specialty;

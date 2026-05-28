@@ -92,9 +92,7 @@ class _AiInsightPageState extends State<AiInsightPage> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // DESKTOP LAYOUT
-// ═══════════════════════════════════════════════════════════════════════════════
 
 class _AiInsightDesktopLayout extends StatelessWidget {
   final Set<String> selectedLogIds;
@@ -117,17 +115,13 @@ class _AiInsightDesktopLayout extends StatelessWidget {
       backgroundColor: HomeColors.background,
       body: Row(
         children: [
-          // ── Left Sidebar ───────────────────────────────────────────────────
           _AiInsightSidebar(onBack: onBack),
 
-          // ── Main content ───────────────────────────────────────────────────
           Expanded(
             child: Column(
               children: [
-                // Top header bar
                 _AiInsightDesktopHeader(onBack: onBack),
 
-                // Body
                 Expanded(
                   child: BlocBuilder<HomeBloc, HomeState>(
                     buildWhen: (_, current) =>
@@ -212,13 +206,11 @@ class _AiInsightDesktopBody extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── LEFT COLUMN: log selection ─────────────────────────────────────
           Expanded(
             flex: 58,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Section: Select Logs
                 _AIDeskSection(
                   icon: Icons.checklist_rounded,
                   iconColor: const Color(0xFF6B4FA8),
@@ -254,7 +246,6 @@ class _AiInsightDesktopBody extends StatelessWidget {
 
           const SizedBox(width: 24),
 
-          // ── RIGHT COLUMN: disclaimer + generate CTA ────────────────────────
           Expanded(
             flex: 42,
             child: Column(
@@ -299,7 +290,7 @@ class _AiInsightDesktopBody extends StatelessWidget {
   }
 }
 
-// ─── Generate card ────────────────────────────────────────────────────────────
+// Generate card
 
 class _AiInsightGenerateCard extends StatelessWidget {
   final int selectedCount;
@@ -401,8 +392,6 @@ class _AiInsightGenerateCard extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 20),
-
-                // Generate button
                 BlocBuilder<HomeBloc, HomeState>(
                   buildWhen: (_, current) => current is AiInsightGenerating,
                   builder: (context, state) {
@@ -536,7 +525,7 @@ class _AIDeskGenerateButtonState extends State<_AIDeskGenerateButton> {
   }
 }
 
-// ─── Shared desktop section card ──────────────────────────────────────────────
+// Shared desktop section card
 
 class _AIDeskSection extends StatelessWidget {
   final IconData icon;
@@ -624,7 +613,7 @@ class _AIDeskSection extends StatelessWidget {
   }
 }
 
-// ─── Desktop Sidebar ──────────────────────────────────────────────────────────
+// Desktop Sidebar
 
 class _AiInsightSidebar extends StatelessWidget {
   final VoidCallback onBack;
@@ -698,7 +687,6 @@ class _AiInsightSidebar extends StatelessWidget {
               ],
             ),
           ),
-          // "Symptoms" (index 3) active for AI Insight
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -802,7 +790,7 @@ class _AISidebarItemState extends State<_AISidebarItem> {
   }
 }
 
-// ─── Desktop Header ───────────────────────────────────────────────────────────
+// Desktop Header
 
 class _AiInsightDesktopHeader extends StatelessWidget {
   final VoidCallback onBack;
@@ -930,9 +918,7 @@ class _AIDesktopBackButtonState extends State<_AIDesktopBackButton> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// MOBILE LAYOUT — completely untouched from the original
-// ═══════════════════════════════════════════════════════════════════════════════
+// MOBILE LAYOUT
 
 class _AiInsightMobileLayout extends StatelessWidget {
   final Set<String> selectedLogIds;

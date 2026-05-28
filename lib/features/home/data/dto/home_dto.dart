@@ -24,11 +24,6 @@ class HomeDataDto {
   );
 }
 
-// SymptomLogDto is defined in:
-// features/symptom/data/dto/symptom_log_dto.dart
-// Do NOT re-declare it here — it is exported via core_import.dart.
-
-/// Maps profiles/{uid} — matches ProfileSetupPage's saved structure.
 class UserProfileDto {
   final String uid;
   final String name;

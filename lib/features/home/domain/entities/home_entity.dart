@@ -25,15 +25,11 @@ class HomeDataEntity extends Equatable {
   ];
 }
 
-// SymptomLogEntity is defined in:
-// features/symptom/domain/entities/symptom_log_entity.dart
-// Do NOT re-declare it here — it is exported via core_import.dart.
-
 class InsightEntity extends Equatable {
   final String id;
-  final String title; // AI Health Insight
-  final String summary; // The summary text
-  final String patternNoticed; // The pattern noticed (shown in card)
+  final String title;
+  final String summary;
+  final String patternNoticed;
   final List<String> suggestedQuestions;
   final String whenToSeekCare;
   final DateTime generatedDate;

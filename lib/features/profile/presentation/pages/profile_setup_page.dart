@@ -63,7 +63,6 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
     super.dispose();
   }
 
-  /// Always read uid directly from FirebaseAuth — never rely on a Provider.
   String _getCurrentUid() => FirebaseAuth.instance.currentUser?.uid ?? '';
 
   @override
@@ -148,7 +147,7 @@ class _ProfileSetupPageState extends State<ProfileSetupPage> {
   }
 }
 
-// ─── Desktop Layout ───────────────────────────────────────────────────────────
+// Desktop Layout
 
 class _ProfileSetupDesktop extends StatefulWidget {
   final ProfileBloc bloc;
@@ -241,7 +240,6 @@ class _ProfileSetupDesktopState extends State<_ProfileSetupDesktop>
       backgroundColor: ProfileColors.background,
       body: Row(
         children: [
-          // ── Left: gradient brand panel (55%) ─────────────────────────────
           Expanded(
             flex: 55,
             child: _ProfileBrandPanel(
@@ -252,7 +250,6 @@ class _ProfileSetupDesktopState extends State<_ProfileSetupDesktop>
             ),
           ),
 
-          // ── Right: form content panel (45%) ───────────────────────────────
           Expanded(
             flex: 45,
             child: _ProfileDesktopFormPanel(
@@ -274,7 +271,7 @@ class _ProfileSetupDesktopState extends State<_ProfileSetupDesktop>
   }
 }
 
-// ── Left brand panel ──────────────────────────────────────────────────────────
+// Left brand panel
 
 class _ProfileBrandPanel extends StatelessWidget {
   final int currentStep;
@@ -446,7 +443,7 @@ class _ProfileBrandPanel extends StatelessWidget {
   }
 }
 
-// ── Illustration card ─────────────────────────────────────────────────────────
+// Illustration card
 
 class _ProfileIllustrationCard extends StatelessWidget {
   final String emoji;
@@ -574,7 +571,7 @@ class _ProfileIllustrationCard extends StatelessWidget {
   }
 }
 
-// ── Right form panel ──────────────────────────────────────────────────────────
+// Right form panel
 
 class _ProfileDesktopFormPanel extends StatelessWidget {
   final ProfileBloc bloc;
@@ -652,7 +649,7 @@ class _ProfileDesktopFormPanel extends StatelessWidget {
   }
 }
 
-// ── Desktop Step 1 ────────────────────────────────────────────────────────────
+// Desktop Step 1
 
 class _DesktopStep1Content extends StatelessWidget {
   final ProfileBloc bloc;
@@ -735,7 +732,7 @@ class _DesktopStep1Content extends StatelessWidget {
   }
 }
 
-// ── Desktop Step 2 ────────────────────────────────────────────────────────────
+// Desktop Step 2
 
 class _DesktopStep2Content extends StatelessWidget {
   final ProfileBloc bloc;
@@ -804,7 +801,7 @@ class _DesktopStep2Content extends StatelessWidget {
   }
 }
 
-// ── Desktop Step 3 ────────────────────────────────────────────────────────────
+// Desktop Step 3
 
 class _DesktopStep3Content extends StatelessWidget {
   final ProfileBloc bloc;
@@ -909,7 +906,7 @@ class _DesktopStep3Content extends StatelessWidget {
   }
 }
 
-// ── Desktop shared widgets ────────────────────────────────────────────────────
+// Desktop shared widgets
 
 class _DesktopStepHeader extends StatelessWidget {
   final String stepLabel;
@@ -1096,7 +1093,7 @@ Widget _desktopFieldLabel(
   );
 }
 
-// ─── Step 1: About You (Mobile — unchanged) ───────────────────────────────────
+// Step 1: About You
 
 class _Step1Body extends StatelessWidget {
   final ProfileBloc bloc;
@@ -1180,7 +1177,7 @@ class _Step1Body extends StatelessWidget {
   }
 }
 
-// ─── Step 2: Health Journey (Mobile — unchanged) ──────────────────────────────
+// Step 2: Health Journey
 
 class _Step2Body extends StatelessWidget {
   final ProfileBloc bloc;
@@ -1267,7 +1264,7 @@ class _Step2Body extends StatelessWidget {
   }
 }
 
-// ─── Step 3: Health Details (Mobile — unchanged) ──────────────────────────────
+// Step 3: Health Details
 
 class _Step3Body extends StatelessWidget {
   final ProfileBloc bloc;

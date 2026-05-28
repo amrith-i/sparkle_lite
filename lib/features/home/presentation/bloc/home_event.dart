@@ -28,9 +28,6 @@ class RefreshHome extends HomeEvent {
 class SubmitSymptom extends HomeEvent {
   final String userId;
   final AddSymptomEntity entity;
-
-  /// When non-null, the existing log at this Firestore document ID is
-  /// **updated**. When null, a new document is created.
   final String? logId;
 
   const SubmitSymptom({required this.userId, required this.entity, this.logId});
@@ -59,9 +56,6 @@ class SubmitDoctorVisit extends HomeEvent {
   List<Object?> get props => [userId, entity];
 }
 
-// ── AI Insight events ─────────────────────────────────────────────────────────
-
-/// Fetches the recent symptom logs to display on the log-selection page.
 class FetchSymptomLogsForInsight extends HomeEvent {
   final String userId;
 
@@ -71,7 +65,6 @@ class FetchSymptomLogsForInsight extends HomeEvent {
   List<Object?> get props => [userId];
 }
 
-/// Sends selected logs to the AI and stores the generated insight.
 class GenerateAiInsight extends HomeEvent {
   final String userId;
   final List<SymptomLogSummaryEntity> selectedLogs;
@@ -82,7 +75,6 @@ class GenerateAiInsight extends HomeEvent {
   List<Object?> get props => [userId, selectedLogs];
 }
 
-/// Saves the generated insight to the timeline / Firestore.
 class SaveInsightToTimeline extends HomeEvent {
   final String userId;
   final AiInsightEntity insight;

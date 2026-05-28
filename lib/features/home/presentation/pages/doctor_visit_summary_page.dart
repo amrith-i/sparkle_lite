@@ -22,7 +22,6 @@ class _DoctorVisitSummaryPageState extends State<DoctorVisitSummaryPage> {
   DateTime _selectedDate = DateTime.now();
   String? _selectedSpecialty;
 
-  // Validation flag — only show errors after first save attempt
   bool _showValidation = false;
 
   final List<String> _specialties = [
@@ -168,9 +167,7 @@ class _DoctorVisitSummaryPageState extends State<DoctorVisitSummaryPage> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // DESKTOP LAYOUT
-// ═══════════════════════════════════════════════════════════════════════════════
 
 class _DoctorVisitDesktopLayout extends StatelessWidget {
   final TextEditingController doctorController;
@@ -215,30 +212,24 @@ class _DoctorVisitDesktopLayout extends StatelessWidget {
       backgroundColor: HomeColors.background,
       body: Row(
         children: [
-          // ── Left Sidebar ───────────────────────────────────────────────────
           _DoctorVisitSidebar(onBack: onBack),
 
-          // ── Main content ───────────────────────────────────────────────────
           Expanded(
             child: Column(
               children: [
-                // Top header bar
                 _DoctorVisitDesktopHeader(onBack: onBack),
 
-                // Scrollable two-column body
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(32, 28, 32, 48),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ── LEFT COLUMN: date + doctor details ─────────────
                         Expanded(
                           flex: 55,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Section: Visit Info
                               _DVDeskSection(
                                 icon: Icons.calendar_month_rounded,
                                 iconColor: const Color(0xFF5B8DEF),
@@ -292,7 +283,6 @@ class _DoctorVisitDesktopLayout extends StatelessWidget {
 
                                     const SizedBox(height: 16),
 
-                                    // Clinic / Hospital
                                     _DVDeskFieldRow(
                                       label: 'Clinic / Hospital',
                                       child: _DVDeskTextField(
@@ -308,7 +298,6 @@ class _DoctorVisitDesktopLayout extends StatelessWidget {
 
                               const SizedBox(height: 20),
 
-                              // Section: Diagnosis
                               _DVDeskSection(
                                 icon: Icons.medical_information_rounded,
                                 iconColor: const Color(0xFFE91E8C),
@@ -356,13 +345,11 @@ class _DoctorVisitDesktopLayout extends StatelessWidget {
 
                         const SizedBox(width: 24),
 
-                        // ── RIGHT COLUMN: specialty + notes + action ────────
                         Expanded(
                           flex: 45,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Section: Specialty
                               _DVDeskSection(
                                 icon: Icons.local_hospital_rounded,
                                 iconColor: const Color(0xFF6B4FA8),
@@ -383,7 +370,6 @@ class _DoctorVisitDesktopLayout extends StatelessWidget {
 
                               const SizedBox(height: 20),
 
-                              // Section: Notes
                               _DVDeskSection(
                                 icon: Icons.notes_rounded,
                                 iconColor: const Color(0xFFF5A623),
@@ -406,7 +392,6 @@ class _DoctorVisitDesktopLayout extends StatelessWidget {
 
                               const SizedBox(height: 20),
 
-                              // Visit summary card + CTA
                               _DoctorVisitSummaryCard(
                                 doctorName: doctorController.text.trim(),
                                 selectedSpecialty: selectedSpecialty,
@@ -478,7 +463,7 @@ class _DoctorVisitDesktopLayout extends StatelessWidget {
   }
 }
 
-// ─── Desktop Sidebar ──────────────────────────────────────────────────────────
+// Desktop Sidebar
 
 class _DoctorVisitSidebar extends StatelessWidget {
   final VoidCallback onBack;
@@ -658,7 +643,7 @@ class _DVSidebarItemState extends State<_DVSidebarItem> {
   }
 }
 
-// ─── Desktop Header ───────────────────────────────────────────────────────────
+// Desktop Header
 
 class _DoctorVisitDesktopHeader extends StatelessWidget {
   final VoidCallback onBack;
@@ -727,7 +712,7 @@ class _DoctorVisitDesktopHeader extends StatelessWidget {
   }
 }
 
-// ─── Section card wrapper ─────────────────────────────────────────────────────
+// Section card wrapper
 
 class _DVDeskSection extends StatelessWidget {
   final IconData icon;
@@ -820,7 +805,7 @@ class _DVDeskSection extends StatelessWidget {
   }
 }
 
-// ─── Field row (label + input side by side) ───────────────────────────────────
+// Field row
 
 class _DVDeskFieldRow extends StatelessWidget {
   final String label;
@@ -866,7 +851,7 @@ class _DVDeskFieldRow extends StatelessWidget {
   }
 }
 
-// ─── Text field (desktop) ─────────────────────────────────────────────────────
+// Text field (desktop)
 
 class _DVDeskTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -923,7 +908,7 @@ class _DVDeskTextField extends StatelessWidget {
   }
 }
 
-// ─── Date button (desktop) ────────────────────────────────────────────────────
+// Date button (desktop)
 
 class _DVDeskDateButton extends StatefulWidget {
   final String label;
@@ -998,7 +983,7 @@ class _DVDeskDateButtonState extends State<_DVDeskDateButton> {
   }
 }
 
-// ─── Specialty chip (desktop) ─────────────────────────────────────────────────
+// Specialty chip (desktop)
 
 class _DVDeskSpecialtyChip extends StatefulWidget {
   final String label;
@@ -1096,7 +1081,7 @@ class _DVDeskSpecialtyChipState extends State<_DVDeskSpecialtyChip> {
   }
 }
 
-// ─── Visit summary + CTA card ─────────────────────────────────────────────────
+// Visit summary + CTA card
 
 class _DoctorVisitSummaryCard extends StatelessWidget {
   final String doctorName;
@@ -1305,7 +1290,7 @@ class _DVSummaryRow extends StatelessWidget {
   }
 }
 
-// ─── Back button ──────────────────────────────────────────────────────────────
+// Back button
 
 class _DVDeskBackButton extends StatefulWidget {
   final VoidCallback onTap;
@@ -1363,7 +1348,7 @@ class _DVDeskBackButtonState extends State<_DVDeskBackButton> {
   }
 }
 
-// ─── Cancel button ────────────────────────────────────────────────────────────
+// Cancel button
 
 class _DVDeskCancelButton extends StatefulWidget {
   final VoidCallback onTap;
@@ -1410,7 +1395,7 @@ class _DVDeskCancelButtonState extends State<_DVDeskCancelButton> {
   }
 }
 
-// ─── Save CTA button ──────────────────────────────────────────────────────────
+// Save CTA button
 
 class _DVDeskSaveButton extends StatefulWidget {
   final bool isLoading;
@@ -1495,7 +1480,7 @@ class _DVDeskSaveButtonState extends State<_DVDeskSaveButton> {
   }
 }
 
-// ─── Validation text (desktop) ────────────────────────────────────────────────
+// Validation text (desktop)
 
 class _DVDeskValidationText extends StatelessWidget {
   final String message;
@@ -1520,9 +1505,7 @@ class _DVDeskValidationText extends StatelessWidget {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// MOBILE LAYOUT — completely untouched from the original
-// ═══════════════════════════════════════════════════════════════════════════════
+// MOBILE LAYOUT
 
 class _DoctorVisitMobileLayout extends StatelessWidget {
   final TextEditingController doctorController;
@@ -1633,7 +1616,7 @@ class _DoctorVisitMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 24)),
 
-            // ── Visit Date ─────────────────────────────────────────
+            // Visit Date
             _FieldLabel(label: 'Visit Date', required: true),
             SizedBox(height: context.h(mobile: 8)),
             GestureDetector(
@@ -1675,7 +1658,6 @@ class _DoctorVisitMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Doctor Name ───────────────────────────────────────
             _FieldLabel(label: "Doctor's Name", required: true),
             SizedBox(height: context.h(mobile: 8)),
             AppFormField(
@@ -1695,7 +1677,6 @@ class _DoctorVisitMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Specialty ─────────────────────────────────────────
             _FieldLabel(label: 'Specialty', required: false),
             SizedBox(height: context.h(mobile: 10)),
             Wrap(
@@ -1744,7 +1725,6 @@ class _DoctorVisitMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Clinic / Hospital ─────────────────────────────────
             _FieldLabel(label: 'Clinic / Hospital', required: false),
             SizedBox(height: context.h(mobile: 8)),
             AppFormField(
@@ -1755,7 +1735,6 @@ class _DoctorVisitMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Diagnosis / Reason ────────────────────────────────
             _FieldLabel(label: 'Diagnosis / Reason for Visit', required: true),
             SizedBox(height: context.h(mobile: 8)),
             AppFormField(
@@ -1778,7 +1757,6 @@ class _DoctorVisitMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 20)),
 
-            // ── Notes ─────────────────────────────────────────────
             _FieldLabel(
               label: "Doctor's Notes / Prescription",
               required: false,
@@ -1795,7 +1773,6 @@ class _DoctorVisitMobileLayout extends StatelessWidget {
 
             SizedBox(height: context.h(mobile: 32)),
 
-            // ── Save Button ───────────────────────────────────────
             BlocBuilder<HomeBloc, HomeState>(
               buildWhen: (_, current) =>
                   current is DoctorVisitSubmitLoading ||
@@ -1867,8 +1844,6 @@ class _DoctorVisitMobileLayout extends StatelessWidget {
     );
   }
 }
-
-// ─── Mobile-only helpers (untouched) ─────────────────────────────────────────
 
 class _FieldLabel extends StatelessWidget {
   final String label;

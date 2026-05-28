@@ -52,9 +52,7 @@ class AiInsightResultPage extends StatelessWidget implements AutoRouteWrapper {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // DESKTOP LAYOUT
-// ═══════════════════════════════════════════════════════════════════════════════
 
 class _AiInsightResultDesktopLayout extends StatelessWidget {
   final AiInsightEntity insight;
@@ -73,24 +71,19 @@ class _AiInsightResultDesktopLayout extends StatelessWidget {
       backgroundColor: HomeColors.background,
       body: Row(
         children: [
-          // ── Left Sidebar ───────────────────────────────────────────────────
           _AiResultSidebar(onBack: onBack),
 
-          // ── Main content ───────────────────────────────────────────────────
           Expanded(
             child: Column(
               children: [
-                // Top header bar
                 _AiResultDesktopHeader(onBack: onBack),
 
-                // Scrollable two-column body
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(32, 28, 32, 48),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ── LEFT COLUMN: important notice + summary + pattern
                         Expanded(
                           flex: 55,
                           child: Column(
@@ -109,7 +102,6 @@ class _AiInsightResultDesktopLayout extends StatelessWidget {
 
                         const SizedBox(width: 24),
 
-                        // ── RIGHT COLUMN: questions + seek care + save CTA
                         Expanded(
                           flex: 45,
                           child: Column(
@@ -123,7 +115,6 @@ class _AiInsightResultDesktopLayout extends StatelessWidget {
                                 content: insight.whenToSeekCare,
                               ),
                               const SizedBox(height: 20),
-                              // Save to timeline card
                               _AiResultSaveCard(onSave: onSave),
                             ],
                           ),
@@ -141,7 +132,7 @@ class _AiInsightResultDesktopLayout extends StatelessWidget {
   }
 }
 
-// ─── Save card ────────────────────────────────────────────────────────────────
+// Save card
 
 class _AiResultSaveCard extends StatelessWidget {
   final VoidCallback onSave;
@@ -344,7 +335,7 @@ class _AiResultDeskSaveButtonState extends State<_AiResultDeskSaveButton> {
   }
 }
 
-// ─── Desktop Sidebar ──────────────────────────────────────────────────────────
+// Desktop Sidebar
 
 class _AiResultSidebar extends StatelessWidget {
   final VoidCallback onBack;
@@ -521,7 +512,7 @@ class _AiResultSidebarItemState extends State<_AiResultSidebarItem> {
   }
 }
 
-// ─── Desktop Header ───────────────────────────────────────────────────────────
+//Desktop Header
 
 class _AiResultDesktopHeader extends StatelessWidget {
   final VoidCallback onBack;
@@ -649,9 +640,7 @@ class _AiResultBackButtonState extends State<_AiResultBackButton> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// MOBILE LAYOUT — completely untouched from the original
-// ═══════════════════════════════════════════════════════════════════════════════
+// MOBILE LAYOUT
 
 class _AiInsightResultMobileLayout extends StatelessWidget {
   final AiInsightEntity insight;

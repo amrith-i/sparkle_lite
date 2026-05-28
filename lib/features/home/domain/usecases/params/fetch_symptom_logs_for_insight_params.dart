@@ -1,5 +1,3 @@
-// ─── Params ───────────────────────────────────────────────────────────────────
-
 import '../../../../../core_import.dart';
 
 class FetchSymptomLogsForInsightParams extends Equatable {

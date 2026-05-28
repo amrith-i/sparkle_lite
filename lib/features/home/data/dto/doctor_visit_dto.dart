@@ -28,8 +28,6 @@ class DoctorVisitDto {
     );
   }
 
-  /// Used when **creating** a new doctor visit document.
-  /// Includes createdAt so Firestore timestamps the first write.
   Map<String, dynamic> toFirestore() {
     return {
       'date': Timestamp.fromDate(date),
@@ -42,9 +40,6 @@ class DoctorVisitDto {
     };
   }
 
-  /// Used when **updating** an existing doctor visit document.
-  /// Does NOT touch createdAt — preserves the original timestamp.
-  /// Uses FieldValue.delete() to remove optional fields when cleared.
   Map<String, dynamic> toFirestoreForUpdate() {
     return {
       'date': Timestamp.fromDate(date),

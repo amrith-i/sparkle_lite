@@ -1,6 +1,5 @@
 import '../../../../core_import.dart';
 
-/// Lightweight representation of a symptom log shown on the log-selection page.
 class SymptomLogSummaryEntity extends Equatable {
   final String id;
   final DateTime date;

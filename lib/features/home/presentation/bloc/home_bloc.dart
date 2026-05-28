@@ -116,8 +116,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  // ── AI Insight handlers ───────────────────────────────────────────────────
-
   Future<void> _onFetchSymptomLogs(
     FetchSymptomLogsForInsight event,
     Emitter<HomeState> emit,
@@ -170,16 +168,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     ResetAiInsightState event,
     Emitter<HomeState> emit,
   ) {
-    // If we're currently in generating state, reset to loaded state
     if (state is AiInsightGenerating) {
-      // Get the current logs if available
       final currentState = state;
       if (currentState is SymptomLogsLoaded) {
         emit(currentState);
-      } else {
-        // If no logs loaded, we need to keep the loaded state
-        // The actual logs will be refetched when the page rebuilds
-      }
+      } else {}
     }
   }
 }

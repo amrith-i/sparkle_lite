@@ -40,9 +40,7 @@ class AiInsightProcessingPage extends StatelessWidget {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
 // DESKTOP LAYOUT
-// ═══════════════════════════════════════════════════════════════════════════════
 
 class _AiInsightProcessingDesktopLayout extends StatelessWidget {
   final HomeBloc homeBloc;
@@ -55,7 +53,6 @@ class _AiInsightProcessingDesktopLayout extends StatelessWidget {
       backgroundColor: HomeColors.background,
       body: Row(
         children: [
-          // ── Left Sidebar ───────────────────────────────────────────────────
           _AiProcessingSidebar(
             onBack: () {
               homeBloc.add(const ResetAiInsightState());
@@ -63,7 +60,6 @@ class _AiInsightProcessingDesktopLayout extends StatelessWidget {
             },
           ),
 
-          // ── Main content ───────────────────────────────────────────────────
           Expanded(
             child: Column(
               children: [
@@ -207,7 +203,7 @@ class _AiInsightProcessingDesktopLayout extends StatelessWidget {
   }
 }
 
-// ─── Desktop Sidebar ──────────────────────────────────────────────────────────
+// Desktop Sidebar
 
 class _AiProcessingSidebar extends StatelessWidget {
   final VoidCallback onBack;
@@ -385,7 +381,7 @@ class _AiProcessingSidebarItemState extends State<_AiProcessingSidebarItem> {
   }
 }
 
-// ─── Desktop Header ───────────────────────────────────────────────────────────
+// Desktop Header
 
 class _AiProcessingDesktopHeader extends StatelessWidget {
   final VoidCallback onBack;
@@ -514,9 +510,7 @@ class _AiProcessingBackButtonState extends State<_AiProcessingBackButton> {
   }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// MOBILE LAYOUT — completely untouched from the original
-// ═══════════════════════════════════════════════════════════════════════════════
+// MOBILE LAYOUT
 
 class _AiInsightProcessingMobileLayout extends StatelessWidget {
   final HomeBloc homeBloc;

@@ -1,7 +1,5 @@
 import '../../../../core_import.dart';
 
-// ─── SymptomLogSummaryDto ─────────────────────────────────────────────────────
-
 class SymptomLogSummaryDto {
   final String id;
   final DateTime date;
@@ -38,7 +36,6 @@ class SymptomLogSummaryDto {
     mood: mood,
   );
 
-  /// Converts to a human-readable string for the AI prompt.
   String toPromptString() {
     const months = [
       'Jan',
@@ -59,9 +56,6 @@ class SymptomLogSummaryDto {
   }
 }
 
-// ─── AiInsightDto ─────────────────────────────────────────────────────────────
-
-// In ai_insight_dto.dart
 class AiInsightDto {
   final String id;
   final String summary;
