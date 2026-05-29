@@ -134,12 +134,12 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
         content: const Text('Are you sure you want to sign out?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.maybePop(context),
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.maybePop(context);
               context.read<ProfileSettingsBloc>().add(const SignOutRequested());
             },
             child: const Text(
