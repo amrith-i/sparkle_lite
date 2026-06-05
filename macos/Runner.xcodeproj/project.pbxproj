@@ -385,7 +385,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dailycoll.dailyFinanceManager.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sparkle.sparkle_lite.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/sparkle_lite.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/sparkle_lite";
@@ -399,7 +399,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dailycoll.dailyFinanceManager.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sparkle.sparkle_lite.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/sparkle_lite.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/sparkle_lite";
@@ -413,7 +413,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dailycoll.dailyFinanceManager.RunnerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sparkle.sparkle_lite.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/sparkle_lite.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/sparkle_lite";

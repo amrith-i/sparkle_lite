@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '327706044489',
     projectId: 'sparkle-lite',
     storageBucket: 'sparkle-lite.firebasestorage.app',
-    iosBundleId: 'com.dailycoll.dailyFinanceManager',
+    iosBundleId: 'sparkle-lite.firebasestorage.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -72,7 +72,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '247606471711',
     projectId: 'qr-gift-system-a4830',
     storageBucket: 'qr-gift-system-a4830.firebasestorage.app',
-    iosBundleId: 'com.dailycoll.dailyFinanceManager',
+    iosBundleId: 'sparkle-lite.firebasestorage.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
@@ -83,5 +83,4 @@ class DefaultFirebaseOptions {
     authDomain: 'sparkle-lite.firebaseapp.com',
     storageBucket: 'sparkle-lite.firebasestorage.app',
   );
-
 }

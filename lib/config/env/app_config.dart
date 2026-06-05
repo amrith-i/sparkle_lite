@@ -17,16 +17,16 @@ class AppConfig {
     switch (EnvResolver.current) {
       case AppEnvironment.prod:
         return const AppConfig(
-          baseUrl: 'https://api.dailyfinance.app',
-          socketUrl: 'https://api.dailyfinance.app',
+          baseUrl: 'https://api.com.sparkle.sparklelite.app',
+          socketUrl: 'https://api.com.sparkle.sparklelite.app',
           enableLogs: false,
           enableCrashlytics: true,
         );
 
       case AppEnvironment.dev:
         return const AppConfig(
-          baseUrl: 'https://dev.api.dailyfinance.app',
-          socketUrl: 'https://dev.api.dailyfinance.app',
+          baseUrl: 'https://dev.api.com.sparkle.sparklelite.app',
+          socketUrl: 'https://dev.api.com.sparkle.sparklelite.app',
           enableLogs: true,
           enableCrashlytics: false,
         );
