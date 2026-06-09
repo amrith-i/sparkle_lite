@@ -45,3 +45,13 @@ class RemoveFamilyMember extends ProfileSettingsEvent {
 class SignOutRequested extends ProfileSettingsEvent {
   const SignOutRequested();
 }
+
+class UpdateFamilyMember extends ProfileSettingsEvent {
+  final String userId;
+  final FamilyMemberEntity member;
+
+  const UpdateFamilyMember({required this.userId, required this.member});
+
+  @override
+  List<Object?> get props => [userId, member];
+}

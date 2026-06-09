@@ -3,8 +3,9 @@ import '../../../../core_import.dart';
 @RoutePage()
 class AddFamilyMemberPage extends StatefulWidget implements AutoRouteWrapper {
   final String userId;
+  final FamilyMemberEntity? member; // null = add mode, non-null = edit mode
 
-  const AddFamilyMemberPage({super.key, required this.userId});
+  const AddFamilyMemberPage({super.key, required this.userId, this.member});
 
   @override
   Widget wrappedRoute(BuildContext context) {
@@ -22,11 +23,13 @@ class AddFamilyMemberPage extends StatefulWidget implements AutoRouteWrapper {
 
 class _AddFamilyMemberPageState extends State<AddFamilyMemberPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _healthNotesController = TextEditingController();
+  late final TextEditingController _nameController;
+  late final TextEditingController _healthNotesController;
 
   String? _selectedRelationship;
   String? _selectedAgeRange;
+
+  bool get _isEditMode => widget.member != null;
 
   static const _relationships = [
     'Mother',
@@ -52,6 +55,17 @@ class _AddFamilyMemberPageState extends State<AddFamilyMemberPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.member?.name ?? '');
+    _healthNotesController = TextEditingController(
+      text: widget.member?.healthNotes ?? '',
+    );
+    _selectedRelationship = widget.member?.relationship;
+    _selectedAgeRange = widget.member?.ageRange;
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _healthNotesController.dispose();
@@ -60,15 +74,29 @@ class _AddFamilyMemberPageState extends State<AddFamilyMemberPage> {
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    final member = FamilyMemberEntity(
-      name: _nameController.text.trim(),
-      relationship: _selectedRelationship!,
-      ageRange: _selectedAgeRange!,
-      healthNotes: _healthNotesController.text.trim(),
-    );
-    context.read<ProfileSettingsBloc>().add(
-      AddFamilyMember(userId: widget.userId, member: member),
-    );
+
+    if (_isEditMode) {
+      final updated = FamilyMemberEntity(
+        id: widget.member!.id,
+        name: _nameController.text.trim(),
+        relationship: _selectedRelationship!,
+        ageRange: _selectedAgeRange!,
+        healthNotes: _healthNotesController.text.trim(),
+      );
+      context.read<ProfileSettingsBloc>().add(
+        UpdateFamilyMember(userId: widget.userId, member: updated),
+      );
+    } else {
+      final member = FamilyMemberEntity(
+        name: _nameController.text.trim(),
+        relationship: _selectedRelationship!,
+        ageRange: _selectedAgeRange!,
+        healthNotes: _healthNotesController.text.trim(),
+      );
+      context.read<ProfileSettingsBloc>().add(
+        AddFamilyMember(userId: widget.userId, member: member),
+      );
+    }
   }
 
   @override
@@ -77,10 +105,14 @@ class _AddFamilyMemberPageState extends State<AddFamilyMemberPage> {
 
     return BlocListener<ProfileSettingsBloc, ProfileSettingsState>(
       listener: (context, state) {
-        if (state is FamilyMemberAddSuccess) {
+        if (state is FamilyMemberAddSuccess ||
+            state is FamilyMemberUpdateSuccess) {
           context.router.maybePop();
         }
         if (state is FamilyMemberAddFailure) {
+          AppNotifier.show(context, state.message, type: MessageType.error);
+        }
+        if (state is FamilyMemberUpdateFailure) {
           AppNotifier.show(context, state.message, type: MessageType.error);
         }
       },
@@ -97,6 +129,7 @@ class _AddFamilyMemberPageState extends State<AddFamilyMemberPage> {
                   setState(() => _selectedRelationship = v),
               onAgeRangeChanged: (v) => setState(() => _selectedAgeRange = v),
               onSubmit: _submit,
+              isEditMode: _isEditMode,
             )
           : _AddMemberMobileLayout(
               formKey: _formKey,
@@ -110,6 +143,7 @@ class _AddFamilyMemberPageState extends State<AddFamilyMemberPage> {
                   setState(() => _selectedRelationship = v),
               onAgeRangeChanged: (v) => setState(() => _selectedAgeRange = v),
               onSubmit: _submit,
+              isEditMode: _isEditMode,
             ),
     );
   }
@@ -130,6 +164,7 @@ class _AddMemberDesktopLayout extends StatelessWidget {
   final ValueChanged<String?> onRelationshipChanged;
   final ValueChanged<String?> onAgeRangeChanged;
   final VoidCallback onSubmit;
+  final bool isEditMode;
 
   const _AddMemberDesktopLayout({
     required this.formKey,
@@ -142,6 +177,7 @@ class _AddMemberDesktopLayout extends StatelessWidget {
     required this.onRelationshipChanged,
     required this.onAgeRangeChanged,
     required this.onSubmit,
+    required this.isEditMode,
   });
 
   @override
@@ -150,14 +186,13 @@ class _AddMemberDesktopLayout extends StatelessWidget {
       backgroundColor: ProfileSettingsColors.background,
       body: Row(
         children: [
-          // ── Sidebar (minimal — back to privacy) ──────────────────────
+          // ── Sidebar ───────────────────────────────────────────────────
           Container(
             width: 190,
             color: const Color(0xFF1A1A2E),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Logo
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
                   child: Row(
@@ -209,7 +244,6 @@ class _AddMemberDesktopLayout extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Nav items
                 Expanded(
                   child: ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -272,26 +306,29 @@ class _AddMemberDesktopLayout extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      // Back button
                       _BackButton(onTap: () => context.router.maybePop()),
                       const SizedBox(width: 16),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Add Family Member',
-                              style: TextStyle(
+                              isEditMode
+                                  ? 'Update Family Member'
+                                  : 'Add Family Member',
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
                                 color: Color(0xFF1A1A2E),
                                 letterSpacing: -0.3,
                               ),
                             ),
-                            SizedBox(height: 2),
+                            const SizedBox(height: 2),
                             Text(
-                              'Add a family member to manage their health separately',
-                              style: TextStyle(
+                              isEditMode
+                                  ? 'Edit this family member\'s health details'
+                                  : 'Add a family member to manage their health separately',
+                              style: const TextStyle(
                                 fontSize: 13,
                                 color: Color(0xFF9B8FB0),
                               ),
@@ -339,15 +376,17 @@ class _AddMemberDesktopLayout extends StatelessWidget {
                                         20,
                                       ),
                                       child: Row(
-                                        children: const [
-                                          Text(
+                                        children: [
+                                          const Text(
                                             '👨‍👩‍👧',
                                             style: TextStyle(fontSize: 18),
                                           ),
-                                          SizedBox(width: 10),
+                                          const SizedBox(width: 10),
                                           Text(
-                                            'Member Details',
-                                            style: TextStyle(
+                                            isEditMode
+                                                ? 'Edit Member Details'
+                                                : 'Member Details',
+                                            style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w700,
                                               color: Color(0xFF1A1A2E),
@@ -436,10 +475,12 @@ class _AddMemberDesktopLayout extends StatelessWidget {
                                             >(
                                               builder: (context, state) {
                                                 final isLoading =
-                                                    state is FamilyMemberAdding;
+                                                    state
+                                                        is FamilyMemberAdding ||
+                                                    state
+                                                        is FamilyMemberUpdating;
                                                 return Row(
                                                   children: [
-                                                    // Cancel
                                                     Expanded(
                                                       child: _CancelButton(
                                                         onTap: () => context
@@ -448,7 +489,6 @@ class _AddMemberDesktopLayout extends StatelessWidget {
                                                       ),
                                                     ),
                                                     const SizedBox(width: 12),
-                                                    // Submit
                                                     Expanded(
                                                       flex: 2,
                                                       child: SizedBox(
@@ -483,9 +523,11 @@ class _AddMemberDesktopLayout extends StatelessWidget {
                                                                         .white,
                                                                   ),
                                                                 )
-                                                              : const Text(
-                                                                  'Add Family Member',
-                                                                  style: TextStyle(
+                                                              : Text(
+                                                                  isEditMode
+                                                                      ? 'Update Family Member'
+                                                                      : 'Add Family Member',
+                                                                  style: const TextStyle(
                                                                     fontSize:
                                                                         14,
                                                                     fontWeight:
@@ -602,6 +644,176 @@ class _AddMemberDesktopLayout extends StatelessWidget {
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Mobile Layout
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _AddMemberMobileLayout extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController nameController;
+  final TextEditingController healthNotesController;
+  final String? selectedRelationship;
+  final String? selectedAgeRange;
+  final List<String> relationships;
+  final List<String> ageRanges;
+  final ValueChanged<String?> onRelationshipChanged;
+  final ValueChanged<String?> onAgeRangeChanged;
+  final VoidCallback onSubmit;
+  final bool isEditMode;
+
+  const _AddMemberMobileLayout({
+    required this.formKey,
+    required this.nameController,
+    required this.healthNotesController,
+    required this.selectedRelationship,
+    required this.selectedAgeRange,
+    required this.relationships,
+    required this.ageRanges,
+    required this.onRelationshipChanged,
+    required this.onAgeRangeChanged,
+    required this.onSubmit,
+    required this.isEditMode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: ProfileSettingsColors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: ProfileSettingsPaddings.page.copyWith(top: 12, bottom: 32),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () => context.router.maybePop(),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(
+                        Icons.arrow_back_ios,
+                        size: 14,
+                        color: ProfileSettingsColors.captionText,
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        'Back',
+                        style: ProfileSettingsTextStyles.captionText,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  isEditMode ? 'Update Family Member' : 'Add Family Member',
+                  style: ProfileSettingsTextStyles.headline,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  isEditMode
+                      ? 'Edit this family member\'s health details'
+                      : 'Add a family member to manage their health separately',
+                  style: ProfileSettingsTextStyles.captionText,
+                ),
+                const SizedBox(height: 28),
+                TextFormField(
+                  controller: nameController,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: ProfileSettingsDecorations.inputDecoration(
+                    label: 'Full Name',
+                    hint: 'e.g. Amma',
+                  ),
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? 'Name is required'
+                      : null,
+                ),
+                const SizedBox(height: 16),
+                _DropdownField(
+                  label: 'Relationship',
+                  hint: 'Select relationship',
+                  value: selectedRelationship,
+                  items: relationships,
+                  onChanged: onRelationshipChanged,
+                  validator: (v) =>
+                      v == null ? 'Please select a relationship' : null,
+                ),
+                const SizedBox(height: 16),
+                _DropdownField(
+                  label: 'Age Range',
+                  hint: 'Select age range',
+                  value: selectedAgeRange,
+                  items: ageRanges,
+                  onChanged: onAgeRangeChanged,
+                  validator: (v) =>
+                      v == null ? 'Please select an age range' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: healthNotesController,
+                  maxLines: 3,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: ProfileSettingsDecorations.inputDecoration(
+                    label: 'Health Notes (optional)',
+                    hint: 'e.g. Diabetes management, check-up every 3 months.',
+                  ),
+                ),
+                const SizedBox(height: 32),
+                BlocBuilder<ProfileSettingsBloc, ProfileSettingsState>(
+                  builder: (context, state) {
+                    final isLoading =
+                        state is FamilyMemberAdding ||
+                        state is FamilyMemberUpdating;
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : onSubmit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ProfileSettingsColors.primaryButton,
+                          foregroundColor:
+                              ProfileSettingsColors.primaryButtonText,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text(
+                                isEditMode
+                                    ? 'Update Family Member'
+                                    : 'Add Family Member',
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Shared widgets — unchanged
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _TipItem extends StatelessWidget {
   final String emoji;
@@ -809,168 +1021,6 @@ class _AddMemberNavItemState extends State<_AddMemberNavItem> {
     );
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Mobile Layout — completely unchanged from original
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _AddMemberMobileLayout extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController nameController;
-  final TextEditingController healthNotesController;
-  final String? selectedRelationship;
-  final String? selectedAgeRange;
-  final List<String> relationships;
-  final List<String> ageRanges;
-  final ValueChanged<String?> onRelationshipChanged;
-  final ValueChanged<String?> onAgeRangeChanged;
-  final VoidCallback onSubmit;
-
-  const _AddMemberMobileLayout({
-    required this.formKey,
-    required this.nameController,
-    required this.healthNotesController,
-    required this.selectedRelationship,
-    required this.selectedAgeRange,
-    required this.relationships,
-    required this.ageRanges,
-    required this.onRelationshipChanged,
-    required this.onAgeRangeChanged,
-    required this.onSubmit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ProfileSettingsColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: ProfileSettingsPaddings.page.copyWith(top: 12, bottom: 32),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () => context.router.maybePop(),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(
-                        Icons.arrow_back_ios,
-                        size: 14,
-                        color: ProfileSettingsColors.captionText,
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        'Back',
-                        style: ProfileSettingsTextStyles.captionText,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Add Family Member',
-                  style: ProfileSettingsTextStyles.headline,
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Add a family member to manage their health separately',
-                  style: ProfileSettingsTextStyles.captionText,
-                ),
-                const SizedBox(height: 28),
-                TextFormField(
-                  controller: nameController,
-                  textCapitalization: TextCapitalization.words,
-                  decoration: ProfileSettingsDecorations.inputDecoration(
-                    label: 'Full Name',
-                    hint: 'e.g. Amma',
-                  ),
-                  validator: (v) => (v == null || v.trim().isEmpty)
-                      ? 'Name is required'
-                      : null,
-                ),
-                const SizedBox(height: 16),
-                _DropdownField(
-                  label: 'Relationship',
-                  hint: 'Select relationship',
-                  value: selectedRelationship,
-                  items: relationships,
-                  onChanged: onRelationshipChanged,
-                  validator: (v) =>
-                      v == null ? 'Please select a relationship' : null,
-                ),
-                const SizedBox(height: 16),
-                _DropdownField(
-                  label: 'Age Range',
-                  hint: 'Select age range',
-                  value: selectedAgeRange,
-                  items: ageRanges,
-                  onChanged: onAgeRangeChanged,
-                  validator: (v) =>
-                      v == null ? 'Please select an age range' : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: healthNotesController,
-                  maxLines: 3,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: ProfileSettingsDecorations.inputDecoration(
-                    label: 'Health Notes (optional)',
-                    hint: 'e.g. Diabetes management, check-up every 3 months.',
-                  ),
-                ),
-                const SizedBox(height: 32),
-                BlocBuilder<ProfileSettingsBloc, ProfileSettingsState>(
-                  builder: (context, state) {
-                    final isLoading = state is FamilyMemberAdding;
-                    return SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: isLoading ? null : onSubmit,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ProfileSettingsColors.primaryButton,
-                          foregroundColor:
-                              ProfileSettingsColors.primaryButtonText,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: isLoading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Text(
-                                'Add Family Member',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Shared dropdown widget (used by both layouts)
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _DropdownField extends StatelessWidget {
   final String label;

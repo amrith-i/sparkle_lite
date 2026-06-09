@@ -308,6 +308,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1046.SignOutUsecase>(
       () => _i1046.SignOutUsecase(gh<_i501.ProfileSettingsRepository>()),
     );
+    gh.factory<_i821.ProfileSettingsBloc>(
+      () => _i821.ProfileSettingsBloc(
+        gh<_i501.FetchProfileSettingsUsecase>(),
+        gh<_i501.UpdatePrivacySettingsUsecase>(),
+        gh<_i501.AddFamilyMemberUsecase>(),
+        gh<_i501.RemoveFamilyMemberUsecase>(),
+        gh<_i501.SignOutUsecase>(),
+        gh<_i501.ProfileSettingsRepository>(),
+      ),
+    );
     gh.factory<_i72.AddDoctorVisitUsecase>(
       () => _i72.AddDoctorVisitUsecase(gh<_i501.HomeRepository>()),
     );
@@ -331,15 +341,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i52.FetchHomeUsecase>(
       () => _i52.FetchHomeUsecase(gh<_i501.HomeRepository>()),
-    );
-    gh.factory<_i821.ProfileSettingsBloc>(
-      () => _i821.ProfileSettingsBloc(
-        gh<_i501.FetchProfileSettingsUsecase>(),
-        gh<_i501.UpdatePrivacySettingsUsecase>(),
-        gh<_i501.AddFamilyMemberUsecase>(),
-        gh<_i501.RemoveFamilyMemberUsecase>(),
-        gh<_i501.SignOutUsecase>(),
-      ),
     );
     gh.factory<_i202.HomeBloc>(
       () => _i202.HomeBloc(

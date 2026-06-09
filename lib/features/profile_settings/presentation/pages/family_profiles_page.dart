@@ -50,10 +50,20 @@ class _FamilyProfilesPageState extends State<FamilyProfilesPage> {
             type: MessageType.success,
           );
         }
+        if (state is FamilyMemberUpdateSuccess) {
+          AppNotifier.show(
+            context,
+            'Family member updated successfully!',
+            type: MessageType.success,
+          );
+        }
         if (state is FamilyMemberAddFailure) {
           AppNotifier.show(context, state.message, type: MessageType.error);
         }
         if (state is FamilyMemberRemoveFailure) {
+          AppNotifier.show(context, state.message, type: MessageType.error);
+        }
+        if (state is FamilyMemberUpdateFailure) {
           AppNotifier.show(context, state.message, type: MessageType.error);
         }
       },
@@ -66,6 +76,9 @@ class _FamilyProfilesPageState extends State<FamilyProfilesPage> {
         if (state is FamilyMemberRemoving) currentProfile = state.profile;
         if (state is FamilyMemberRemoveSuccess) currentProfile = state.profile;
         if (state is FamilyMemberRemoveFailure) currentProfile = state.profile;
+        if (state is FamilyMemberUpdating) currentProfile = state.profile;
+        if (state is FamilyMemberUpdateSuccess) currentProfile = state.profile;
+        if (state is FamilyMemberUpdateFailure) currentProfile = state.profile;
 
         final isLoading =
             state is ProfileSettingsLoading ||
@@ -172,6 +185,7 @@ class _FamilyProfilesPageState extends State<FamilyProfilesPage> {
                               child: FamilyMemberCardWidget(
                                 member: m,
                                 onRemove: () => _confirmRemove(context, uid, m),
+                                onClick: () => _onClick(context, uid, m),
                               ),
                             ),
                           ),
@@ -214,6 +228,19 @@ class _FamilyProfilesPageState extends State<FamilyProfilesPage> {
         );
       },
     );
+  }
+
+  void _onClick(
+    BuildContext context,
+    String uid,
+    FamilyMemberEntity member,
+  ) async {
+    await context.router.push(
+      AddFamilyMemberRoute(userId: uid, member: member),
+    );
+    if (mounted) {
+      context.read<ProfileSettingsBloc>().add(LoadProfileSettings(userId: uid));
+    }
   }
 
   void _confirmRemove(
@@ -610,6 +637,23 @@ class _FamilyDesktopLayoutState extends State<_FamilyDesktopLayout> {
                                             member: m,
                                             onRemove: () =>
                                                 widget.onRemoveMember(m),
+                                            onTap: () async {
+                                              await context.router.push(
+                                                AddFamilyMemberRoute(
+                                                  userId: widget.uid,
+                                                  member: m,
+                                                ),
+                                              );
+                                              if (context.mounted) {
+                                                context
+                                                    .read<ProfileSettingsBloc>()
+                                                    .add(
+                                                      LoadProfileSettings(
+                                                        userId: widget.uid,
+                                                      ),
+                                                    );
+                                              }
+                                            },
                                           ),
                                         ),
                                       )
@@ -863,10 +907,12 @@ class _FamilyAddButtonState extends State<_FamilyAddButton> {
 class _FamilyMemberDesktopCard extends StatefulWidget {
   final FamilyMemberEntity member;
   final VoidCallback onRemove;
+  final VoidCallback onTap;
 
   const _FamilyMemberDesktopCard({
     required this.member,
     required this.onRemove,
+    required this.onTap,
   });
 
   @override
@@ -884,125 +930,129 @@ class _FamilyMemberDesktopCardState extends State<_FamilyMemberDesktopCard> {
         : '?';
 
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(_hovered ? 0.08 : 0.04),
-              blurRadius: _hovered ? 20 : 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            // Avatar
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    AuthColors.buttonGradientStart,
-                    AuthColors.buttonGradientEnd,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(14),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(_hovered ? 0.08 : 0.04),
+                blurRadius: _hovered ? 20 : 12,
+                offset: const Offset(0, 4),
               ),
-              child: Center(
-                child: Text(
-                  initial,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
+            ],
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              // Avatar
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      AuthColors.buttonGradientStart,
+                      AuthColors.buttonGradientEnd,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
+                  borderRadius: BorderRadius.circular(14),
                 ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            // Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.member.name,
+                child: Center(
+                  child: Text(
+                    initial,
                     style: const TextStyle(
-                      fontSize: 15,
+                      color: Colors.white,
+                      fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A2E),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF3F0F8),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          widget.member.relationship,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF6B4FA8),
-                          ),
-                        ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.member.name,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF1A1A2E),
                       ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEEF3FF),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          widget.member.ageRange,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF5B8DEF),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF3F0F8),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            widget.member.relationship,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF6B4FA8),
+                            ),
                           ),
                         ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEEF3FF),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            widget.member.ageRange,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF5B8DEF),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (widget.member.healthNotes.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        widget.member.healthNotes,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF9B8FB0),
+                          height: 1.4,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                  ),
-                  if (widget.member.healthNotes.isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Text(
-                      widget.member.healthNotes,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF9B8FB0),
-                        height: 1.4,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
                   ],
-                ],
+                ),
               ),
-            ),
-            // Remove button
-            _RemoveButton(onTap: widget.onRemove),
-          ],
+              // Remove button
+              _RemoveButton(onTap: widget.onRemove),
+            ],
+          ),
         ),
       ),
     );

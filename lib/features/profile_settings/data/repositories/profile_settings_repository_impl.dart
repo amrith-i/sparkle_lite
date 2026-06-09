@@ -55,4 +55,16 @@ class ProfileSettingsRepositoryImpl extends BaseRepository
       await remoteDataSource.signOut();
     });
   }
+
+  @override
+  Future<ApiResult<ProfileSettingsEntity>> updateFamilyMember({
+    required String userId,
+    required FamilyMemberEntity member,
+  }) {
+    return safeApiCall(() async {
+      final dto = FamilyMemberDto.fromEntity(member);
+      await remoteDataSource.updateFamilyMember(userId: userId, dto: dto);
+      return await remoteDataSource.fetchProfile(userId);
+    });
+  }
 }

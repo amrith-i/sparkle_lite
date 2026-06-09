@@ -15,4 +15,9 @@ abstract class ProfileSettingsRemoteDataSource {
     required String memberId,
   });
   Future<void> signOut();
+
+  Future<void> updateFamilyMember({
+    required String userId,
+    required FamilyMemberDto dto,
+  });
 }

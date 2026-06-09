@@ -97,4 +97,17 @@ class ProfileSettingsRemoteDataSourceImpl
   Future<void> signOut() async {
     await auth.signOut();
   }
+
+  @override
+  Future<void> updateFamilyMember({
+    required String userId,
+    required FamilyMemberDto dto,
+  }) async {
+    await firestore
+        .collection('users')
+        .doc(userId)
+        .collection('family_members')
+        .doc(dto.id) // must have id since we're editing
+        .update(dto.toFirestore());
+  }
 }

@@ -86,3 +86,31 @@ class SignOutFailure extends ProfileSettingsState {
   @override
   List<Object?> get props => [message];
 }
+
+class FamilyMemberUpdating extends ProfileSettingsState {
+  final ProfileSettingsEntity profile;
+  const FamilyMemberUpdating({required this.profile});
+
+  @override
+  List<Object?> get props => [profile];
+}
+
+class FamilyMemberUpdateSuccess extends ProfileSettingsState {
+  final ProfileSettingsEntity profile;
+  const FamilyMemberUpdateSuccess({required this.profile});
+
+  @override
+  List<Object?> get props => [profile];
+}
+
+class FamilyMemberUpdateFailure extends ProfileSettingsState {
+  final ProfileSettingsEntity profile;
+  final String message;
+  const FamilyMemberUpdateFailure({
+    required this.profile,
+    required this.message,
+  });
+
+  @override
+  List<Object?> get props => [profile, message];
+}

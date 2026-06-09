@@ -8,6 +8,7 @@ class ProfileSettingsBloc
   final AddFamilyMemberUsecase _addFamilyMemberUsecase;
   final RemoveFamilyMemberUsecase _removeFamilyMemberUsecase;
   final SignOutUsecase _signOutUsecase;
+  final ProfileSettingsRepository _repository;
 
   ProfileSettingsBloc(
     this._fetchProfileUsecase,
@@ -15,12 +16,14 @@ class ProfileSettingsBloc
     this._addFamilyMemberUsecase,
     this._removeFamilyMemberUsecase,
     this._signOutUsecase,
+    this._repository,
   ) : super(ProfileSettingsInitial()) {
     on<LoadProfileSettings>(_onLoadProfile);
     on<TogglePrivacySetting>(_onTogglePrivacy);
     on<AddFamilyMember>(_onAddFamilyMember);
     on<RemoveFamilyMember>(_onRemoveFamilyMember);
     on<SignOutRequested>(_onSignOut);
+    on<UpdateFamilyMember>(_onUpdateFamilyMember);
   }
 
   Future<void> _onLoadProfile(
@@ -147,6 +150,32 @@ class ProfileSettingsBloc
       emit(SignOutSuccess());
     } else {
       emit(SignOutFailure(result.failure!.userMessage));
+    }
+  }
+
+  Future<void> _onUpdateFamilyMember(
+    UpdateFamilyMember event,
+    Emitter<ProfileSettingsState> emit,
+  ) async {
+    if (state is! ProfileSettingsLoaded) return;
+    final current = (state as ProfileSettingsLoaded).profile;
+
+    emit(FamilyMemberUpdating(profile: current));
+
+    final result = await _repository.updateFamilyMember(
+      userId: event.userId,
+      member: event.member,
+    );
+
+    if (result.isSuccess) {
+      emit(FamilyMemberUpdateSuccess(profile: result.data!));
+    } else {
+      emit(
+        FamilyMemberUpdateFailure(
+          profile: current,
+          message: result.failure!.userMessage,
+        ),
+      );
     }
   }
 }

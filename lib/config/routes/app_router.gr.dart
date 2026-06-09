@@ -16,10 +16,15 @@ class AddFamilyMemberRoute extends PageRouteInfo<AddFamilyMemberRouteArgs> {
   AddFamilyMemberRoute({
     Key? key,
     required String userId,
+    FamilyMemberEntity? member,
     List<PageRouteInfo>? children,
   }) : super(
          AddFamilyMemberRoute.name,
-         args: AddFamilyMemberRouteArgs(key: key, userId: userId),
+         args: AddFamilyMemberRouteArgs(
+           key: key,
+           userId: userId,
+           member: member,
+         ),
          initialChildren: children,
        );
 
@@ -30,33 +35,39 @@ class AddFamilyMemberRoute extends PageRouteInfo<AddFamilyMemberRouteArgs> {
     builder: (data) {
       final args = data.argsAs<AddFamilyMemberRouteArgs>();
       return WrappedRoute(
-        child: AddFamilyMemberPage(key: args.key, userId: args.userId),
+        child: AddFamilyMemberPage(
+          key: args.key,
+          userId: args.userId,
+          member: args.member,
+        ),
       );
     },
   );
 }
 
 class AddFamilyMemberRouteArgs {
-  const AddFamilyMemberRouteArgs({this.key, required this.userId});
+  const AddFamilyMemberRouteArgs({this.key, required this.userId, this.member});
 
   final Key? key;
 
   final String userId;
 
+  final FamilyMemberEntity? member;
+
   @override
   String toString() {
-    return 'AddFamilyMemberRouteArgs{key: $key, userId: $userId}';
+    return 'AddFamilyMemberRouteArgs{key: $key, userId: $userId, member: $member}';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! AddFamilyMemberRouteArgs) return false;
-    return key == other.key && userId == other.userId;
+    return key == other.key && userId == other.userId && member == other.member;
   }
 
   @override
-  int get hashCode => key.hashCode ^ userId.hashCode;
+  int get hashCode => key.hashCode ^ userId.hashCode ^ member.hashCode;
 }
 
 /// generated route for

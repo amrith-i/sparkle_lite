@@ -19,4 +19,9 @@ abstract class ProfileSettingsRepository {
   });
 
   Future<ApiResult<void>> signOut();
+
+  Future<ApiResult<ProfileSettingsEntity>> updateFamilyMember({
+    required String userId,
+    required FamilyMemberEntity member,
+  });
 }
